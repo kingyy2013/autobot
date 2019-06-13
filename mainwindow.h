@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "bot_login_dialog.h"
+#include "autobot_login_dialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,7 +23,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    BotLoginDialog bot_log_dialog;
+    AutobotLoginDialog bot_log_dialog;
 };
 
 } // namespace

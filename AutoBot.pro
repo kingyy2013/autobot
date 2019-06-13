@@ -27,9 +27,10 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    bot_login_dialog.cpp \
-    bot_edit_window.cpp \
-    autobot_account.cpp
+    autobot_account.cpp \
+    autobot_edit_window.cpp \
+    autobot_login_dialog.cpp \
+    autobot_helper.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,8 +42,8 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui \
-    bot_login_dialog_form.ui \
-    bot_edit_window_form.ui
+    autobot_edit_window_form.ui \
+    autobot_login_dialog_form.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

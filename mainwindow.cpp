@@ -17,4 +17,8 @@ void MainWindow::on_pushButton_add_clicked() {
   bot_log_dialog.show();
 }
 
+void MainWindow::AddNewAccount(AutobotAccount) {
+
+}
+
 } //namespace

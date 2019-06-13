@@ -16,8 +16,8 @@ class AutobotLoginDialog : public QDialog
 
 public:
   explicit AutobotLoginDialog(QWidget *parent = nullptr);
-  QString GetUsername();
-  QString GetPassword();
+  QString GetUsername() const;
+  QString GetPassword() const;
   ~AutobotLoginDialog();
 
 private slots:

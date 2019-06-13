@@ -3,7 +3,7 @@
 
 #include <QThreadPool>
 
-namespace auto_bot {
+namespace autobot {
 
 class AccountManager {
   AccountManager();

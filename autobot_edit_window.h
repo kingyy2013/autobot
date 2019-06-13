@@ -4,19 +4,21 @@
 #include <QMainWindow>
 
 namespace Ui {
-  class BotEditWindow;
+  class AutobotEditWindow;
 }
 
-class BotEditWindow : public QMainWindow
+namespace autobot {
+
+class AutobotEditWindow : public QMainWindow
 {
   Q_OBJECT
 
 public:
-  explicit BotEditWindow(QWidget *parent = nullptr);
-  ~BotEditWindow();
+  explicit AutobotEditWindow(QWidget *parent = nullptr);
+  ~AutobotEditWindow();
 
 private:
-  Ui::BotEditWindow *ui;
+  Ui::AutobotEditWindow *ui;
 };
-
+}
 #endif // BOT_EDIT_WINDOW_H

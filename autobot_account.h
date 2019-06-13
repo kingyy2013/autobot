@@ -1,9 +1,9 @@
 #ifndef BOT_ACCOUNT_H
 #define BOT_ACCOUNT_H
 
-#include <string>
+#include <QString>
 
-namespace auto_bot {
+namespace autobot {
 enum class AccountStatus {
   UNINITIALIZED,
   IDLE,
@@ -13,14 +13,16 @@ enum class AccountStatus {
 
 // The container for the bot accounts.
 class AutobotAccount {
- public:
-  AutobotAccount();
+public:
+  AutobotAccount(const QString& username, const QString& password);
   bool Login();
   bool Speak();
   bool Logoff();
- private:
-  std::string bot_name;
-  std::string bot_password;
+  QString GetUsername();
+  QString GetPassword();
+private:
+  QString bot_username_;
+  QString bot_password_;
   int bot_status;
 }; // AutobotAccount
 
