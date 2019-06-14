@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "autobot_login_dialog.h"
+#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -18,10 +19,11 @@ public:
     ~MainWindow();
 
 private slots:
-
+  void AddAccount(const QString&, const QString&);
   void on_pushButton_add_clicked();
 
 private:
+    QMessageBox messagebox;
     Ui::MainWindow *ui;
     AutobotLoginDialog bot_log_dialog;
 };

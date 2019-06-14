@@ -30,7 +30,8 @@ SOURCES += \
     autobot_account.cpp \
     autobot_edit_window.cpp \
     autobot_login_dialog.cpp \
-    autobot_helper.cpp
+    autobot_helper.cpp \
+    account_manager.cpp
 
 HEADERS += \
         mainwindow.h \

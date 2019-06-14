@@ -22,6 +22,8 @@ QString AutobotLoginDialog::GetPassword() const {
 }
 
 void AutobotLoginDialog::on_pushButton_add_clicked() {
+  emit AddNewAccount(ui->lineEdit_username->text(),
+                     ui->lineEdit_username->text());
   close();
 }
 
@@ -30,6 +32,3 @@ void AutobotLoginDialog::on_pushButton_cancel_clicked() {
 }
 
 } //namespace
-
-
-

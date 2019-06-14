@@ -18,7 +18,11 @@ public:
   explicit AutobotLoginDialog(QWidget *parent = nullptr);
   QString GetUsername() const;
   QString GetPassword() const;
+  Ui::AutobotLoginDialog* GetUI() const {return ui;}
   ~AutobotLoginDialog();
+
+signals:
+  void AddNewAccount(const QString&, const QString&);
 
 private slots:
 

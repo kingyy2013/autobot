@@ -66,7 +66,7 @@
      <string>Load All Accounts</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="listWidget_accounts">
     <property name="geometry">
      <rect>
       <x>10</x>

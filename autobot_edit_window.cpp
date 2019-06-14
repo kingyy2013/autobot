@@ -13,4 +13,10 @@ AutobotEditWindow::~AutobotEditWindow()
 {
   delete ui;
 }
+
+void AutobotEditWindow::CombineAutobotAccount(
+    std::shared_ptr<AutobotAccount> account) {
+  autobot_account_ptr_ = account;
+}
+
 }
