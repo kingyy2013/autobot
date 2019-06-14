@@ -17,9 +17,9 @@ class AutobotEditWindow : public QMainWindow
 
 public:
   explicit AutobotEditWindow(QWidget *parent = nullptr);
-  void CombineAutobotAccount(std::shared_ptr<AutobotAccount> account);
+  void CombineAutobotAccount(const std::shared_ptr<AutobotAccount>& account);
   ~AutobotEditWindow();
-
+  void UpdateUI();
 private:
   Ui::AutobotEditWindow *ui;
   std::shared_ptr<AutobotAccount> autobot_account_ptr_;

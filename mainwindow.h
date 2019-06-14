@@ -2,8 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "autobot_login_dialog.h"
 #include <QMessageBox>
+#include "autobot_login_dialog.h"
+#include "account_manager.h"
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,7 @@ private:
     QMessageBox messagebox;
     Ui::MainWindow *ui;
     AutobotLoginDialog bot_log_dialog;
+    AccountManager account_manager;
 };
 
 } // namespace

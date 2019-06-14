@@ -9,14 +9,19 @@ AutobotEditWindow::AutobotEditWindow(QWidget *parent) :
   ui->setupUi(this);
 }
 
-AutobotEditWindow::~AutobotEditWindow()
-{
+AutobotEditWindow::~AutobotEditWindow() {
   delete ui;
 }
 
 void AutobotEditWindow::CombineAutobotAccount(
-    std::shared_ptr<AutobotAccount> account) {
+    const std::shared_ptr<AutobotAccount>& account) {
   autobot_account_ptr_ = account;
+  UpdateUI();
+}
+
+void AutobotEditWindow::UpdateUI() {
+  ui->lineEdit_password->setText(autobot_account_ptr_->GetPassword());
+  ui->lineEdit_username->setText(autobot_account_ptr_->GetUsername());
 }
 
 }
