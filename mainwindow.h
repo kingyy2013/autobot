@@ -22,9 +22,9 @@ public:
 private slots:
   void AddAccount(const QString&, const QString&);
   void on_pushButton_add_clicked();
+  void on_pushButton_delete_clicked();
 
 private:
-    QMessageBox messagebox;
     Ui::MainWindow *ui;
     AutobotLoginDialog bot_log_dialog;
     AccountManager account_manager;
