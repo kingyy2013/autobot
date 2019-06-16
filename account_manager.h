@@ -2,7 +2,7 @@
 #define ACCOUNT_MANAGER_H
 
 #include <QThreadPool>
-#include <QMap>
+#include <QHash>
 #include <memory>
 
 #include "autobot_account.h"
@@ -18,9 +18,9 @@ public:
   /// @brief Find the AutobotAccount instance.
   std::shared_ptr<AutobotAccount> Find(const QString& autobot_name) const;
   void RemoveAutobot(const QString& autobot_name);
-  const QMap<QString, std::shared_ptr<AutobotAccount>>& GetAccountDict();
+  const QHash<QString, std::shared_ptr<AutobotAccount>>& GetAccountDict();
 private:
-  QMap<QString, std::shared_ptr<AutobotAccount>> account_dict_;
+  QHash<QString, std::shared_ptr<AutobotAccount>> account_dict_;
   QThreadPool thread_pool_;
 };
 

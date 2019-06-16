@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "autobot_helper.h"
+#include <QDebug>
 
 namespace autobot {
 
@@ -22,6 +24,25 @@ void MainWindow::on_pushButton_add_clicked() {
   bot_log_dialog_.show();
 }
 
+void MainWindow::UpdateAccountToView(
+    const std::shared_ptr<AutobotAccount>& account_ptr) {
+  SetAccountToView(account_ptr,
+                   ui->treeWidget_accounts->currentItem());
+}
+
+
+void MainWindow::SetAccountToView(
+    const std::shared_ptr<AutobotAccount>& account_ptr,
+    QTreeWidgetItem *autobot_item) {
+  autobot_item->setText(0, account_ptr->GetUsername());
+  QPair<QString, QColor> status_and_color
+      = ConvertStatusToQStringAndColor(account_ptr->GetStatus());
+  autobot_item->setText(1,
+                        status_and_color.first);
+  autobot_item->setBackground(0, QBrush(status_and_color.second));
+  autobot_item->setBackground(1, QBrush(status_and_color.second));
+}
+
 void MainWindow::AddAccount(const QString& account_username,
                             const QString& account_password) {
   QMessageBox messagebox(this);
@@ -39,9 +60,8 @@ void MainWindow::AddAccount(const QString& account_username,
                                              account_password);
       QTreeWidgetItem *autobot_item
           = new QTreeWidgetItem(ui->treeWidget_accounts);
+      SetAccountToView(temp_account_ptr, autobot_item);
       ui->treeWidget_accounts->addTopLevelItem(autobot_item);
-      autobot_item->setText(0, account_username);
-      autobot_item->setText(1, "空闲");
       account_manager_.AddAccount(temp_account_ptr);
     }
   }
@@ -81,21 +101,22 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
            .toStdString().data());
   } else {
     autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
-    autobot_edit_window_->move(this->pos().x() + this->width(), this->pos().y());
+    autobot_edit_window_->move(this->pos().x() + this->width(),
+                               this->pos().y());
     autobot_edit_window_->show();
   }
 }
 
 void MainWindow::on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item,
                                                     int column) {
-  if (autobot_edit_window_->isVisible()) {
-    on_treeWidget_accounts_itemDoubleClicked(item, column);
+  if (item == nullptr) {
+    autobot_edit_window_->hide();
+  } else {
+    if (autobot_edit_window_->isVisible()) {
+      on_treeWidget_accounts_itemDoubleClicked(item, column);
+    }
   }
 }
 
 } //namespace
-
-
-
-
 

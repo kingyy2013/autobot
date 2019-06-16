@@ -2,10 +2,12 @@
 #define AUTOBOT_HELPER_H
 
 #include "autobot_account.h"
-#include "autobot_login_dialog.h"
+#include <QPair>
+#include <QColor>
 
 namespace autobot {
-  AutobotAccount ConvertLoginDialogToAccount(const AutobotLoginDialog& login_dialog);
+QPair<QString, QColor> ConvertStatusToQStringAndColor(AccountStatus status);
+
 }
 
 #endif // AUTOBOT_HELPER_H

@@ -20,7 +20,7 @@ void AccountManager::RemoveAutobot(const QString& autobot_name) {
   account_dict_.remove(autobot_name);
 }
 
-const QMap<QString, std::shared_ptr<AutobotAccount>>&
+const QHash<QString, std::shared_ptr<AutobotAccount>>&
 AccountManager::GetAccountDict() {
   return account_dict_;
 }

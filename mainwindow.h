@@ -22,8 +22,8 @@ class MainWindow : public QMainWindow {
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
 private slots:
+  void UpdateAccountToView(const std::shared_ptr<AutobotAccount>& account_ptr);
   void AddAccount(const QString&, const QString&);
   void on_pushButton_add_clicked();
   void on_pushButton_delete_clicked();
@@ -32,7 +32,13 @@ private slots:
   void on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item, int column);
 
 private:
+    // Set the account to the tree view and the account manager.
+    void SetAccountToView(
+        const std::shared_ptr<AutobotAccount>& account_ptr,
+        QTreeWidgetItem *autobot_item);
+
     Ui::MainWindow *ui;
+    QHash<QString, QTreeWidgetItem> account_to_tree_item_map_;
     AutobotLoginDialog bot_log_dialog_;
     AccountManager account_manager_;
     AutobotEditWindow* autobot_edit_window_;

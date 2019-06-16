@@ -65,13 +65,16 @@
     <item row="0" column="0">
      <widget class="QTreeWidget" name="treeWidget_accounts">
       <property name="selectionMode">
-       <enum>QAbstractItemView::MultiSelection</enum>
+       <enum>QAbstractItemView::ExtendedSelection</enum>
       </property>
       <property name="autoExpandDelay">
        <number>1</number>
       </property>
       <property name="indentation">
        <number>10</number>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
       </property>
       <property name="allColumnsShowFocus">
        <bool>true</bool>

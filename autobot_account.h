@@ -5,7 +5,7 @@
 
 namespace autobot {
 enum class AccountStatus {
-  UNINITIALIZED,
+  UNINITIALIZED = 0,
   IDLE,
   WORKING,
   ERROR,
@@ -20,10 +20,11 @@ public:
   bool Logoff();
   QString GetUsername();
   QString GetPassword();
+  AccountStatus GetStatus();
 private:
   QString bot_username_;
   QString bot_password_;
-  int bot_status;
+  AccountStatus bot_status_;
 }; // AutobotAccount
 
 } // namespace
