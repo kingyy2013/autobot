@@ -3,8 +3,11 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QListWidgetItem>
+
 #include "autobot_login_dialog.h"
 #include "account_manager.h"
+#include "autobot_edit_window.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,10 +27,15 @@ private slots:
   void on_pushButton_add_clicked();
   void on_pushButton_delete_clicked();
 
+  void on_listWidget_accounts_itemDoubleClicked(QListWidgetItem *item);
+
+  void on_listWidget_accounts_itemClicked(QListWidgetItem *item);
+
 private:
     Ui::MainWindow *ui;
-    AutobotLoginDialog bot_log_dialog;
-    AccountManager account_manager;
+    AutobotLoginDialog bot_log_dialog_;
+    AccountManager account_manager_;
+    AutobotEditWindow* autobot_edit_window_;
 };
 
 } // namespace

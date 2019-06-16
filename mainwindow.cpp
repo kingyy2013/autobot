@@ -5,9 +5,10 @@ namespace autobot {
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
-  ui(new Ui::MainWindow) {
+  ui(new Ui::MainWindow),
+  autobot_edit_window_(new AutobotEditWindow(this)){
   ui->setupUi(this);
-  connect(&bot_log_dialog, SIGNAL(AddNewAccount(const QString&,
+  connect(&bot_log_dialog_, SIGNAL(AddNewAccount(const QString&,
                                                 const QString&)),
           this, SLOT(AddAccount(const QString&, const QString&)));
 }
@@ -17,7 +18,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_pushButton_add_clicked() {
-  bot_log_dialog.show();
+  bot_log_dialog_.show();
 }
 
 void MainWindow::AddAccount(const QString& account_username,
@@ -28,7 +29,7 @@ void MainWindow::AddAccount(const QString& account_username,
     messagebox.setText("无法添加，账号名不能为空！");
     messagebox.exec();
   } else {
-    if (account_manager.Find(account_username) != nullptr) {
+    if (account_manager_.Find(account_username) != nullptr) {
       messagebox.setText("无法添加，账号： " + account_username + " 已存在！");
       messagebox.exec();
     } else {
@@ -36,7 +37,7 @@ void MainWindow::AddAccount(const QString& account_username,
           = std::make_shared<AutobotAccount>(account_username,
                                              account_password);
       ui->listWidget_accounts->addItem(account_username);
-      account_manager.AddAccount(temp_account_ptr);
+      account_manager_.AddAccount(temp_account_ptr);
     }
   }
 }
@@ -59,12 +60,35 @@ void MainWindow::on_pushButton_delete_clicked() {
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
     if (messagebox.exec() == false) {
       foreach(QListWidgetItem * item, selected_items)  {
-        account_manager.RemoveAutobot(item->text());
+        account_manager_.RemoveAutobot(item->text());
         delete ui->listWidget_accounts->
             takeItem(ui->listWidget_accounts->row(item));
       }
     }
   }
 }
+void MainWindow::on_listWidget_accounts_itemClicked(QListWidgetItem *item) {
+  if (autobot_edit_window_->isVisible()) {
+    on_listWidget_accounts_itemDoubleClicked(item);
+  }
+}
+
+void MainWindow::on_listWidget_accounts_itemDoubleClicked(
+    QListWidgetItem *item) {
+  QString account_username = item->text();
+  std::shared_ptr <AutobotAccount> bot_account_ptr
+      = account_manager_.Find(account_username);
+  if (bot_account_ptr == nullptr) {
+    qFatal(("account name " + account_username + " is not in the manager")
+           .toStdString().data());
+  } else {
+
+    autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
+    autobot_edit_window_->show();
+  }
+}
 
 } //namespace
+
+
+

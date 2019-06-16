@@ -18,12 +18,11 @@ QString AutobotLoginDialog::GetUsername() const {
 }
 
 QString AutobotLoginDialog::GetPassword() const {
-  return ui->lineEdit_username->text();
+  return ui->lineEdit_password->text();
 }
 
 void AutobotLoginDialog::on_pushButton_add_clicked() {
-  emit AddNewAccount(ui->lineEdit_username->text(),
-                     ui->lineEdit_username->text());
+  emit AddNewAccount(GetUsername(), GetPassword());
   close();
 }
 
