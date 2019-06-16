@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QListWidgetItem>
+#include <QTreeWidgetItem>
 
 #include "autobot_login_dialog.h"
 #include "account_manager.h"
@@ -26,10 +27,9 @@ private slots:
   void AddAccount(const QString&, const QString&);
   void on_pushButton_add_clicked();
   void on_pushButton_delete_clicked();
-
-  void on_listWidget_accounts_itemDoubleClicked(QListWidgetItem *item);
-
-  void on_listWidget_accounts_itemClicked(QListWidgetItem *item);
+  void on_treeWidget_accounts_itemDoubleClicked(QTreeWidgetItem *item,
+                                                int column);
+  void on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item, int column);
 
 private:
     Ui::MainWindow *ui;
