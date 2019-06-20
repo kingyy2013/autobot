@@ -32,31 +32,31 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="1" column="0">
      <layout class="QGridLayout" name="gridLayout">
+      <item row="2" column="0">
+       <widget class="QPushButton" name="pushButton_saveall">
+        <property name="text">
+         <string>储存</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QPushButton" name="pushButton_delete">
         <property name="text">
-         <string>Delete Account</string>
+         <string>删除机器人账号</string>
         </property>
        </widget>
       </item>
       <item row="0" column="0">
        <widget class="QPushButton" name="pushButton_add">
         <property name="text">
-         <string>Add New Account</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="pushButton_saveall">
-        <property name="text">
-         <string>Save All Accounts</string>
+         <string>添加机器人账号</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0">
        <widget class="QPushButton" name="pushButton_loadall">
         <property name="text">
-         <string>Load All Accounts</string>
+         <string>读取</string>
         </property>
        </widget>
       </item>

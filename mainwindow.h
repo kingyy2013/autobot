@@ -31,15 +31,20 @@ private slots:
                                                 int column);
   void on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item, int column);
 
+  void on_pushButton_saveall_clicked();
+
+  void on_pushButton_loadall_clicked();
+
 private:
     // Set the account to the tree view and the account manager.
     void SetAccountToView(
         const std::shared_ptr<AutobotAccount>& account_ptr,
         QTreeWidgetItem *autobot_item);
-
     Ui::MainWindow *ui;
     AutobotLoginDialog* bot_log_dialog_;
     AutobotEditWindow* autobot_edit_window_;
+    QString last_directory_;
+
     QHash<QString, QTreeWidgetItem> account_to_tree_item_map_;
     AutobotManager account_manager_;
 };

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "autobot_helper.h"
 #include <QDebug>
+#include <QFileDialog>
 
 namespace autobot {
 
@@ -9,7 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow),
   bot_log_dialog_(new AutobotLoginDialog()),
-  autobot_edit_window_(new AutobotEditWindow(this)) {
+  autobot_edit_window_(new AutobotEditWindow(this)),
+  last_directory_(QDir::currentPath()) {
   ui->setupUi(this);
   ui->treeWidget_accounts->setColumnWidth(0, 300);
   connect(bot_log_dialog_, SIGNAL(AddNewAccount(const QString&,
@@ -119,5 +121,34 @@ void MainWindow::on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item,
   }
 }
 
+void MainWindow::on_pushButton_saveall_clicked() {
+  QString filename =
+      QFileDialog::getSaveFileName(
+        this,
+        "Save Document",
+        last_directory_,
+        "Document files (*.yys);;All files (*.*)");
+  if (!filename.isEmpty()) {
+    QFileInfo file_info(filename);
+    last_directory_ = file_info.absoluteDir().absolutePath();
+  }
+}
+
+void MainWindow::on_pushButton_loadall_clicked() {
+  QString filename =
+      QFileDialog::getOpenFileName(
+        this,
+        "Open Document",
+        last_directory_,
+        "Document files (*.yys);;All files (*.*)");
+  if (!filename.isEmpty()) {
+    QFileInfo file_info(filename);
+    last_directory_ = file_info.absoluteDir().absolutePath();
+  }
+}
+
 } //namespace
+
+
+
 
