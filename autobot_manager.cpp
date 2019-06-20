@@ -1,7 +1,7 @@
-#include "account_manager.h"
+#include "autobot_manager.h"
 
 namespace autobot {
-std::shared_ptr<AutobotAccount> AccountManager::Find(
+std::shared_ptr<AutobotAccount> AutobotManager::Find(
     const QString& autobot_name) const {
   auto account_dict_itr = account_dict_.find(autobot_name);
   if (account_dict_itr == account_dict_.end()) {
@@ -11,17 +11,17 @@ std::shared_ptr<AutobotAccount> AccountManager::Find(
   }
 }
 
-void AccountManager::AddAccount(
+void AutobotManager::AddAccount(
     const std::shared_ptr<AutobotAccount>& autobot_account) {
   account_dict_[autobot_account->GetUsername()] = autobot_account;
 }
 
-void AccountManager::RemoveAutobot(const QString& autobot_name) {
+void AutobotManager::RemoveAutobot(const QString& autobot_name) {
   account_dict_.remove(autobot_name);
 }
 
 const QHash<QString, std::shared_ptr<AutobotAccount>>&
-AccountManager::GetAccountDict() {
+AutobotManager::GetAccountDict() {
   return account_dict_;
 }
 

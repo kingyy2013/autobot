@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>595</width>
-    <height>334</height>
+    <width>491</width>
+    <height>279</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -171,7 +171,11 @@
        </widget>
       </item>
       <item row="0" column="1" colspan="2">
-       <widget class="QLineEdit" name="lineEdit_username"/>
+       <widget class="QLineEdit" name="lineEdit_username">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_account">
@@ -253,7 +257,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>595</width>
+     <width>491</width>
      <height>21</height>
     </rect>
    </property>

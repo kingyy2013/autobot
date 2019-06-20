@@ -20,6 +20,9 @@ public:
   bool Logoff();
   QString GetUsername();
   QString GetPassword();
+  void SetUsername(const QString&);
+  void SetPassword(const QString&);
+
   AccountStatus GetStatus();
 private:
   QString bot_username_;

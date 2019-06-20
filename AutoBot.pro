@@ -31,20 +31,25 @@ SOURCES += \
     autobot_edit_window.cpp \
     autobot_login_dialog.cpp \
     autobot_helper.cpp \
-    account_manager.cpp
+    target_room_dialog.cpp \
+    autobot_manager.cpp \
+    target_room.cpp
 
 HEADERS += \
         mainwindow.h \
-    account_manager.h \
     autobot_account.h \
     autobot_helper.h \
     autobot_login_dialog.h \
-    autobot_edit_window.h
+    autobot_edit_window.h \
+    target_room_dialog.h \
+    autobot_manager.h \
+    target_room.h
 
 FORMS += \
         mainwindow.ui \
     autobot_edit_window_form.ui \
-    autobot_login_dialog_form.ui
+    autobot_login_dialog_form.ui \
+    target_room_dialog_form.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

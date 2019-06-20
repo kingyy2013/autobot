@@ -24,4 +24,15 @@ void AutobotEditWindow::UpdateUI() {
   ui->lineEdit_username->setText(autobot_account_ptr_->GetUsername());
 }
 
+void AutobotEditWindow::on_pushButton_update_account_clicked() {
+  autobot_account_ptr_->SetUsername(ui->lineEdit_username->text());
+  autobot_account_ptr_->SetPassword(ui->lineEdit_password->text());
 }
+
+
+void AutobotEditWindow::on_pushButton_add_target_clicked() {
+
+}
+
+}
+

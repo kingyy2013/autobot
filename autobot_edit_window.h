@@ -20,6 +20,11 @@ public:
   void CombineAutobotAccount(const std::shared_ptr<AutobotAccount>& account);
   ~AutobotEditWindow();
   void UpdateUI();
+private slots:
+  void on_pushButton_update_account_clicked();
+
+  void on_pushButton_add_target_clicked();
+
 private:
   Ui::AutobotEditWindow *ui;
   std::shared_ptr<AutobotAccount> autobot_account_ptr_;

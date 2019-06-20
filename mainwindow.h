@@ -7,7 +7,7 @@
 #include <QTreeWidgetItem>
 
 #include "autobot_login_dialog.h"
-#include "account_manager.h"
+#include "autobot_manager.h"
 #include "autobot_edit_window.h"
 
 namespace Ui {
@@ -40,7 +40,7 @@ private:
     Ui::MainWindow *ui;
     QHash<QString, QTreeWidgetItem> account_to_tree_item_map_;
     AutobotLoginDialog bot_log_dialog_;
-    AccountManager account_manager_;
+    AutobotManager account_manager_;
     AutobotEditWindow* autobot_edit_window_;
 };
 

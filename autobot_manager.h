@@ -9,9 +9,9 @@
 
 namespace autobot {
 
-class AccountManager {
+class AutobotManager {
 public:
-  AccountManager() = default;
+  AutobotManager() = default;
   /// @brief Added new autobot account to the manager.
   /// @param autobot_account. Autobot account that is being added.
   void AddAccount(const std::shared_ptr<AutobotAccount>& autobot_account);

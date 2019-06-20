@@ -22,4 +22,12 @@ AccountStatus AutobotAccount::GetStatus() {
   return bot_status_;
 }
 
+void AutobotAccount::SetUsername(const QString& username) {
+  bot_username_ = username;
+}
+
+void AutobotAccount::SetPassword(const QString& password) {
+  bot_password_ = password;
+}
+
 }
