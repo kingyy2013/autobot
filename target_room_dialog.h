@@ -17,6 +17,14 @@ public:
   explicit TargetRoomDialog(QWidget *parent = nullptr);
   ~TargetRoomDialog();
 
+signals:
+  void AddNewRoom(const QString&);
+
+private slots:
+  void on_pushButton_add_clicked();
+
+  void on_pushButton_cancel_clicked();
+
 private:
   Ui::TargetRoomDialog *ui;
 };

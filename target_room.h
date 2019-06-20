@@ -7,7 +7,7 @@ namespace autobot {
 class TargetRoom {
 public:
   TargetRoom(const QString& room_number);
-
+  const QString& GetRoomNumber();
 private:
   QString room_number_;
 };

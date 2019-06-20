@@ -38,10 +38,10 @@ private:
         QTreeWidgetItem *autobot_item);
 
     Ui::MainWindow *ui;
-    QHash<QString, QTreeWidgetItem> account_to_tree_item_map_;
-    AutobotLoginDialog bot_log_dialog_;
-    AutobotManager account_manager_;
+    AutobotLoginDialog* bot_log_dialog_;
     AutobotEditWindow* autobot_edit_window_;
+    QHash<QString, QTreeWidgetItem> account_to_tree_item_map_;
+    AutobotManager account_manager_;
 };
 
 } // namespace

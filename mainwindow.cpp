@@ -8,20 +8,22 @@ namespace autobot {
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow),
-  autobot_edit_window_(new AutobotEditWindow(this)){
+  bot_log_dialog_(new AutobotLoginDialog()),
+  autobot_edit_window_(new AutobotEditWindow(this)) {
   ui->setupUi(this);
   ui->treeWidget_accounts->setColumnWidth(0, 300);
-  connect(&bot_log_dialog_, SIGNAL(AddNewAccount(const QString&,
+  connect(bot_log_dialog_, SIGNAL(AddNewAccount(const QString&,
                                                 const QString&)),
           this, SLOT(AddAccount(const QString&, const QString&)));
 }
 
 MainWindow::~MainWindow() {
+  delete bot_log_dialog_;
   delete ui;
 }
 
 void MainWindow::on_pushButton_add_clicked() {
-  bot_log_dialog_.show();
+  bot_log_dialog_->show();
 }
 
 void MainWindow::UpdateAccountToView(
@@ -29,7 +31,6 @@ void MainWindow::UpdateAccountToView(
   SetAccountToView(account_ptr,
                    ui->treeWidget_accounts->currentItem());
 }
-
 
 void MainWindow::SetAccountToView(
     const std::shared_ptr<AutobotAccount>& account_ptr,
