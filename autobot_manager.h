@@ -9,6 +9,8 @@
 
 namespace autobot {
 
+typedef QHash<QString, std::shared_ptr<AutobotAccount>> AutobotAccountMap;
+
 class AutobotManager {
 public:
   AutobotManager() = default;
@@ -18,7 +20,7 @@ public:
   /// @brief Find the AutobotAccount instance.
   std::shared_ptr<AutobotAccount> Find(const QString& autobot_name) const;
   void RemoveAutobot(const QString& autobot_name);
-  const QHash<QString, std::shared_ptr<AutobotAccount>>& GetAccountDict();
+  const AutobotAccountMap& GetAccountDict() const;
 private:
   QHash<QString, std::shared_ptr<AutobotAccount>> account_dict_;
   QThreadPool thread_pool_;

@@ -10,19 +10,19 @@ AutobotAccount::AutobotAccount(const QString& username,
 }
 
 
-QString AutobotAccount::GetUsername() {
+const QString& AutobotAccount::GetUsername() const {
   return bot_username_;
 }
 
-QString AutobotAccount::GetPassword() {
+const QString& AutobotAccount::GetPassword() const {
   return bot_password_;
 }
 
-AccountStatus AutobotAccount::GetStatus() {
+const AccountStatus& AutobotAccount::GetStatus() const {
   return bot_status_;
 }
 
-const TargtRoomMap& AutobotAccount::GetTargetRoomMap() {
+const TargtRoomMap& AutobotAccount::GetTargetRoomMap() const {
   return assigned_target_rooms_;
 }
 

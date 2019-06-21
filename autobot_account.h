@@ -21,20 +21,23 @@ typedef QHash<QString, std::shared_ptr<TargetRoom>> TargtRoomMap;
 class AutobotAccount {
 public:
   AutobotAccount(const QString& username, const QString& password);
+  // Work related.
   bool Login();
   bool Speak();
   bool Logoff();
-  QString GetUsername();
-  QString GetPassword();
+
+  // Read related.
+  const QString& GetUsername() const;
+  const QString& GetPassword() const;
+  const TargtRoomMap& GetTargetRoomMap() const;
+
+  // Write related.
   void SetUsername(const QString&);
   void SetPassword(const QString&);
-
   void AssignTargetRoom(const std::shared_ptr<TargetRoom>& target_room);
   void RemoveTargetRoom(const QString& target_room);
-  const TargtRoomMap& GetTargetRoomMap();
 
-
-  AccountStatus GetStatus();
+  const AccountStatus& GetStatus() const;
 private:
   QString bot_username_;
   QString bot_password_;

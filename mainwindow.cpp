@@ -132,6 +132,21 @@ void MainWindow::on_pushButton_saveall_clicked() {
     QFileInfo file_info(filename);
     last_directory_ = file_info.absoluteDir().absolutePath();
   }
+
+
+  // Writing to a file
+  QFile file(filename);
+  if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    qDebug() << "Open the file for writing failed";
+  } else {
+    QDomDocument document;
+    QDomElement root = ConvertAutobotManagerToXML(account_manager_, &document);
+    document.appendChild(root);
+    QTextStream stream(&file);
+    stream << document.toString();
+    file.close();
+    qDebug() << "Writing is done: " << document.toString();
+  }
 }
 
 void MainWindow::on_pushButton_loadall_clicked() {

@@ -5,7 +5,7 @@ TargetRoom::TargetRoom(const QString& room_number) : room_number_(room_number) {
 
 }
 
-const QString& TargetRoom::GetRoomNumber() {
+const QString& TargetRoom::GetRoomNumber() const {
   return room_number_;
 }
 
