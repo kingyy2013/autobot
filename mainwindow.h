@@ -23,7 +23,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 private slots:
-  void UpdateAccountToView(const std::shared_ptr<AutobotAccount>& account_ptr);
+  void UpdateAccountToCurrentView(const std::shared_ptr<AutobotAccount>& account_ptr);
+  void UpdateManagerToView();
+
   void AddAccount(const QString&, const QString&);
   void on_pushButton_add_clicked();
   void on_pushButton_delete_clicked();

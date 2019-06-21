@@ -56,8 +56,10 @@ QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
 bool ParseXMLToTargetRoom(const QDomElement& dom_element,
                           TargetRoom* target_room) {
   if (!dom_element.hasAttribute("Room")) {
+    qDebug() << "Failed to parse Room num";
     return false;
   }
+  qDebug() << "asdfasdf";
   target_room->SetRoomNumber(dom_element.attribute("Room"));
   return true;
 }
@@ -66,6 +68,7 @@ bool ParseXMLToTargetAccount(const QDomElement& dom_element,
                              AutobotAccount* autobot_account) {
   if (!dom_element.hasAttribute("Username") ||
       !dom_element.hasAttribute("Password")) {
+    qDebug() << "Failed to parse Username and Password";
     return false;
   }
   const QString& username = dom_element.attribute("Username");

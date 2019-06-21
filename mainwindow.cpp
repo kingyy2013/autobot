@@ -28,7 +28,7 @@ void MainWindow::on_pushButton_add_clicked() {
   bot_log_dialog_->show();
 }
 
-void MainWindow::UpdateAccountToView(
+void MainWindow::UpdateAccountToCurrentView(
     const std::shared_ptr<AutobotAccount>& account_ptr) {
   SetAccountToView(account_ptr,
                    ui->treeWidget_accounts->currentItem());
@@ -70,6 +70,15 @@ void MainWindow::AddAccount(const QString& account_username,
   }
 }
 
+void MainWindow::UpdateManagerToView() {
+  for (const auto& autobot_account :
+       account_manager_.GetAccountDict()) {
+    QTreeWidgetItem *autobot_item
+        = new QTreeWidgetItem(ui->treeWidget_accounts);
+    SetAccountToView(autobot_account, autobot_item);
+    ui->treeWidget_accounts->addTopLevelItem(autobot_item);
+  }
+}
 
 void MainWindow::on_pushButton_delete_clicked() {
   QList<QTreeWidgetItem*> selected_items
@@ -179,10 +188,12 @@ void MainWindow::on_pushButton_loadall_clicked() {
   // Getting root element
   QDomElement root = document.firstChildElement();
   qDebug() << "Read file saved on: " << root.attributeNode("DateTime").value();
-  if (ParseXMLToAutobotManager(root,
+  if (!ParseXMLToAutobotManager(root,
                                &account_manager_)) {
     qDebug() << "Failed to parse file.";
   }
+
+  UpdateManagerToView();
 }
 
 } //namespace
