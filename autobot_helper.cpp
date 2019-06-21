@@ -59,7 +59,6 @@ bool ParseXMLToTargetRoom(const QDomElement& dom_element,
     qDebug() << "Failed to parse Room num";
     return false;
   }
-  qDebug() << "asdfasdf";
   target_room->SetRoomNumber(dom_element.attribute("Room"));
   return true;
 }
@@ -86,6 +85,7 @@ bool ParseXMLToTargetAccount(const QDomElement& dom_element,
 
         success &= ParseXMLToTargetRoom(target_dorms.at(j).toElement(),
                                         target_room_ptr.get());
+        autobot_account->AssignTargetRoom(target_room_ptr);
       }
     }
   }
