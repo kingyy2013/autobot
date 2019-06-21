@@ -70,6 +70,7 @@ void MainWindow::AddAccount(const QString& account_username,
   }
 }
 
+
 void MainWindow::on_pushButton_delete_clicked() {
   QList<QTreeWidgetItem*> selected_items
       = ui->treeWidget_accounts->selectedItems();
@@ -133,7 +134,6 @@ void MainWindow::on_pushButton_saveall_clicked() {
     last_directory_ = file_info.absoluteDir().absolutePath();
   }
 
-
   // Writing to a file
   QFile file(filename);
   if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -159,6 +159,29 @@ void MainWindow::on_pushButton_loadall_clicked() {
   if (!filename.isEmpty()) {
     QFileInfo file_info(filename);
     last_directory_ = file_info.absoluteDir().absolutePath();
+  }
+
+  // Create a document to write XML
+  QDomDocument document;
+
+  // Open a file for reading
+  QFile file(filename);
+  if(!file.open(QIODevice::ReadOnly | QIODevice::Text))  {
+    qDebug() << "Failed to open the file for reading.";
+  } else {
+    // loading
+    if(!document.setContent(&file, true)) {
+      qDebug() << "Failed to load the file for reading.";
+    }
+    file.close();
+  }
+
+  // Getting root element
+  QDomElement root = document.firstChildElement();
+  qDebug() << "Read file saved on: " << root.attributeNode("DateTime").value();
+  if (ParseXMLToAutobotManager(root,
+                               &account_manager_)) {
+    qDebug() << "Failed to parse file.";
   }
 }
 

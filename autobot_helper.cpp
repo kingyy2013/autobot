@@ -27,7 +27,7 @@ QDomElement ConvertTargetRoomToXML(const TargetRoom& target_room,
 QDomElement ConvertTargetAccountToXML(const AutobotAccount& autobot_account,
                                        QDomDocument* parent_doc) {
   QDomElement dom_account = parent_doc->createElement("AutoBot");
-  dom_account.setAttribute("Userame", autobot_account.GetUsername());
+  dom_account.setAttribute("Username", autobot_account.GetUsername());
   dom_account.setAttribute("Password", autobot_account.GetPassword());
   QDomElement dom_targets = parent_doc->createElement("TagetRooms");
   for (const auto& target_room : autobot_account.GetTargetRoomMap()) {
@@ -41,7 +41,7 @@ QDomElement ConvertTargetAccountToXML(const AutobotAccount& autobot_account,
 
 QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
                                        QDomDocument* parent_doc) {
-  QDomElement dom_account = parent_doc->createElement("Autobot Accounts");
+  QDomElement dom_account = parent_doc->createElement("AutobotAccounts");
   dom_account.setAttribute("DateTime",
                            QDateTime::currentDateTime()
                            .toString("yyyy.MM.dd:hh:mm:ss"));
@@ -52,5 +52,58 @@ QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
   }
   return dom_account;
 }
+
+bool ParseXMLToTargetRoom(const QDomElement& dom_element,
+                          TargetRoom* target_room) {
+  if (!dom_element.hasAttribute("Room")) {
+    return false;
+  }
+  target_room->SetRoomNumber(dom_element.attribute("Room"));
+  return true;
+}
+
+bool ParseXMLToTargetAccount(const QDomElement& dom_element,
+                             AutobotAccount* autobot_account) {
+  if (!dom_element.hasAttribute("Username") ||
+      !dom_element.hasAttribute("Password")) {
+    return false;
+  }
+  const QString& username = dom_element.attribute("Username");
+  const QString& password = dom_element.attribute("Password");
+  autobot_account->SetUsername(username);
+  autobot_account->SetPassword(password);
+  bool success = true;
+  QDomNodeList child_dorms = dom_element.childNodes();
+  for (int i = 0; i < child_dorms.size(); ++i) {
+    QDomElement child_ele = child_dorms.at(i).toElement();
+    if (child_ele.tagName() == "TagetRooms") {
+      QDomNodeList target_dorms = child_ele.childNodes();
+      for (int j = 0; j < target_dorms.size(); ++j) {
+        auto target_room_ptr = std::make_shared<TargetRoom>();
+
+        success &= ParseXMLToTargetRoom(target_dorms.at(j).toElement(),
+                                        target_room_ptr.get());
+      }
+    }
+  }
+  return success;
+}
+
+bool ParseXMLToAutobotManager(const QDomElement& dom_element,
+                              AutobotManager* account_manager) {
+  QDomNodeList child_dorms = dom_element.childNodes();
+  bool success = true;
+  for (int i = 0; i < child_dorms.size(); ++i) {
+    QDomElement child_ele = child_dorms.at(i).toElement();
+    if (child_ele.tagName() == "AutoBot") {
+      auto autobot_ptr = std::make_shared<AutobotAccount>();
+      success &= ParseXMLToTargetAccount(child_ele,
+                                         autobot_ptr.get());
+      account_manager->AddAccount(autobot_ptr);
+    }
+  }
+  return success;
+}
+
 
 }

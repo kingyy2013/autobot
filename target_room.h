@@ -6,7 +6,9 @@
 namespace autobot {
 class TargetRoom {
 public:
+  TargetRoom() = default;
   TargetRoom(const QString& room_number);
+  void SetRoomNumber(const QString& room_number);
   const QString& GetRoomNumber() const;
 private:
   QString room_number_;

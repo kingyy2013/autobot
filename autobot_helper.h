@@ -20,6 +20,13 @@ QDomElement ConvertTargetAccountToXML(const AutobotAccount& autobot_account,
 QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
                                        QDomDocument* parent_doc);
 
+bool ParseXMLToTargetRoom(const QDomElement& dom_element,
+                          TargetRoom* target_room);
+bool ParseXMLToTargetAccount(const QDomElement& dom_element,
+                             AutobotAccount* autobot_account);
+bool ParseXMLToAutobotManager(const QDomElement& dom_element,
+                              AutobotManager* account_manager);
+
 }
 
 #endif // AUTOBOT_HELPER_H

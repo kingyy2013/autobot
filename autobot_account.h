@@ -20,6 +20,7 @@ typedef QHash<QString, std::shared_ptr<TargetRoom>> TargtRoomMap;
 // The container for the bot accounts.
 class AutobotAccount {
 public:
+  AutobotAccount() = default;
   AutobotAccount(const QString& username, const QString& password);
   // Work related.
   bool Login();
