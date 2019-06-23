@@ -49,7 +49,6 @@ private:
     QString last_directory_;
 
     QHash<QString, QTreeWidgetItem> account_to_tree_item_map_;
-    AutobotManager account_manager_;
 };
 
 } // namespace

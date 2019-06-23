@@ -21,6 +21,7 @@ public:
   std::shared_ptr<AutobotAccount> Find(const QString& autobot_name) const;
   void RemoveAutobot(const QString& autobot_name);
   const AutobotAccountMap& GetAccountDict() const;
+  static AutobotManager& GetInstance();
 private:
   QHash<QString, std::shared_ptr<AutobotAccount>> account_dict_;
   QThreadPool thread_pool_;

@@ -54,7 +54,7 @@ void MainWindow::AddAccount(const QString& account_username,
     messagebox.setText("无法添加，账号名不能为空！");
     messagebox.exec();
   } else {
-    if (account_manager_.Find(account_username) != nullptr) {
+    if (AutobotManager::GetInstance().Find(account_username) != nullptr) {
       messagebox.setText("无法添加，账号： " + account_username + " 已存在！");
       messagebox.exec();
     } else {
@@ -65,14 +65,14 @@ void MainWindow::AddAccount(const QString& account_username,
           = new QTreeWidgetItem(ui->treeWidget_accounts);
       SetAccountToView(temp_account_ptr, autobot_item);
       ui->treeWidget_accounts->addTopLevelItem(autobot_item);
-      account_manager_.AddAccount(temp_account_ptr);
+      AutobotManager::GetInstance().AddAccount(temp_account_ptr);
     }
   }
 }
 
 void MainWindow::UpdateManagerToView() {
   for (const auto& autobot_account :
-       account_manager_.GetAccountDict()) {
+       AutobotManager::GetInstance().GetAccountDict()) {
     QTreeWidgetItem *autobot_item
         = new QTreeWidgetItem(ui->treeWidget_accounts);
     SetAccountToView(autobot_account, autobot_item);
@@ -97,7 +97,7 @@ void MainWindow::on_pushButton_delete_clicked() {
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
     if (messagebox.exec() == false) {
       foreach(QTreeWidgetItem * item, selected_items)  {
-        account_manager_.RemoveAutobot(item->text(0));
+        AutobotManager::GetInstance().RemoveAutobot(item->text(0));
         delete item;
       }
     }
@@ -108,7 +108,7 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
     QTreeWidgetItem *item, int) {
   QString account_username = item->text(0);
   std::shared_ptr <AutobotAccount> bot_account_ptr
-      = account_manager_.Find(account_username);
+      = AutobotManager::GetInstance().Find(account_username);
   if (bot_account_ptr == nullptr) {
     qFatal(("account name " + account_username + " is not in the manager")
            .toStdString().data());
@@ -151,7 +151,8 @@ void MainWindow::on_pushButton_saveall_clicked() {
     messagebox.exec();
   } else {
     QDomDocument document;
-    QDomElement root = ConvertAutobotManagerToXML(account_manager_, &document);
+    QDomElement root = ConvertAutobotManagerToXML(
+          AutobotManager::GetInstance(), &document);
     document.appendChild(root);
     QTextStream stream(&file);
     stream << document.toString();
@@ -193,7 +194,7 @@ void MainWindow::on_pushButton_loadall_clicked() {
   // Getting root element
   QDomElement root = document.firstChildElement();
   if (!ParseXMLToAutobotManager(root,
-                               &account_manager_)) {
+                               &AutobotManager::GetInstance())) {
     QMessageBox messagebox(this);
     messagebox.setText("无法解读文件格式");
     messagebox.exec();

@@ -1,4 +1,5 @@
 #include "autobot_manager.h"
+#include <memory>
 
 namespace autobot {
 std::shared_ptr<AutobotAccount> AutobotManager::Find(
@@ -10,6 +11,12 @@ std::shared_ptr<AutobotAccount> AutobotManager::Find(
     return account_dict_itr.value();
   }
 }
+
+AutobotManager& AutobotManager::GetInstance() {
+  static AutobotManager autobot_manager_singleton;
+  return autobot_manager_singleton;
+}
+
 
 void AutobotManager::AddAccount(
     const std::shared_ptr<AutobotAccount>& autobot_account) {
