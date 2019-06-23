@@ -33,7 +33,8 @@ SOURCES += \
     autobot_helper.cpp \
     target_room_dialog.cpp \
     autobot_manager.cpp \
-    target_room.cpp
+    target_room.cpp \
+    target_speech.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,7 +44,9 @@ HEADERS += \
     autobot_edit_window.h \
     target_room_dialog.h \
     autobot_manager.h \
-    target_room.h
+    target_room.h \
+    target_speech.h \
+    target_speech_set.h
 
 FORMS += \
         mainwindow.ui \

@@ -31,6 +31,8 @@ private slots:
 
   void on_pushButton_remove_target_clicked();
 
+  void on_pushButton_set_speech_clicked();
+
 private:
   Ui::AutobotEditWindow *ui;
   TargetRoomDialog* target_room_dialog_;

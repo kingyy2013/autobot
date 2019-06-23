@@ -42,6 +42,7 @@ private:
     void SetAccountToView(
         const std::shared_ptr<AutobotAccount>& account_ptr,
         QTreeWidgetItem *autobot_item);
+
     Ui::MainWindow *ui;
     AutobotLoginDialog* bot_log_dialog_;
     AutobotEditWindow* autobot_edit_window_;

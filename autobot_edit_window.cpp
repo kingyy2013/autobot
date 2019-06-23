@@ -95,6 +95,11 @@ void AutobotEditWindow::on_pushButton_add_target_clicked() {
   target_room_dialog_->show();
 }
 
+
+void AutobotEditWindow::on_pushButton_set_speech_clicked() {
+
 }
+}
+
 
 
