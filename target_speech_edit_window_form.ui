@@ -29,7 +29,7 @@
      </widget>
     </item>
     <item row="0" column="0" colspan="2">
-     <widget class="QListWidget" name="listWidget">
+     <widget class="QListWidget" name="listWidget_speech_names">
       <property name="maximumSize">
        <size>
         <width>234</width>
@@ -39,7 +39,7 @@
      </widget>
     </item>
     <item row="0" column="2" colspan="2">
-     <widget class="QTextEdit" name="textEdit">
+     <widget class="QTextEdit" name="textEdit_speech_words">
       <property name="lineWrapMode">
        <enum>QTextEdit::NoWrap</enum>
       </property>

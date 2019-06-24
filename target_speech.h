@@ -18,9 +18,13 @@ public:
   void RewindWord(bool is_random = true);
   const QString& GetNextWord(bool is_random = true);
   void ClearAllWords();
+  const QStringList& GetWordsList() const;
+  void SetWordsList(const QStringList& word_list);
+
+  QStringList& GetWordsListMutable();
 
 private:
-  QStringList words_set_;
+  QStringList words_list_;
   QString speech_name_;
   QStringList::Iterator cur_word_index_;
 };

@@ -30,7 +30,7 @@ public:
   // Read related.
   const QString& GetUsername() const;
   const QString& GetPassword() const;
-  const QString& GetSpeechName() const;
+  const QString& GetAssignedSpeechName() const;
   const TargtRoomMap& GetTargetRoomMap() const;
 
   // Write related.
