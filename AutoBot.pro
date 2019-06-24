@@ -34,7 +34,9 @@ SOURCES += \
     target_room_dialog.cpp \
     autobot_manager.cpp \
     target_room.cpp \
-    target_speech.cpp
+    target_speech.cpp \
+    target_speech_edit_window.cpp \
+    target_speech_set.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -46,13 +48,16 @@ HEADERS += \
     autobot_manager.h \
     target_room.h \
     target_speech.h \
-    target_speech_set.h
+    target_speech_set.h \
+    target_speech_edit_window.h
 
 FORMS += \
         mainwindow.ui \
     autobot_edit_window_form.ui \
     autobot_login_dialog_form.ui \
-    target_room_dialog_form.ui
+    target_room_dialog_form.ui \
+    target_speech_edit_window_form.ui \
+    target_speech_dialog_form.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

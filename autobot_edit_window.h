@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "autobot_account.h"
 #include "target_room_dialog.h"
+#include "target_speech_edit_window.h"
+
 #include <memory>
 
 namespace Ui {
@@ -36,6 +38,7 @@ private slots:
 private:
   Ui::AutobotEditWindow *ui;
   TargetRoomDialog* target_room_dialog_;
+  TargetSpeechEditWindow* target_speech_edit_window_;
   std::shared_ptr<AutobotAccount> autobot_account_ptr_;
 };
 

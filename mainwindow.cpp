@@ -24,7 +24,7 @@ MainWindow::~MainWindow() {
   delete ui;
 }
 
-void MainWindow::on_pushButton_add_clicked() {
+void MainWindow::on_pushButton_account_add_clicked() {
   bot_log_dialog_->show();
 }
 
@@ -80,7 +80,7 @@ void MainWindow::UpdateManagerToView() {
   }
 }
 
-void MainWindow::on_pushButton_delete_clicked() {
+void MainWindow::on_pushButton_account_delete_clicked() {
   QList<QTreeWidgetItem*> selected_items
       = ui->treeWidget_accounts->selectedItems();
   if (selected_items.empty() == false) {

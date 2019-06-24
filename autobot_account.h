@@ -30,6 +30,7 @@ public:
   // Read related.
   const QString& GetUsername() const;
   const QString& GetPassword() const;
+  const QString& GetSpeechName() const;
   const TargtRoomMap& GetTargetRoomMap() const;
 
   // Write related.
@@ -42,6 +43,7 @@ public:
 private:
   QString bot_username_;
   QString bot_password_;
+  QString speech_name_;
   QHash<QString, std::shared_ptr<TargetRoom>> assigned_target_rooms_;
   AccountStatus bot_status_;
 }; // AutobotAccount

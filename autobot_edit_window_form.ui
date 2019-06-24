@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>491</width>
-    <height>279</height>
+    <width>500</width>
+    <height>280</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,6 +28,13 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="1" colspan="3">
+     <widget class="Line" name="line_basic_info">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_speech">
       <property name="sizePolicy">
@@ -37,35 +44,25 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>语言集</string>
+       <string>当前语言集</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_speech_freq">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
+    <item row="3" column="0" colspan="2">
+     <widget class="QPushButton" name="pushButton_set_speech">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="text">
-       <string>语言频率</string>
+       <string>设置语言集</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="1" colspan="3">
-     <widget class="Line" name="line_speech">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1" colspan="3">
-     <widget class="Line" name="line_basic_info">
+    <item row="4" column="1" colspan="3">
+     <widget class="Line" name="line">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -196,39 +193,6 @@
       </item>
      </layout>
     </item>
-    <item row="4" column="1" colspan="3">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="2" colspan="2">
-     <widget class="QPushButton" name="pushButton_set_speech_2">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>编辑语言集</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0" colspan="2">
-     <widget class="QPushButton" name="pushButton_set_speech">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>设置语言集</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="4" rowspan="7">
      <layout class="QGridLayout" name="gridLayout_field_info">
       <item row="1" column="0">
@@ -267,6 +231,42 @@
       </item>
      </layout>
     </item>
+    <item row="2" column="1" colspan="3">
+     <widget class="Line" name="line_speech">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_speech_freq">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>语言频率</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2" colspan="2">
+     <widget class="QPushButton" name="pushButton_set_speech_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>编辑语言集</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -274,7 +274,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>491</width>
+     <width>500</width>
      <height>21</height>
     </rect>
    </property>

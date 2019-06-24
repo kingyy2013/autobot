@@ -27,8 +27,8 @@ private slots:
   void UpdateManagerToView();
 
   void AddAccount(const QString&, const QString&);
-  void on_pushButton_add_clicked();
-  void on_pushButton_delete_clicked();
+  void on_pushButton_account_add_clicked();
+  void on_pushButton_account_delete_clicked();
   void on_treeWidget_accounts_itemDoubleClicked(QTreeWidgetItem *item,
                                                 int column);
   void on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item, int column);
