@@ -104,6 +104,15 @@ void MainWindow::on_pushButton_account_delete_clicked() {
   }
 }
 
+void MainWindow::SetSelectedAcountToManager() {
+  QList<QTreeWidgetItem*> selected_items
+      = ui->treeWidget_accounts->selectedItems();
+  for (auto item : selected_items) {
+    AutobotManager::GetInstance().SetSelectedAcountNames(
+          QStringList(item->text(0)));
+  }
+}
+
 void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
     QTreeWidgetItem *item, int) {
   QString account_username = item->text(0);
@@ -117,6 +126,7 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
     autobot_edit_window_->move(this->pos().x() + this->width(),
                                this->pos().y());
     autobot_edit_window_->show();
+    SetSelectedAcountToManager();
   }
 }
 
@@ -128,6 +138,7 @@ void MainWindow::on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item,
     if (autobot_edit_window_->isVisible()) {
       on_treeWidget_accounts_itemDoubleClicked(item, column);
     }
+    SetSelectedAcountToManager();
   }
 }
 

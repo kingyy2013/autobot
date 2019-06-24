@@ -30,10 +30,15 @@ public:
   TargetSpeechSetMap& GetSpeechDictMutable();
 
   static AutobotManager& GetInstance();
+
+  // Sets selected nicknames.
+  void SetSelectedAcountNames(const QStringList& selected_autobots);
+
 private:
   AutobotAccountMap account_dict_;
   QThreadPool thread_pool_;
   TargetSpeechSetMap target_speech_set_;
+  QStringList selected_autobot_nicknames_;
 };
 
 }// namespace

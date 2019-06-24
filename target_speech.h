@@ -4,7 +4,6 @@
 #include <QStringList>
 
 namespace autobot {
-
 class TargetSpeech
 {
 public:

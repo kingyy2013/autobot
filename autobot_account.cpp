@@ -3,9 +3,11 @@
 namespace autobot {
 
 AutobotAccount::AutobotAccount(const QString& username,
-                               const QString& password)
+                               const QString& password,
+                               const QString& speech_name)
   : bot_username_(username),
     bot_password_(password),
+    speech_name_(speech_name),
     bot_status_(AccountStatus::UNINITIALIZED) {
 }
 
@@ -41,6 +43,14 @@ void AutobotAccount::AssignTargetRoom(
 
 void AutobotAccount::RemoveTargetRoom(const QString& room_number) {
   assigned_target_rooms_.remove(room_number);
+}
+
+void AutobotAccount::SetSpeechName(const QString& speech_name) {
+  speech_name_ = speech_name;
+}
+
+const QString&  AutobotAccount::GetSpeechName() const {
+  return speech_name_;
 }
 
 }

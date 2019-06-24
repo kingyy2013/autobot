@@ -2,6 +2,12 @@
 
 namespace autobot {
 
+const QStringList default_speech = {
+  "666",
+  "来了老哥",
+  "我就看看不说话"
+};
+
 const QStringList female_speech = {
   "666",
   "声音好可爱",
@@ -17,8 +23,9 @@ const QStringList male_speech = {
 
 std::shared_ptr<TargetSpeechSetMap> CreateDefaultTargetSpeechSet() {
   QList<std::shared_ptr<TargetSpeech>> speech_set_list = {
-    std::make_shared<TargetSpeech>("默认（男）", male_speech),
-    std::make_shared<TargetSpeech>("默认（女）", female_speech),
+    std::make_shared<TargetSpeech>(kDefaultSpeechName, default_speech),
+    std::make_shared<TargetSpeech>(kDefaultMaleSpeechName, male_speech),
+    std::make_shared<TargetSpeech>(kDefaultFemaleSpeechName, female_speech),
   };
   std::shared_ptr<TargetSpeechSetMap> singleton_speech_set
       = std::make_shared<TargetSpeechSetMap>();

@@ -2,7 +2,7 @@
 #define TARGET_SPEECH_EDIT_WINDOW_H
 
 #include <QMainWindow>
-#include <QListWidgetItem>
+#include <QTreeWidgetItem>
 
 namespace Ui {
 class TargetSpeechEditWindow;
@@ -20,17 +20,21 @@ public:
   ~TargetSpeechEditWindow();
 
 private slots:
-  void on_pushButton_new_clicked();
+  void on_pushButton_speech_words_new_clicked();
   void SpeechDialogAdd();
 
-  void on_listWidget_speech_names_itemClicked(QListWidgetItem *item);
+  void on_treeWidget_speech_names_itemClicked(QTreeWidgetItem *item);
+
+  void on_pushButton_speech_words_save_clicked();
+
+  void on_pushButton_speech_words_delete_clicked();
 
 private:
   Ui::TargetSpeechEditWindow *ui;
   Ui::TargetSpeechDialog* dialog_ui_form;
   QDialog *dialog_ui;
   // Container to store previous selected speech name.
-  QListWidgetItem* prev_list_widge_;
+  QTreeWidgetItem* prev_list_widge_;
 };
 }// namespace
 

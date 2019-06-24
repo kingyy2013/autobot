@@ -17,11 +17,11 @@ class MainWindow;
 namespace autobot {
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+  explicit MainWindow(QWidget *parent = nullptr);
+  ~MainWindow();
 private slots:
   void UpdateAccountToCurrentView(const std::shared_ptr<AutobotAccount>& account_ptr);
   void UpdateManagerToView();
@@ -38,17 +38,19 @@ private slots:
   void on_pushButton_loadall_clicked();
 
 private:
-    // Set the account to the tree view and the account manager.
-    void SetAccountToView(
-        const std::shared_ptr<AutobotAccount>& account_ptr,
-        QTreeWidgetItem *autobot_item);
+  void SetSelectedAcountToManager();
 
-    Ui::MainWindow *ui;
-    AutobotLoginDialog* bot_log_dialog_;
-    AutobotEditWindow* autobot_edit_window_;
-    QString last_directory_;
+  // Set the account to the tree view and the account manager.
+  void SetAccountToView(
+      const std::shared_ptr<AutobotAccount>& account_ptr,
+      QTreeWidgetItem *autobot_item);
 
-    QHash<QString, QTreeWidgetItem> account_to_tree_item_map_;
+  Ui::MainWindow *ui;
+  AutobotLoginDialog* bot_log_dialog_;
+  AutobotEditWindow* autobot_edit_window_;
+  QString last_directory_;
+
+  QHash<QString, QTreeWidgetItem> account_to_tree_item_map_;
 };
 
 } // namespace

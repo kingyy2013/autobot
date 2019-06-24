@@ -2,10 +2,12 @@
 #define BOT_ACCOUNT_H
 
 #include <QString>
+#include <QStringList>
 #include <QHash>
 
 #include <memory>
 #include "target_room.h"
+#include "target_speech_set.h"
 
 namespace autobot {
 enum class AccountStatus {
@@ -21,7 +23,8 @@ typedef QHash<QString, std::shared_ptr<TargetRoom>> TargtRoomMap;
 class AutobotAccount {
 public:
   AutobotAccount() = default;
-  AutobotAccount(const QString& username, const QString& password);
+  AutobotAccount(const QString& username, const QString& password,
+                 const QString& speech_name = "");
   // Work related.
   bool Login();
   bool Speak();
@@ -30,7 +33,9 @@ public:
   // Read related.
   const QString& GetUsername() const;
   const QString& GetPassword() const;
-  const QString& GetAssignedSpeechName() const;
+  const QString& GetSpeechName() const;
+  void SetSpeechName(const QString& speech_name);
+
   const TargtRoomMap& GetTargetRoomMap() const;
 
   // Write related.
