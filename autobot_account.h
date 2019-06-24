@@ -24,7 +24,7 @@ class AutobotAccount {
 public:
   AutobotAccount() = default;
   AutobotAccount(const QString& username, const QString& password,
-                 const QString& speech_name = "");
+                 const QString& speech_name = kDefaultSpeechName);
   // Work related.
   bool Login();
   bool Speak();

@@ -13,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
   autobot_edit_window_(new AutobotEditWindow(this)),
   last_directory_(QDir::currentPath()) {
   ui->setupUi(this);
-  ui->treeWidget_accounts->setColumnWidth(0, 300);
+  ui->treeWidget_accounts->setColumnWidth(0, 200);
+  ui->treeWidget_accounts->setColumnWidth(1, 100);
+
   connect(bot_log_dialog_, SIGNAL(AddNewAccount(const QString&,
                                                 const QString&)),
           this, SLOT(AddAccount(const QString&, const QString&)));
@@ -28,6 +30,22 @@ void MainWindow::on_pushButton_account_add_clicked() {
   bot_log_dialog_->show();
 }
 
+void MainWindow::UpdateAllAccountToView() {
+  for (auto account_ptr : AutobotManager::GetInstance().GetAccountDict()) {
+    SetAccountToView(account_ptr,
+                     account_to_tree_item_map_[account_ptr->GetUsername()]);
+  }
+}
+
+void MainWindow::UpdateSelectedAccountToView() {
+  const auto& account_dict = AutobotManager::GetInstance().GetAccountDict();
+  for (const auto& selected_account_name :
+       AutobotManager::GetInstance().GetSelectedAcountNames()) {
+    SetAccountToView(account_dict[selected_account_name],
+                     account_to_tree_item_map_[selected_account_name]);
+  }
+}
+
 void MainWindow::UpdateAccountToCurrentView(
     const std::shared_ptr<AutobotAccount>& account_ptr) {
   SetAccountToView(account_ptr,
@@ -38,12 +56,14 @@ void MainWindow::SetAccountToView(
     const std::shared_ptr<AutobotAccount>& account_ptr,
     QTreeWidgetItem *autobot_item) {
   autobot_item->setText(0, account_ptr->GetUsername());
+  autobot_item->setText(1, account_ptr->GetSpeechName());
   QPair<QString, QColor> status_and_color
       = ConvertStatusToQStringAndColor(account_ptr->GetStatus());
-  autobot_item->setText(1,
+  autobot_item->setText(2,
                         status_and_color.first);
   autobot_item->setBackground(0, QBrush(status_and_color.second));
   autobot_item->setBackground(1, QBrush(status_and_color.second));
+  autobot_item->setBackground(2, QBrush(status_and_color.second));
 }
 
 void MainWindow::AddAccount(const QString& account_username,
@@ -64,13 +84,15 @@ void MainWindow::AddAccount(const QString& account_username,
       QTreeWidgetItem *autobot_item
           = new QTreeWidgetItem(ui->treeWidget_accounts);
       SetAccountToView(temp_account_ptr, autobot_item);
+      account_to_tree_item_map_[temp_account_ptr->GetUsername()]
+          = autobot_item;
       ui->treeWidget_accounts->addTopLevelItem(autobot_item);
       AutobotManager::GetInstance().AddAccount(temp_account_ptr);
     }
   }
 }
 
-void MainWindow::UpdateManagerToView() {
+void MainWindow::AddManagerToView() {
   for (const auto& autobot_account :
        AutobotManager::GetInstance().GetAccountDict()) {
     QTreeWidgetItem *autobot_item
@@ -97,6 +119,7 @@ void MainWindow::on_pushButton_account_delete_clicked() {
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
     if (messagebox.exec() == false) {
       foreach(QTreeWidgetItem * item, selected_items)  {
+        account_to_tree_item_map_.remove(item->text(0));
         AutobotManager::GetInstance().RemoveAutobot(item->text(0));
         delete item;
       }
@@ -210,7 +233,7 @@ void MainWindow::on_pushButton_loadall_clicked() {
     messagebox.setText("无法解读文件格式");
     messagebox.exec();
   }
-  UpdateManagerToView();
+  AddManagerToView();
 }
 
 } //namespace

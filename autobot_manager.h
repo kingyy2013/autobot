@@ -33,6 +33,7 @@ public:
 
   // Sets selected nicknames.
   void SetSelectedAcountNames(const QStringList& selected_autobots);
+  const QStringList& GetSelectedAcountNames() const;
 
 private:
   AutobotAccountMap account_dict_;

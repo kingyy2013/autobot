@@ -37,9 +37,14 @@ const AutobotAccountMap& AutobotManager::GetAccountDict() const {
 AutobotAccountMap& AutobotManager::GetAccountDictMutable() {
   return account_dict_;
 }
+
 void AutobotManager::SetSelectedAcountNames(
     const QStringList& selected_autobots) {
   selected_autobot_nicknames_ = selected_autobots;
+}
+
+const QStringList& AutobotManager::GetSelectedAcountNames() const {
+  return selected_autobot_nicknames_;
 }
 
 const TargetSpeechSetMap& AutobotManager::GetSpeechDict() const {

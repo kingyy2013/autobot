@@ -23,9 +23,8 @@ public:
   explicit MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 private slots:
+  void AddManagerToView();
   void UpdateAccountToCurrentView(const std::shared_ptr<AutobotAccount>& account_ptr);
-  void UpdateManagerToView();
-
   void AddAccount(const QString&, const QString&);
   void on_pushButton_account_add_clicked();
   void on_pushButton_account_delete_clicked();
@@ -36,6 +35,10 @@ private slots:
   void on_pushButton_saveall_clicked();
 
   void on_pushButton_loadall_clicked();
+
+  void UpdateAllAccountToView();
+
+  void UpdateSelectedAccountToView();
 
 private:
   void SetSelectedAcountToManager();
@@ -50,7 +53,7 @@ private:
   AutobotEditWindow* autobot_edit_window_;
   QString last_directory_;
 
-  QHash<QString, QTreeWidgetItem> account_to_tree_item_map_;
+  QHash<QString, QTreeWidgetItem*> account_to_tree_item_map_;
 };
 
 } // namespace
