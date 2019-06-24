@@ -98,8 +98,13 @@ void AutobotEditWindow::on_pushButton_add_target_clicked() {
 
 
 void AutobotEditWindow::on_pushButton_set_speech_clicked() {
+  target_speech_edit_window_->move(this->pos().x(),
+                             this->pos().y()+ this->height());
+  target_speech_edit_window_->resize(this->width(),
+                                     target_speech_edit_window_->height());
   target_speech_edit_window_->show();
 }
+
 }
 
 
