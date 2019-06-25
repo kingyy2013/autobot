@@ -9,7 +9,7 @@
 #include "target_speech.h"
 
 namespace autobot {
-
+const QString kDefaultInstruction = "每行为一句话";
 const QString kDefaultSpeechName = "默认";
 const QString kDefaultMaleSpeechName = "默认（男）";
 const QString kDefaultFemaleSpeechName = "默认（女）";

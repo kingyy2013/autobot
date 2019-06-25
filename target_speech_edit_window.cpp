@@ -25,6 +25,7 @@ TargetSpeechEditWindow::TargetSpeechEditWindow(QWidget *parent) :
     speech_item->setText(0, target_speech->SpeechName());
     ui->treeWidget_speech_names->addTopLevelItem(speech_item);
   }
+  ui->textEdit_speech_words->setText(kDefaultInstruction);
 }
 
 TargetSpeechEditWindow::~TargetSpeechEditWindow() {
@@ -111,21 +112,33 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
   if (selected_items.empty() == false) {
     QString account_list_msg;
     foreach(QTreeWidgetItem * item, selected_items)  {
-      account_list_msg.append(item->text(0));
-      account_list_msg.append(" ");
-    }
-    QMessageBox messagebox(this);
-    messagebox.setWindowTitle("");
-    messagebox.setText("您确定删除： " + account_list_msg + "?");
-    messagebox.addButton("确定", QMessageBox::ButtonRole::AcceptRole);
-    messagebox.addButton("取消", QMessageBox::ButtonRole::RejectRole);
-    // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
-    if (messagebox.exec() == false) {
-      foreach(QTreeWidgetItem * item, selected_items)  {
-        delete item;
-        prev_list_widge_ = nullptr;
-        ui->textEdit_speech_words->clear();
+      if (item->text(0) != kDefaultSpeechName) {
+        account_list_msg.append(item->text(0));
+        account_list_msg.append("， ");
       }
+    }
+    if (!account_list_msg.isEmpty()) {
+      QMessageBox messagebox(this);
+      messagebox.setWindowTitle("");
+      messagebox.setText("您确定删除： " + account_list_msg + "?");
+      messagebox.addButton("确定", QMessageBox::ButtonRole::AcceptRole);
+      messagebox.addButton("取消", QMessageBox::ButtonRole::RejectRole);
+      // Not so sure why Accept role coresponds to 0,
+      // but reject corepsonds to 1.
+      if (messagebox.exec() == false) {
+        foreach(QTreeWidgetItem * item, selected_items)  {
+          if (item->text(0) != kDefaultSpeechName) {
+            AutobotManager::GetInstance().GetSpeechDictMutable().remove(item->text(0));
+            prev_list_widge_ = nullptr;
+            ui->textEdit_speech_words->setText(kDefaultInstruction);
+            delete item;
+          }
+        }
+      }
+    } else {
+      QMessageBox messagebox(this);
+      messagebox.setText("不可删除： " + kDefaultSpeechName);
+      messagebox.exec();
     }
   }
 }
