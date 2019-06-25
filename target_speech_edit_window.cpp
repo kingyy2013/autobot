@@ -106,7 +106,28 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_save_clicked() {
 }
 
 void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
-
+  QList<QTreeWidgetItem*> selected_items
+      = ui->treeWidget_speech_names->selectedItems();
+  if (selected_items.empty() == false) {
+    QString account_list_msg;
+    foreach(QTreeWidgetItem * item, selected_items)  {
+      account_list_msg.append(item->text(0));
+      account_list_msg.append(" ");
+    }
+    QMessageBox messagebox(this);
+    messagebox.setWindowTitle("");
+    messagebox.setText("您确定删除： " + account_list_msg + "?");
+    messagebox.addButton("确定", QMessageBox::ButtonRole::AcceptRole);
+    messagebox.addButton("取消", QMessageBox::ButtonRole::RejectRole);
+    // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
+    if (messagebox.exec() == false) {
+      foreach(QTreeWidgetItem * item, selected_items)  {
+        delete item;
+        prev_list_widge_ = nullptr;
+        ui->textEdit_speech_words->clear();
+      }
+    }
+  }
 }
 }// namespace
 
