@@ -45,10 +45,10 @@ void TargetSpeechEditWindow::SpeechDialogAdd() {
       = speech_nickname_str.split(rx, QString::SkipEmptyParts);
   QString error_message;
   for (const auto& speech_nickname : speech_nickname_list) {
-    auto& speech_dict = AutobotManager::GetInstance().GetSpeechDictMutable();
-    if(!speech_dict.contains(speech_nickname)) {
-      speech_dict.insert(speech_nickname,
-                         std::make_shared<TargetSpeech>(speech_nickname));
+    if(!AutobotManager::GetInstance().
+       GetSpeechDict().contains(speech_nickname)) {
+      AutobotManager::GetInstance()
+          .AddSpeech(std::make_shared<TargetSpeech>(speech_nickname));
       QTreeWidgetItem *speech_item
           = new QTreeWidgetItem(ui->treeWidget_speech_names);
       speech_item->setText(0, speech_nickname);
@@ -69,8 +69,8 @@ void TargetSpeechEditWindow::on_treeWidget_speech_names_itemClicked(
   if (item == prev_list_widge_) {
     return;
   }
-  auto& speech_dict =
-      AutobotManager::GetInstance().GetSpeechDictMutable();
+  const auto& speech_dict =
+      AutobotManager::GetInstance().GetSpeechDict();
   if (prev_list_widge_ != nullptr) {
     const QString& prev_speech_nickname = prev_list_widge_->text(0);
     const QStringList& prev_word_list
@@ -84,12 +84,12 @@ void TargetSpeechEditWindow::on_treeWidget_speech_names_itemClicked(
       messagebox.addButton("确定", QMessageBox::ButtonRole::AcceptRole);
       messagebox.addButton("取消", QMessageBox::ButtonRole::RejectRole);
       if (messagebox.exec() == false) {
-        speech_dict[prev_speech_nickname]->SetWordsList(
+        AutobotManager::GetInstance().SetSpeechContent(
+              prev_speech_nickname,
               ui->textEdit_speech_words->toPlainText().split("\n"));
       }
     }
   }
-
   const QString& speech_nickname = item->text(0);
   const QStringList& word_list = speech_dict[speech_nickname]->GetWordsList();
   ui->textEdit_speech_words->setPlainText(word_list.join("\n"));
@@ -98,12 +98,13 @@ void TargetSpeechEditWindow::on_treeWidget_speech_names_itemClicked(
 }
 
 void TargetSpeechEditWindow::on_pushButton_speech_words_save_clicked() {
-  const QString& curr_speech_nickname
-      = ui->treeWidget_speech_names->currentItem()->text(0);
-  auto& speech_dict =
-      AutobotManager::GetInstance().GetSpeechDictMutable();
-  speech_dict[curr_speech_nickname]->SetWordsList(
-        ui->textEdit_speech_words->toPlainText().split("\n"));
+  if (ui->treeWidget_speech_names->currentItem() != nullptr) {
+    const QString& curr_speech_nickname
+        = ui->treeWidget_speech_names->currentItem()->text(0);
+    AutobotManager::GetInstance().SetSpeechContent(
+          curr_speech_nickname,
+          ui->textEdit_speech_words->toPlainText().split("\n"));
+  }
 }
 
 void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
@@ -128,8 +129,7 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
       if (messagebox.exec() == false) {
         foreach(QTreeWidgetItem * item, selected_items)  {
           if (item->text(0) != kDefaultSpeechName) {
-            AutobotManager::GetInstance().GetSpeechDictMutable()
-                .remove(item->text(0));
+            AutobotManager::GetInstance().RemoveSpeech(item->text(0));
             prev_list_widge_ = nullptr;
             ui->textEdit_speech_words->setText(kDefaultInstruction);
             delete item;
@@ -145,7 +145,16 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
 }
 
 void TargetSpeechEditWindow::on_pushButton_speech_words_set_clicked() {
-
+  const auto current_speech =  ui->treeWidget_speech_names->currentItem();
+  if (current_speech != nullptr) {
+    QStringList selected_account_names
+        = AutobotManager::GetInstance().GetSelectedAcountNames();
+    for (const auto &selected_name : selected_account_names) {
+      AutobotManager::GetInstance().
+          AssignSpeechToAccount(current_speech->text(0),
+                                selected_name);
+    }
+  }
 }
 
 }// namespace

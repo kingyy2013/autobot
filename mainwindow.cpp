@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(bot_log_dialog_, SIGNAL(AddNewAccount(const QString&,
                                                 const QString&)),
           this, SLOT(AddAccount(const QString&, const QString&)));
+  connect(&(AutobotManager::GetInstance()), SIGNAL(AccountsChanged(const QStringList&)), this, SLOT(UpdateSelectedAccountToView(const QStringList&)));
+    connect(&(AutobotManager::GetInstance()), SIGNAL(AccountsChanged()), this, SLOT(UpdateAllAccountToView()));
 }
 
 MainWindow::~MainWindow() {
@@ -37,10 +39,10 @@ void MainWindow::UpdateAllAccountToView() {
   }
 }
 
-void MainWindow::UpdateSelectedAccountToView() {
+void MainWindow::UpdateSelectedAccountToView(
+    const QStringList& selected_accounts) {
   const auto& account_dict = AutobotManager::GetInstance().GetAccountDict();
-  for (const auto& selected_account_name :
-       AutobotManager::GetInstance().GetSelectedAcountNames()) {
+  for (const auto& selected_account_name : selected_accounts) {
     SetAccountToView(account_dict[selected_account_name],
                      account_to_tree_item_map_[selected_account_name]);
   }
@@ -99,6 +101,8 @@ void MainWindow::AddManagerToView() {
         = new QTreeWidgetItem(ui->treeWidget_accounts);
     SetAccountToView(autobot_account, autobot_item);
     ui->treeWidget_accounts->addTopLevelItem(autobot_item);
+    account_to_tree_item_map_[autobot_account->GetUsername()]
+        = autobot_item;
   }
 }
 
@@ -130,10 +134,11 @@ void MainWindow::on_pushButton_account_delete_clicked() {
 void MainWindow::SetSelectedAcountToManager() {
   QList<QTreeWidgetItem*> selected_items
       = ui->treeWidget_accounts->selectedItems();
+  QStringList selected_item_names;
   for (auto item : selected_items) {
-    AutobotManager::GetInstance().SetSelectedAcountNames(
-          QStringList(item->text(0)));
+    selected_item_names.append(item->text(0));
   }
+  AutobotManager::GetInstance().SetSelectedAcountNames(selected_item_names);
 }
 
 void MainWindow::on_treeWidget_accounts_itemDoubleClicked(

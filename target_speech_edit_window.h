@@ -29,6 +29,8 @@ private slots:
 
   void on_pushButton_speech_words_delete_clicked();
 
+  void on_pushButton_speech_words_set_clicked();
+
 private:
   Ui::TargetSpeechEditWindow *ui;
   Ui::TargetSpeechDialog* dialog_ui_form;

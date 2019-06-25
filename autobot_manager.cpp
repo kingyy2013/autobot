@@ -30,6 +30,12 @@ void AutobotManager::AssignSpeechToAccount(const QString& speech_name,
                                            const QString& account_name) {
   account_dict_[account_name]->SetSpeechName(speech_name);
   speech_to_account_list_[speech_name].insert(account_name);
+  emit AccountsChanged(QStringList(account_name));
+}
+
+void AutobotManager::SetSpeechContent(const QString& speech_name,
+                                      const QStringList& speech_content) {
+  target_speech_set_[speech_name]->SetWordsList(speech_content);
 }
 
 void AutobotManager::AddAccount(
@@ -45,10 +51,6 @@ const AutobotAccountMap& AutobotManager::GetAccountDict() const {
   return account_dict_;
 }
 
-AutobotAccountMap& AutobotManager::GetAccountDictMutable() {
-  return account_dict_;
-}
-
 void AutobotManager::SetSelectedAcountNames(
     const QStringList& selected_autobots) {
   selected_autobot_nicknames_ = selected_autobots;
@@ -59,10 +61,6 @@ const QStringList& AutobotManager::GetSelectedAcountNames() const {
 }
 
 const TargetSpeechSetMap& AutobotManager::GetSpeechDict() const {
-  return target_speech_set_;
-}
-
-TargetSpeechSetMap& AutobotManager::GetSpeechDictMutable() {
   return target_speech_set_;
 }
 
@@ -82,6 +80,7 @@ void AutobotManager::RemoveSpeech(const QString& speech_name) {
   }
   target_speech_set_.remove(speech_name);
   speech_to_account_list_.remove(speech_name);
+  emit AccountsChanged(associated_accounts.toList());
 }
 
 }// namespace

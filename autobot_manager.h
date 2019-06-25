@@ -3,6 +3,7 @@
 
 #include <QThreadPool>
 #include <QHash>
+#include <QSet>
 #include <memory>
 
 #include "autobot_account.h"
@@ -12,7 +13,9 @@ namespace autobot {
 
 typedef QHash<QString, std::shared_ptr<AutobotAccount>> AutobotAccountMap;
 
-class AutobotManager {
+class AutobotManager : public QObject {
+  Q_OBJECT
+
 public:
   AutobotManager();
   /// @brief Added new autobot account to the manager.
@@ -23,6 +26,9 @@ public:
 
   void RemoveAutobot(const QString& autobot_name);
   void AddSpeech(const std::shared_ptr<TargetSpeech>& speech_ptr);
+  void SetSpeechContent(
+      const QString& speech_name,
+      const QStringList& speech_content);
 
   void AssignSpeechToAccount(const QString& speech_name,
                              const QString& account_name);
@@ -30,16 +36,20 @@ public:
   void RemoveSpeech(const QString& speech_name);
 
   const AutobotAccountMap& GetAccountDict() const;
-  AutobotAccountMap& GetAccountDictMutable();
 
   const TargetSpeechSetMap& GetSpeechDict() const;
-  TargetSpeechSetMap& GetSpeechDictMutable();
 
   static AutobotManager& GetInstance();
 
   // Sets selected nicknames.
   void SetSelectedAcountNames(const QStringList& selected_autobots);
   const QStringList& GetSelectedAcountNames() const;
+
+signals:
+  void AccountsChanged(const QStringList&);
+  void AccountsChanged();
+
+  void AccountStatusChanged();
 
 private:
   AutobotAccountMap account_dict_;
