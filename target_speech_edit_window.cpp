@@ -114,7 +114,7 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
     foreach(QTreeWidgetItem * item, selected_items)  {
       if (item->text(0) != kDefaultSpeechName) {
         account_list_msg.append(item->text(0));
-        account_list_msg.append("， ");
+        account_list_msg.append(" ");
       }
     }
     if (!account_list_msg.isEmpty()) {
@@ -128,7 +128,8 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
       if (messagebox.exec() == false) {
         foreach(QTreeWidgetItem * item, selected_items)  {
           if (item->text(0) != kDefaultSpeechName) {
-            AutobotManager::GetInstance().GetSpeechDictMutable().remove(item->text(0));
+            AutobotManager::GetInstance().GetSpeechDictMutable()
+                .remove(item->text(0));
             prev_list_widge_ = nullptr;
             ui->textEdit_speech_words->setText(kDefaultInstruction);
             delete item;
@@ -142,10 +143,9 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
     }
   }
 }
+
+void TargetSpeechEditWindow::on_pushButton_speech_words_set_clicked() {
+
+}
+
 }// namespace
-
-
-
-
-
-

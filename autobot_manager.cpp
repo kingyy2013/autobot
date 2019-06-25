@@ -1,10 +1,15 @@
 #include "autobot_manager.h"
 #include <memory>
+#include <QSet>
 
 namespace autobot {
 
 AutobotManager::AutobotManager() :
-  target_speech_set_(*CreateDefaultTargetSpeechSet()) {}
+  target_speech_set_(*CreateDefaultTargetSpeechSet()) {
+  for (auto target_speech : target_speech_set_) {
+    speech_to_account_list_[target_speech->SpeechName()] = QSet<QString>();
+  }
+}
 
 std::shared_ptr<AutobotAccount> AutobotManager::Find(
     const QString& autobot_name) const {
@@ -19,6 +24,12 @@ std::shared_ptr<AutobotAccount> AutobotManager::Find(
 AutobotManager& AutobotManager::GetInstance() {
   static AutobotManager autobot_manager_singleton;
   return autobot_manager_singleton;
+}
+
+void AutobotManager::AssignSpeechToAccount(const QString& speech_name,
+                                           const QString& account_name) {
+  account_dict_[account_name]->SetSpeechName(speech_name);
+  speech_to_account_list_[speech_name].insert(account_name);
 }
 
 void AutobotManager::AddAccount(
@@ -53,6 +64,24 @@ const TargetSpeechSetMap& AutobotManager::GetSpeechDict() const {
 
 TargetSpeechSetMap& AutobotManager::GetSpeechDictMutable() {
   return target_speech_set_;
+}
+
+void AutobotManager::AddSpeech(
+    const std::shared_ptr<TargetSpeech>& speech_ptr) {
+  target_speech_set_[speech_ptr->SpeechName()] = speech_ptr;
+  speech_to_account_list_[speech_ptr->SpeechName()] = QSet<QString>();
+}
+
+
+void AutobotManager::RemoveSpeech(const QString& speech_name) {
+  // Remove the speech set from the account.
+  QSet<QString> associated_accounts = speech_to_account_list_[speech_name];
+  for (auto associated_account : associated_accounts) {
+    // Set the account speech to default.
+    account_dict_[associated_account]->SetSpeechName(kDefaultSpeechName);
+  }
+  target_speech_set_.remove(speech_name);
+  speech_to_account_list_.remove(speech_name);
 }
 
 }// namespace

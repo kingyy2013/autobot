@@ -22,6 +22,12 @@ public:
   std::shared_ptr<AutobotAccount> Find(const QString& autobot_name) const;
 
   void RemoveAutobot(const QString& autobot_name);
+  void AddSpeech(const std::shared_ptr<TargetSpeech>& speech_ptr);
+
+  void AssignSpeechToAccount(const QString& speech_name,
+                             const QString& account_name);
+
+  void RemoveSpeech(const QString& speech_name);
 
   const AutobotAccountMap& GetAccountDict() const;
   AutobotAccountMap& GetAccountDictMutable();
@@ -37,9 +43,9 @@ public:
 
 private:
   AutobotAccountMap account_dict_;
-  QThreadPool thread_pool_;
   TargetSpeechSetMap target_speech_set_;
   QStringList selected_autobot_nicknames_;
+  QHash<QString, QSet<QString>> speech_to_account_list_;
 };
 
 }// namespace
