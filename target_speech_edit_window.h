@@ -19,9 +19,13 @@ public:
   explicit TargetSpeechEditWindow(QWidget *parent = nullptr);
   ~TargetSpeechEditWindow();
 
+public slots:
+  void AddAllSpeechToView();
+
 private slots:
-  void on_pushButton_speech_words_new_clicked();
   void SpeechDialogAdd();
+
+  void on_pushButton_speech_words_new_clicked();
 
   void on_treeWidget_speech_names_itemClicked(QTreeWidgetItem *item);
 

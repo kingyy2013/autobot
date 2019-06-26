@@ -18,6 +18,16 @@ TargetSpeechEditWindow::TargetSpeechEditWindow(QWidget *parent) :
   dialog_ui_form->setupUi(dialog_ui);
   connect(dialog_ui_form->pushButton_speech_add, SIGNAL(clicked()), this,
           SLOT(SpeechDialogAdd()));
+
+  ui->textEdit_speech_words->setText(kDefaultInstruction);
+}
+
+TargetSpeechEditWindow::~TargetSpeechEditWindow() {
+  delete ui;
+}
+
+void TargetSpeechEditWindow::AddAllSpeechToView() {
+  ui->treeWidget_speech_names->clear();
   for (const auto& target_speech
        : AutobotManager::GetInstance().GetSpeechDict()) {
     QTreeWidgetItem *speech_item
@@ -25,11 +35,6 @@ TargetSpeechEditWindow::TargetSpeechEditWindow(QWidget *parent) :
     speech_item->setText(0, target_speech->SpeechName());
     ui->treeWidget_speech_names->addTopLevelItem(speech_item);
   }
-  ui->textEdit_speech_words->setText(kDefaultInstruction);
-}
-
-TargetSpeechEditWindow::~TargetSpeechEditWindow() {
-  delete ui;
 }
 
 void TargetSpeechEditWindow::on_pushButton_speech_words_new_clicked() {

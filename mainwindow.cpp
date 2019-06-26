@@ -221,8 +221,9 @@ void MainWindow::on_pushButton_loadall_clicked() {
     messagebox.setText("无法打开文件");
     messagebox.exec();
   } else {
+    QTextStream in(&file);
     // loading
-    if(!document.setContent(&file, true)) {
+    if(!document.setContent(in.readAll(), true)) {
       QMessageBox messagebox(this);
       messagebox.setText("无法读取文件内容或文件格式损坏");
       messagebox.exec();
