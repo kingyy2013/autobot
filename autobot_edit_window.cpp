@@ -7,8 +7,7 @@ namespace autobot {
 AutobotEditWindow::AutobotEditWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::AutobotEditWindow),
-  target_room_dialog_(new TargetRoomDialog()),
-  target_speech_edit_window_(new TargetSpeechEditWindow(this)) {
+  target_room_dialog_(new TargetRoomDialog()) {
   ui->setupUi(this);
   connect(target_room_dialog_, SIGNAL(AddNewRoom(const QString& )), this,
           SLOT(AssignTargetRoomToTarget(const QString&)));
@@ -97,12 +96,6 @@ void AutobotEditWindow::on_pushButton_add_target_clicked() {
 }
 
 void AutobotEditWindow::on_pushButton_set_speech_clicked() {
-  target_speech_edit_window_->move(this->pos().x(),
-                             this->pos().y()+ this->height());
-  target_speech_edit_window_->resize(this->width(),
-                                     target_speech_edit_window_->height());
-  target_speech_edit_window_->AddAllSpeechToView();
-  target_speech_edit_window_->show();
 }
 
 }

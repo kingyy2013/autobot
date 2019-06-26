@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui(new Ui::MainWindow),
   bot_log_dialog_(new AutobotLoginDialog()),
   autobot_edit_window_(new AutobotEditWindow(this)),
+  target_speech_edit_window_(new TargetSpeechEditWindow(this)),
   last_directory_(QDir::currentPath()) {
   ui->setupUi(this);
   ui->treeWidget_accounts->setColumnWidth(0, 200);
@@ -154,6 +155,12 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
     autobot_edit_window_->move(this->pos().x() + this->width(),
                                this->pos().y());
     autobot_edit_window_->show();
+    target_speech_edit_window_->move(this->pos().x() + this->width(),
+                               this->pos().y()+ autobot_edit_window_->height());
+    target_speech_edit_window_->resize(autobot_edit_window_->width(),
+                                       this->height() - autobot_edit_window_->height());
+    target_speech_edit_window_->AddAllSpeechToView();
+    target_speech_edit_window_->show();
     SetSelectedAcountToManager();
   }
 }
@@ -164,7 +171,10 @@ void MainWindow::on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item,
     autobot_edit_window_->hide();
   } else {
     if (autobot_edit_window_->isVisible()) {
-      on_treeWidget_accounts_itemDoubleClicked(item, column);
+      QString account_username = item->text(0);
+      std::shared_ptr <AutobotAccount> bot_account_ptr
+          = AutobotManager::GetInstance().Find(account_username);
+      autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
     }
     SetSelectedAcountToManager();
   }

@@ -38,7 +38,6 @@ private slots:
 private:
   Ui::AutobotEditWindow *ui;
   TargetRoomDialog* target_room_dialog_;
-  TargetSpeechEditWindow* target_speech_edit_window_;
   std::shared_ptr<AutobotAccount> autobot_account_ptr_;
 };
 

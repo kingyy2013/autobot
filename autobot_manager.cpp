@@ -89,7 +89,7 @@ void AutobotManager::RebuildSpeechToAccountMap() {
   }
   for (const auto& account : account_dict_) {
     const auto& speech_name = account->GetSpeechName();
-    if (speech_to_account_list_.contains(speech_name)) {
+    if (!speech_to_account_list_.contains(speech_name)) {
       qFatal (("Target speech" + speech_name + "from account " +
                account->GetUsername() +
                "is not found in the speech dictionary.").toStdString().data());

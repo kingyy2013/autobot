@@ -149,6 +149,7 @@ bool ParseXMLToAutobotManager(const QDomElement& dom_element,
       }
     }
   }
+  account_manager->RebuildSpeechToAccountMap();
   return success;
 }
 

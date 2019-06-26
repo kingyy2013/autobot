@@ -51,6 +51,7 @@ private:
   Ui::MainWindow *ui;
   AutobotLoginDialog* bot_log_dialog_;
   AutobotEditWindow* autobot_edit_window_;
+  TargetSpeechEditWindow* target_speech_edit_window_;
   QString last_directory_;
 
   QHash<QString, QTreeWidgetItem*> account_to_tree_item_map_;
