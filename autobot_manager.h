@@ -41,6 +41,8 @@ public:
 
   static AutobotManager& GetInstance();
 
+  void RebuildSpeechToAccountMap();
+
   // Sets selected nicknames.
   void SetSelectedAcountNames(const QStringList& selected_autobots);
   const QStringList& GetSelectedAcountNames() const;
@@ -53,7 +55,7 @@ signals:
 
 private:
   AutobotAccountMap account_dict_;
-  TargetSpeechSetMap target_speech_set_;
+  TargetSpeechSetMap target_speech_dict_;
   QStringList selected_autobot_nicknames_;
   QHash<QString, QSet<QString>> speech_to_account_list_;
 };

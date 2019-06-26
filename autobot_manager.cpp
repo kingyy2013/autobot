@@ -5,8 +5,8 @@
 namespace autobot {
 
 AutobotManager::AutobotManager() :
-  target_speech_set_(*CreateDefaultTargetSpeechSet()) {
-  for (auto target_speech : target_speech_set_) {
+  target_speech_dict_(*CreateDefaultTargetSpeechSet()) {
+  for (auto target_speech : target_speech_dict_) {
     speech_to_account_list_[target_speech->SpeechName()] = QSet<QString>();
   }
 }
@@ -35,7 +35,7 @@ void AutobotManager::AssignSpeechToAccount(const QString& speech_name,
 
 void AutobotManager::SetSpeechContent(const QString& speech_name,
                                       const QStringList& speech_content) {
-  target_speech_set_[speech_name]->SetWordsList(speech_content);
+  target_speech_dict_[speech_name]->SetWordsList(speech_content);
 }
 
 void AutobotManager::AddAccount(
@@ -61,12 +61,12 @@ const QStringList& AutobotManager::GetSelectedAcountNames() const {
 }
 
 const TargetSpeechSetMap& AutobotManager::GetSpeechDict() const {
-  return target_speech_set_;
+  return target_speech_dict_;
 }
 
 void AutobotManager::AddSpeech(
     const std::shared_ptr<TargetSpeech>& speech_ptr) {
-  target_speech_set_[speech_ptr->SpeechName()] = speech_ptr;
+  target_speech_dict_[speech_ptr->SpeechName()] = speech_ptr;
   speech_to_account_list_[speech_ptr->SpeechName()] = QSet<QString>();
 }
 
@@ -78,9 +78,24 @@ void AutobotManager::RemoveSpeech(const QString& speech_name) {
     // Set the account speech to default.
     account_dict_[associated_account]->SetSpeechName(kDefaultSpeechName);
   }
-  target_speech_set_.remove(speech_name);
+  target_speech_dict_.remove(speech_name);
   speech_to_account_list_.remove(speech_name);
   emit AccountsChanged(associated_accounts.toList());
+}
+
+void AutobotManager::RebuildSpeechToAccountMap() {
+  for (const auto& speech_name : target_speech_dict_) {
+    speech_to_account_list_[speech_name->SpeechName()] = QSet<QString>();
+  }
+  for (const auto& account : account_dict_) {
+    const auto& speech_name = account->GetSpeechName();
+    if (speech_to_account_list_.contains(speech_name)) {
+      qFatal (("Target speech" + speech_name + "from account " +
+               account->GetUsername() +
+               "is not found in the speech dictionary.").toStdString().data());
+    }
+    speech_to_account_list_[speech_name].insert(account->GetUsername());
+  }
 }
 
 }// namespace

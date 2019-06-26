@@ -7,10 +7,12 @@ namespace autobot {
 class TargetSpeech
 {
 public:
+  TargetSpeech() = default;
   TargetSpeech(const QString& speech_name);
   TargetSpeech(const QString& speech_name,
                const QStringList& piece_of_words);
 
+  void SetSpeechName(const QString& speech_name);
   const QString& SpeechName() const;
   void AddNewWords(const QString& piece_of_words);
   void AddNewWords(const QStringList& piece_of_words);

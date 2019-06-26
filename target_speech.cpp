@@ -13,6 +13,10 @@ TargetSpeech::TargetSpeech(const QString& speech_name,
   speech_name_(speech_name),
   cur_word_index_(words_list_.begin()){}
 
+void TargetSpeech::SetSpeechName(const QString& speech_name) {
+  speech_name_ = speech_name;
+}
+
 const QString& TargetSpeech::SpeechName() const {
   return speech_name_;
 }
