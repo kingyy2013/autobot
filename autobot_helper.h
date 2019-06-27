@@ -5,6 +5,7 @@
 #include "autobot_manager.h"
 #include "target_room.h"
 #include "target_speech.h"
+#include "task_interface.h"
 
 #include <QPair>
 #include <QColor>
@@ -22,7 +23,8 @@ QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
                                        QDomDocument* parent_doc);
 QDomElement ConvertTargetSpeechToXML(const TargetSpeech& target_speech,
                                      QDomDocument* parent_doc);
-
+QDomElement ConvertTaskConfigToXML(const TaskConfig& task_config,
+                                   QDomDocument* parent_doc);
 bool ParseXMLToTargetRoom(const QDomElement& dom_element,
                           TargetRoom* target_room);
 bool ParseXMLToTargetAccount(const QDomElement& dom_element,
@@ -31,6 +33,8 @@ bool ParseXMLToAutobotManager(const QDomElement& dom_element,
                               AutobotManager* account_manager);
 bool ParseXMLToTargetSpeech(const QDomElement& dom_element,
                             TargetSpeech* target_speech);
+bool ParseXMLToTaskConfig(const QDomElement& dom_element,
+                          TaskConfig* task_config);
 }
 
 #endif // AUTOBOT_HELPER_H

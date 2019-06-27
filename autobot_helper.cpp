@@ -25,15 +25,22 @@ QDomElement ConvertTargetRoomToXML(const TargetRoom& target_room,
 }
 
 QDomElement ConvertTargetAccountToXML(const AutobotAccount& autobot_account,
-                                       QDomDocument* parent_doc) {
+                                      QDomDocument* parent_doc) {
   QDomElement dom_account = parent_doc->createElement("AutoBot");
   dom_account.setAttribute("Username", autobot_account.GetUsername());
   dom_account.setAttribute("Password", autobot_account.GetPassword());
   dom_account.setAttribute("Speech", autobot_account.GetSpeechName());
+
+  // Save task config.
+  QDomElement task_dom = ConvertTaskConfigToXML(
+        autobot_account.GetTaskConfig(), parent_doc);
+  dom_account.appendChild(task_dom);
+
+  // Save target rooms.
   QDomElement dom_targets = parent_doc->createElement("TagetRooms");
   for (const auto& target_room : autobot_account.GetTargetRoomMap()) {
     QDomElement target_dom = ConvertTargetRoomToXML(*target_room,
-                                                   parent_doc);
+                                                    parent_doc);
     dom_targets.appendChild(target_dom);
   }
   dom_account.appendChild(dom_targets);
@@ -62,7 +69,7 @@ QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
   QDomElement dom_all_accounts = parent_doc->createElement("AutobotAccounts");
   for (const auto& autobot_account : account_manager.GetAccountDict()) {
     QDomElement target_dom = ConvertTargetAccountToXML(*autobot_account,
-                                                   parent_doc);
+                                                       parent_doc);
     dom_all_accounts.appendChild(target_dom);
   }
   dom_manager.appendChild(dom_all_accounts);
@@ -78,6 +85,15 @@ QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
   return dom_manager;
 }
 
+QDomElement ConvertTaskConfigToXML(const TaskConfig& task_config,
+                                   QDomDocument* parent_doc) {
+  QDomElement dom_manager = parent_doc->createElement("TaskConfig");
+  dom_manager.setAttribute("fixed", task_config.fixed_interval);
+  dom_manager.setAttribute("interval_seconds", task_config.interval_seconds);
+  dom_manager.setAttribute("min_seconds", task_config.min_seconds);
+  dom_manager.setAttribute("max_seconds", task_config.max_seconds);
+  return dom_manager;
+}
 
 bool ParseXMLToTargetRoom(const QDomElement& dom_element,
                           TargetRoom* target_room) {
@@ -108,11 +124,15 @@ bool ParseXMLToTargetAccount(const QDomElement& dom_element,
   QDomNodeList child_dorms = dom_element.childNodes();
   for (int i = 0; i < child_dorms.size(); ++i) {
     QDomElement child_ele = child_dorms.at(i).toElement();
+    if (child_ele.tagName() == "TaskConfig") {
+      TaskConfig task_config;
+      success &= ParseXMLToTaskConfig(child_ele, &task_config);
+      autobot_account->SetTaskConfig(task_config);
+    }
     if (child_ele.tagName() == "TagetRooms") {
       QDomNodeList target_dorms = child_ele.childNodes();
       for (int j = 0; j < target_dorms.size(); ++j) {
         auto target_room_ptr = std::make_shared<TargetRoom>();
-
         success &= ParseXMLToTargetRoom(target_dorms.at(j).toElement(),
                                         target_room_ptr.get());
         autobot_account->AssignTargetRoom(target_room_ptr);
@@ -174,4 +194,22 @@ bool ParseXMLToTargetSpeech(const QDomElement& dom_element,
   return true;
 }
 
+bool ParseXMLToTaskConfig(const QDomElement& dom_element,
+                          TaskConfig* task_config) {
+  if (!dom_element.hasAttribute("fixed") ||
+      !dom_element.hasAttribute("interval_seconds") ||
+      !dom_element.hasAttribute("min_seconds") ||
+      !dom_element.hasAttribute("max_seconds")) {
+    qDebug() << "Failed to parse target config";
+    return false;
+  }
+  task_config->fixed_interval
+      = dom_element.attribute("fixed") == "0" ? false : true;
+  task_config->interval_seconds = dom_element.attribute("interval_seconds").toInt();
+  task_config->min_seconds = dom_element.attribute("min_seconds").toInt();
+  task_config->max_seconds = dom_element.attribute("max_seconds").toInt();
+  return true;
 }
+
+} // namespace
+
