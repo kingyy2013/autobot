@@ -11,18 +11,21 @@ namespace autobot {
 TargetSpeechEditWindow::TargetSpeechEditWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::TargetSpeechEditWindow),
-  dialog_ui_form(new Ui::TargetSpeechDialog),
+  speech_input_dialog_ui_(new Ui::TargetSpeechDialog),
   prev_list_widge_(nullptr) {
   ui->setupUi(this);
-  dialog_ui = new QDialog();
-  dialog_ui_form->setupUi(dialog_ui);
-  connect(dialog_ui_form->pushButton_speech_add, SIGNAL(clicked()), this,
+  speech_input_dialog_ = new QDialog();
+  speech_input_dialog_ui_->setupUi(speech_input_dialog_);
+  connect(speech_input_dialog_ui_->pushButton_speech_add, SIGNAL(clicked()), this,
           SLOT(SpeechDialogAdd()));
-
+  connect(speech_input_dialog_ui_->pushButton_speech_cancel, SIGNAL(clicked()),
+          speech_input_dialog_, SLOT(close()));
   ui->textEdit_speech_words->setText(kDefaultInstruction);
 }
 
 TargetSpeechEditWindow::~TargetSpeechEditWindow() {
+  delete speech_input_dialog_ui_;
+  delete speech_input_dialog_;
   delete ui;
 }
 
@@ -38,12 +41,12 @@ void TargetSpeechEditWindow::AddAllSpeechToView() {
 }
 
 void TargetSpeechEditWindow::on_pushButton_speech_words_new_clicked() {
-  dialog_ui->exec();
+  speech_input_dialog_->exec();
 }
 
 void TargetSpeechEditWindow::SpeechDialogAdd() {
-  dialog_ui->close();
-  QString speech_nickname_str = dialog_ui_form->lineEdit_speech->text();
+  speech_input_dialog_->close();
+  QString speech_nickname_str = speech_input_dialog_ui_->lineEdit_speech->text();
 
   QRegExp rx("[, ]");// match a comma or a space
   QStringList speech_nickname_list

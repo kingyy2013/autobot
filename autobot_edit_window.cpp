@@ -1,16 +1,22 @@
 #include <QMessageBox>
+#include <QDialog>
 
 #include "autobot_edit_window.h"
 #include "ui_autobot_edit_window_form.h"
+#include "ui_target_room_dialog_form.h"
 
 namespace autobot {
 AutobotEditWindow::AutobotEditWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::AutobotEditWindow),
-  target_room_dialog_(new TargetRoomDialog()) {
+  target_room_dialog_ui_(new Ui::TargetRoomDialog),
+  target_room_dialog_(new QDialog()) {
   ui->setupUi(this);
-  connect(target_room_dialog_, SIGNAL(AddNewRoom(const QString& )), this,
-          SLOT(AssignTargetRoomToTarget(const QString&)));
+  target_room_dialog_ui_->setupUi(target_room_dialog_);
+  connect(target_room_dialog_ui_->pushButton_add, SIGNAL(clicked()), this,
+          SLOT(AssignTargetRoomToTarget()));
+  connect(target_room_dialog_ui_->pushButton_cancel, SIGNAL(clicked()),
+          target_room_dialog_, SLOT(close()));
 }
 
 AutobotEditWindow::~AutobotEditWindow() {
@@ -37,8 +43,9 @@ void AutobotEditWindow::UpdateUI() {
   }
 }
 
-void AutobotEditWindow::AssignTargetRoomToTarget(
-    const QString& target_room_str) {
+void AutobotEditWindow::AssignTargetRoomToTarget() {
+  const QString& target_room_str =
+      target_room_dialog_ui_->lineEdit_room->text();
   QRegExp rx("[, ]");// match a comma or a space
   QStringList target_room_list
       = target_room_str.split(rx, QString::SkipEmptyParts);
@@ -51,6 +58,7 @@ void AutobotEditWindow::AssignTargetRoomToTarget(
           = new QTreeWidgetItem(ui->treeWidget_targets);
       target_room_item->setText(0, room_str);
       ui->treeWidget_targets->addTopLevelItem(target_room_item);
+      target_room_dialog_->close();
     } else {
       error_message.append(room_str + " ");
     }
@@ -92,10 +100,7 @@ void AutobotEditWindow::on_pushButton_update_account_clicked() {
 }
 
 void AutobotEditWindow::on_pushButton_add_target_clicked() {
-  target_room_dialog_->show();
-}
-
-void AutobotEditWindow::on_pushButton_set_speech_clicked() {
+  target_room_dialog_->exec();
 }
 
 }

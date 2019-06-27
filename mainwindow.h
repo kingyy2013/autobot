@@ -6,12 +6,12 @@
 #include <QListWidgetItem>
 #include <QTreeWidgetItem>
 
-#include "autobot_login_dialog.h"
 #include "autobot_manager.h"
 #include "autobot_edit_window.h"
 
 namespace Ui {
 class MainWindow;
+class AutobotLoginDialog;
 }
 
 namespace autobot {
@@ -24,8 +24,9 @@ public:
   ~MainWindow();
 private slots:
   void AddManagerToView();
-  void UpdateAccountToCurrentView(const std::shared_ptr<AutobotAccount>& account_ptr);
-  void AddAccount(const QString&, const QString&);
+  void UpdateAccountToCurrentView(
+      const std::shared_ptr<AutobotAccount>& account_ptr);
+  void AddAccountFromUi();
   void on_pushButton_account_add_clicked();
   void on_pushButton_account_delete_clicked();
   void on_treeWidget_accounts_itemDoubleClicked(QTreeWidgetItem *item,
@@ -49,7 +50,8 @@ private:
       QTreeWidgetItem *autobot_item);
 
   Ui::MainWindow *ui;
-  AutobotLoginDialog* bot_log_dialog_;
+  Ui::AutobotLoginDialog* autobot_login_dialog_ui_;
+  QDialog* autobot_login_dialog_;
   AutobotEditWindow* autobot_edit_window_;
   TargetSpeechEditWindow* target_speech_edit_window_;
   QString last_directory_;

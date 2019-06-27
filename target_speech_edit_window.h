@@ -37,8 +37,8 @@ private slots:
 
 private:
   Ui::TargetSpeechEditWindow *ui;
-  Ui::TargetSpeechDialog* dialog_ui_form;
-  QDialog *dialog_ui;
+  Ui::TargetSpeechDialog* speech_input_dialog_ui_;
+  QDialog *speech_input_dialog_;
   // Container to store previous selected speech name.
   QTreeWidgetItem* prev_list_widge_;
 };
