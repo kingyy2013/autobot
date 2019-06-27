@@ -143,6 +143,7 @@ void AutobotEditWindow::on_pushButton_update_account_clicked() {
   autobot_account_ptr_->SetUsername(ui->lineEdit_username->text());
   autobot_account_ptr_->SetNickname(ui->lineEdit_nickname->text());
   autobot_account_ptr_->SetPassword(ui->lineEdit_password->text());
+  emit AutobotManager::GetInstance().AccountsChanged(QStringList(autobot_account_ptr_->GetUsername()));
 }
 
 void AutobotEditWindow::on_pushButton_add_target_clicked() {

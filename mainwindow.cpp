@@ -16,8 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
   target_speech_edit_window_(new TargetSpeechEditWindow(this)),
   last_directory_(QDir::currentPath()) {
   ui->setupUi(this);
-  ui->treeWidget_accounts->setColumnWidth(0, 200);
-  ui->treeWidget_accounts->setColumnWidth(1, 100);
+  ui->treeWidget_accounts->setColumnWidth(0, 150);
+  ui->treeWidget_accounts->setColumnWidth(1, 150);
+  ui->treeWidget_accounts->setColumnWidth(2, 150);
   autobot_login_dialog_ui_->setupUi(autobot_login_dialog_);
   // Set up the autobot_login_dialog connections.
   connect(autobot_login_dialog_ui_->pushButton_add, SIGNAL(clicked()),
@@ -68,14 +69,16 @@ void MainWindow::SetAccountToView(
     const std::shared_ptr<AutobotAccount>& account_ptr,
     QTreeWidgetItem *autobot_item) {
   autobot_item->setText(0, account_ptr->GetUsername());
-  autobot_item->setText(1, account_ptr->GetSpeechName());
+  autobot_item->setText(1, account_ptr->GetNickname());
+  autobot_item->setText(2, account_ptr->GetSpeechName());
   QPair<QString, QColor> status_and_color
       = ConvertStatusToQStringAndColor(account_ptr->GetStatus());
-  autobot_item->setText(2,
+  autobot_item->setText(3,
                         status_and_color.first);
   autobot_item->setBackground(0, QBrush(status_and_color.second));
   autobot_item->setBackground(1, QBrush(status_and_color.second));
   autobot_item->setBackground(2, QBrush(status_and_color.second));
+  autobot_item->setBackground(3, QBrush(status_and_color.second));
 }
 
 void MainWindow::AddAccountFromUi() {

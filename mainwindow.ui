@@ -92,6 +92,11 @@
       </column>
       <column>
        <property name="text">
+        <string>绰号</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
         <string>语言集</string>
        </property>
       </column>
