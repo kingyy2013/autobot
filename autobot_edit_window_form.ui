@@ -91,7 +91,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="spinBox_freq_fix"/>
+         <widget class="QSpinBox" name="spinBox_freq_fix">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>300</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -108,10 +115,24 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="spinBox_freq_max"/>
+         <widget class="QSpinBox" name="spinBox_freq_min">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>300</number>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="spinBox_freq_min"/>
+         <widget class="QSpinBox" name="spinBox_freq_max">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>300</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

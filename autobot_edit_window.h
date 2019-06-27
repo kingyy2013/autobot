@@ -29,6 +29,8 @@ public:
 private slots:
   void AssignTargetRoomToTarget();
 
+  void SetTaskConfig();
+
   void on_pushButton_update_account_clicked();
 
   void on_pushButton_add_target_clicked();

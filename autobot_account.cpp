@@ -53,4 +53,12 @@ const QString&  AutobotAccount::GetSpeechName() const {
   return speech_name_;
 }
 
+void AutobotAccount::SetTaskConfig(const TaskConfig& task_config) {
+  task_config_ = task_config;
+}
+
+const TaskConfig& AutobotAccount::GetTaskConfig() const {
+  return task_config_;
+}
+
 }

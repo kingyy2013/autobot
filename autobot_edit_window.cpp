@@ -17,6 +17,18 @@ AutobotEditWindow::AutobotEditWindow(QWidget *parent) :
           SLOT(AssignTargetRoomToTarget()));
   connect(target_room_dialog_ui_->pushButton_cancel, SIGNAL(clicked()),
           target_room_dialog_, SLOT(close()));
+  connect(target_room_dialog_ui_->pushButton_cancel, SIGNAL(clicked()),
+          target_room_dialog_, SLOT(close()));
+  connect(ui->radioButton_freq_fix, SIGNAL(clicked()), this,
+          SLOT(SetTaskConfig()));
+  connect(ui->radioButton_freq_range, SIGNAL(clicked()), this,
+          SLOT(SetTaskConfig()));
+  connect(ui->spinBox_freq_fix, SIGNAL(editingFinished()), this,
+          SLOT(SetTaskConfig()));
+  connect(ui->spinBox_freq_max, SIGNAL(editingFinished()), this,
+          SLOT(SetTaskConfig()));
+  connect(ui->spinBox_freq_min, SIGNAL(editingFinished()), this,
+          SLOT(SetTaskConfig()));
 }
 
 AutobotEditWindow::~AutobotEditWindow() {
@@ -41,6 +53,22 @@ void AutobotEditWindow::UpdateUI() {
         = new QTreeWidgetItem(ui->treeWidget_targets);
     target_room_item->setText(0, str_to_target_room->GetRoomNumber());
     ui->treeWidget_targets->addTopLevelItem(target_room_item);
+  }
+  const auto& task_config = autobot_account_ptr_->GetTaskConfig();
+  ui->spinBox_freq_fix->setValue(task_config.interval_seconds);
+  ui->spinBox_freq_max->setValue(task_config.max_seconds);
+  ui->spinBox_freq_min->setValue(task_config.min_seconds);
+
+  if (task_config.fixed_interval == true) {
+    ui->radioButton_freq_fix->setChecked(true);
+    ui->spinBox_freq_fix->setDisabled(false);
+    ui->spinBox_freq_max->setDisabled(true);
+    ui->spinBox_freq_min->setDisabled(true);
+  } else {
+    ui->radioButton_freq_range->setChecked(true);
+    ui->spinBox_freq_fix->setDisabled(true);
+    ui->spinBox_freq_max->setDisabled(false);
+    ui->spinBox_freq_min->setDisabled(false);
   }
 }
 
@@ -102,6 +130,33 @@ void AutobotEditWindow::on_pushButton_update_account_clicked() {
 
 void AutobotEditWindow::on_pushButton_add_target_clicked() {
   target_room_dialog_->exec();
+}
+
+
+void AutobotEditWindow::SetTaskConfig() {
+  TaskConfig task_config = autobot_account_ptr_->GetTaskConfig();
+  if (ui->radioButton_freq_fix->isChecked()) {
+    task_config.fixed_interval = true;
+    task_config.interval_seconds = ui->spinBox_freq_fix->value();
+    ui->spinBox_freq_fix->setDisabled(false);
+    ui->spinBox_freq_max->setDisabled(true);
+    ui->spinBox_freq_min->setDisabled(true);
+
+  } else {
+    task_config.fixed_interval = false;
+    if (ui->spinBox_freq_min->value() > task_config.max_seconds) {
+      ui->spinBox_freq_max->setValue(ui->spinBox_freq_min->value());
+    }
+    if (ui->spinBox_freq_max->value() < task_config.min_seconds) {
+      ui->spinBox_freq_min->setValue(ui->spinBox_freq_max->value());
+    }
+    task_config.min_seconds = ui->spinBox_freq_min->value();
+    task_config.max_seconds = ui->spinBox_freq_max->value();
+    ui->spinBox_freq_fix->setDisabled(true);
+    ui->spinBox_freq_max->setDisabled(false);
+    ui->spinBox_freq_min->setDisabled(false);
+  }
+  autobot_account_ptr_->SetTaskConfig(task_config);
 }
 
 }

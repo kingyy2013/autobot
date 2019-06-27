@@ -34,7 +34,8 @@ SOURCES += \
     target_room.cpp \
     target_speech.cpp \
     target_speech_edit_window.cpp \
-    target_speech_set.cpp
+    target_speech_set.cpp \
+    task_rumble_fish.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,7 +46,9 @@ HEADERS += \
     target_room.h \
     target_speech.h \
     target_speech_set.h \
-    target_speech_edit_window.h
+    target_speech_edit_window.h \
+    task_interface.h \
+    task_rumble_fish.h
 
 FORMS += \
         mainwindow.ui \

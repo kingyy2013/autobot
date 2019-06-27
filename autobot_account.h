@@ -8,6 +8,7 @@
 #include <memory>
 #include "target_room.h"
 #include "target_speech_set.h"
+#include "task_interface.h"
 
 namespace autobot {
 enum class AccountStatus {
@@ -36,6 +37,9 @@ public:
   const QString& GetSpeechName() const;
   void SetSpeechName(const QString& speech_name);
 
+  void SetTaskConfig(const TaskConfig& task_config);
+  const TaskConfig& GetTaskConfig() const;
+
   const TargtRoomMap& GetTargetRoomMap() const;
 
   // Write related.
@@ -51,6 +55,7 @@ private:
   QString speech_name_;
   QHash<QString, std::shared_ptr<TargetRoom>> assigned_target_rooms_;
   AccountStatus bot_status_;
+  TaskConfig task_config_;
 }; // AutobotAccount
 
 } // namespace
