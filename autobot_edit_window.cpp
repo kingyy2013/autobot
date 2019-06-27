@@ -2,6 +2,8 @@
 #include <QDialog>
 
 #include "autobot_edit_window.h"
+#include "autobot_manager.h"
+
 #include "ui_autobot_edit_window_form.h"
 #include "ui_target_room_dialog_form.h"
 
@@ -45,6 +47,7 @@ void AutobotEditWindow::CombineAutobotAccount(
 
 void AutobotEditWindow::UpdateUI() {
   ui->lineEdit_password->setText(autobot_account_ptr_->GetPassword());
+  ui->lineEdit_nickname->setText(autobot_account_ptr_->GetNickname());
   ui->lineEdit_username->setText(autobot_account_ptr_->GetUsername());
   ui->treeWidget_targets->clear();
   for (const auto& str_to_target_room
@@ -80,22 +83,35 @@ void AutobotEditWindow::AssignTargetRoomToTarget() {
       = target_room_str.split(rx, QString::SkipEmptyParts);
   QString error_message;
   for (const auto& room_str : target_room_list) {
+    // Assgin the added room to the current account's edit window.
     if(!autobot_account_ptr_->GetTargetRoomMap().contains(room_str)) {
-      autobot_account_ptr_->AssignTargetRoom(
-            std::make_shared<TargetRoom>(room_str));
       QTreeWidgetItem *target_room_item
           = new QTreeWidgetItem(ui->treeWidget_targets);
       target_room_item->setText(0, room_str);
       ui->treeWidget_targets->addTopLevelItem(target_room_item);
-      target_room_dialog_->close();
-    } else {
-      error_message.append(room_str + " ");
+    }
+
+    // Assgin the added room to all the selected accounts.
+    const auto& selected_accounts =
+        AutobotManager::GetInstance().GetSelectedAcountNames();
+    for (const auto& selected_account : selected_accounts) {
+      auto autobot_account_ptr
+          = AutobotManager::GetInstance().Find(selected_account);
+      if(!autobot_account_ptr->GetTargetRoomMap().contains(room_str)) {
+        autobot_account_ptr->AssignTargetRoom(
+              std::make_shared<TargetRoom>(room_str));
+      } else {
+        error_message.append(" 房间：" + room_str + " 到 " + " 机器人："
+                             + selected_account + "\n");
+      }
     }
   }
   if (!error_message.isEmpty()) {
     QMessageBox messagebox(this);
-    messagebox.setText("无法添加，账号： " + error_message + " 已存在！");
+    messagebox.setText("无法添加，\n" + error_message + " 已存在！");
     messagebox.exec();
+  } else {
+    target_room_dialog_->close();
   }
 }
 
@@ -125,13 +141,13 @@ void AutobotEditWindow::on_pushButton_remove_target_clicked() {
 
 void AutobotEditWindow::on_pushButton_update_account_clicked() {
   autobot_account_ptr_->SetUsername(ui->lineEdit_username->text());
+  autobot_account_ptr_->SetNickname(ui->lineEdit_nickname->text());
   autobot_account_ptr_->SetPassword(ui->lineEdit_password->text());
 }
 
 void AutobotEditWindow::on_pushButton_add_target_clicked() {
   target_room_dialog_->exec();
 }
-
 
 void AutobotEditWindow::SetTaskConfig() {
   TaskConfig task_config = autobot_account_ptr_->GetTaskConfig();
