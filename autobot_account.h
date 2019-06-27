@@ -25,6 +25,7 @@ class AutobotAccount {
 public:
   AutobotAccount() = default;
   AutobotAccount(const QString& username, const QString& password,
+                 const QString& nickname = "",
                  const QString& speech_name = kDefaultSpeechName);
   // Work related.
   bool Login();
@@ -33,6 +34,7 @@ public:
 
   // Read related.
   const QString& GetUsername() const;
+  const QString& GetNickname() const;
   const QString& GetPassword() const;
   const QString& GetSpeechName() const;
   void SetSpeechName(const QString& speech_name);
@@ -44,6 +46,7 @@ public:
 
   // Write related.
   void SetUsername(const QString&);
+  void SetNickname(const QString&);
   void SetPassword(const QString&);
   void AssignTargetRoom(const std::shared_ptr<TargetRoom>& target_room);
   void RemoveTargetRoom(const QString& target_room);
@@ -52,6 +55,7 @@ public:
 private:
   QString bot_username_;
   QString bot_password_;
+  QString bot_nickname_;
   QString speech_name_;
   QHash<QString, std::shared_ptr<TargetRoom>> assigned_target_rooms_;
   AccountStatus bot_status_;

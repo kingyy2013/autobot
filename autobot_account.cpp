@@ -4,9 +4,11 @@ namespace autobot {
 
 AutobotAccount::AutobotAccount(const QString& username,
                                const QString& password,
+                               const QString& nickname,
                                const QString& speech_name)
   : bot_username_(username),
     bot_password_(password),
+    bot_nickname_(nickname),
     speech_name_(speech_name),
     bot_status_(AccountStatus::UNINITIALIZED) {
 }
@@ -14,6 +16,10 @@ AutobotAccount::AutobotAccount(const QString& username,
 
 const QString& AutobotAccount::GetUsername() const {
   return bot_username_;
+}
+
+const QString& AutobotAccount::GetNickname() const {
+  return bot_nickname_;
 }
 
 const QString& AutobotAccount::GetPassword() const {
@@ -30,6 +36,10 @@ const TargtRoomMap& AutobotAccount::GetTargetRoomMap() const {
 
 void AutobotAccount::SetUsername(const QString& username) {
   bot_username_ = username;
+}
+
+void AutobotAccount::SetNickname(const QString& nickname) {
+  bot_nickname_ = nickname;
 }
 
 void AutobotAccount::SetPassword(const QString& password) {

@@ -14,8 +14,8 @@
    <string>机器人信息编辑</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_4">
-    <item row="0" column="0">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" colspan="2">
      <widget class="QLabel" name="label_basic_info">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -28,14 +28,14 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1" colspan="2">
+    <item row="0" column="2" colspan="2">
      <widget class="Line" name="line_basic_info">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item row="0" column="3" rowspan="5">
+    <item row="0" column="4" rowspan="7">
      <layout class="QGridLayout" name="gridLayout_field_info">
       <item row="1" column="0">
        <widget class="QPushButton" name="pushButton_add_target">
@@ -73,7 +73,95 @@
       </item>
      </layout>
     </item>
-    <item row="4" column="0" colspan="3">
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_account">
+      <property name="text">
+       <string>用户名</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" colspan="3">
+     <widget class="QLineEdit" name="lineEdit_username">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_password">
+      <property name="text">
+       <string>密码</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1" colspan="3">
+     <widget class="QLineEdit" name="lineEdit_password">
+      <property name="whatsThis">
+       <string>nide yonghuming</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_nickname">
+      <property name="text">
+       <string>绰号</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1" colspan="3">
+     <widget class="QLineEdit" name="lineEdit_nickname">
+      <property name="whatsThis">
+       <string>nide yonghuming</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1" colspan="2">
+     <widget class="QPushButton" name="pushButton_update_account">
+      <property name="text">
+       <string>更改绰号&amp;密码</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="3">
+     <widget class="QPushButton" name="pushButton_update_account_2">
+      <property name="text">
+       <string>测试登陆</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="2">
+     <widget class="QLabel" name="label_speech_freq">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>语言频率</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="2" colspan="2">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0" colspan="4">
      <layout class="QGridLayout" name="gridLayout_freq_info">
       <property name="spacing">
        <number>1</number>
@@ -159,84 +247,6 @@
         </property>
         <property name="text">
          <string>固定频率</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_speech_freq">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>语言频率</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" rowspan="2" colspan="3">
-     <layout class="QGridLayout" name="gridLayout_account_infos">
-      <property name="spacing">
-       <number>8</number>
-      </property>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_password">
-        <property name="text">
-         <string>密码</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="pushButton_update_account_2">
-        <property name="text">
-         <string>测试登陆</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="lineEdit_password">
-        <property name="whatsThis">
-         <string>nide yonghuming</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QLineEdit" name="lineEdit_username">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_account">
-        <property name="text">
-         <string>用户名</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="pushButton_update_account">
-        <property name="text">
-         <string>更改用户名密码</string>
         </property>
        </widget>
       </item>
