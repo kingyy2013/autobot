@@ -20,6 +20,7 @@ AutobotEditWindow::AutobotEditWindow(QWidget *parent) :
 }
 
 AutobotEditWindow::~AutobotEditWindow() {
+  delete target_room_dialog_ui_;
   delete target_room_dialog_;
   delete ui;
 }

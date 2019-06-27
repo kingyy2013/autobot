@@ -14,7 +14,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>机器人输入</string>
   </property>
   <property name="toolTip">
    <string/>
@@ -22,7 +22,7 @@
   <property name="whatsThis">
    <string/>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
