@@ -37,6 +37,8 @@ private slots:
 
   void on_pushButton_remove_target_clicked();
 
+  void on_treeWidget_targets_itemDoubleClicked(QTreeWidgetItem *item, int column);
+
 private:
   Ui::AutobotEditWindow *ui;
   Ui::TargetRoomDialog* target_room_dialog_ui_;

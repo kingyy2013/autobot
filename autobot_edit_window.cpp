@@ -25,6 +25,10 @@ AutobotEditWindow::AutobotEditWindow(QWidget *parent) :
           SLOT(SetTaskConfig()));
   connect(ui->radioButton_freq_range, SIGNAL(clicked()), this,
           SLOT(SetTaskConfig()));
+  connect(ui->radioButton_order_fix, SIGNAL(clicked()), this,
+          SLOT(SetTaskConfig()));
+  connect(ui->radioButton_order_random, SIGNAL(clicked()), this,
+          SLOT(SetTaskConfig()));
   connect(ui->spinBox_freq_fix, SIGNAL(editingFinished()), this,
           SLOT(SetTaskConfig()));
   connect(ui->spinBox_freq_max, SIGNAL(editingFinished()), this,
@@ -72,6 +76,13 @@ void AutobotEditWindow::UpdateUI() {
     ui->spinBox_freq_fix->setDisabled(true);
     ui->spinBox_freq_max->setDisabled(false);
     ui->spinBox_freq_min->setDisabled(false);
+  }
+  if (task_config.fixed_order == true) {
+    ui->radioButton_order_fix->setChecked(true);
+    ui->radioButton_order_random->setChecked(false);
+  } else {
+    ui->radioButton_order_random->setChecked(true);
+    ui->radioButton_order_fix->setChecked(false);
   }
 }
 
@@ -158,7 +169,6 @@ void AutobotEditWindow::SetTaskConfig() {
     ui->spinBox_freq_fix->setDisabled(false);
     ui->spinBox_freq_max->setDisabled(true);
     ui->spinBox_freq_min->setDisabled(true);
-
   } else {
     task_config.fixed_interval = false;
     if (ui->spinBox_freq_min->value() > task_config.max_seconds) {
@@ -173,10 +183,23 @@ void AutobotEditWindow::SetTaskConfig() {
     ui->spinBox_freq_max->setDisabled(false);
     ui->spinBox_freq_min->setDisabled(false);
   }
+  if (ui->radioButton_order_fix->isChecked()) {
+    task_config.fixed_order = true;
+    ui->radioButton_order_random->setChecked(false);
+  } else {
+    task_config.fixed_order = false;
+    ui->radioButton_order_fix->setChecked(false);
+  }
   autobot_account_ptr_->SetTaskConfig(task_config);
 }
 
+
+void AutobotEditWindow::on_treeWidget_targets_itemDoubleClicked(QTreeWidgetItem *item, int column) {
+
 }
+
+}
+
 
 
 

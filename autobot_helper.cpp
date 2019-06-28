@@ -89,7 +89,8 @@ QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
 QDomElement ConvertTaskConfigToXML(const TaskConfig& task_config,
                                    QDomDocument* parent_doc) {
   QDomElement dom_manager = parent_doc->createElement("TaskConfig");
-  dom_manager.setAttribute("fixed", task_config.fixed_interval);
+  dom_manager.setAttribute("fixed_interval", task_config.fixed_interval);
+  dom_manager.setAttribute("fixed_order", task_config.fixed_order);
   dom_manager.setAttribute("interval_seconds", task_config.interval_seconds);
   dom_manager.setAttribute("min_seconds", task_config.min_seconds);
   dom_manager.setAttribute("max_seconds", task_config.max_seconds);
@@ -201,7 +202,7 @@ bool ParseXMLToTargetSpeech(const QDomElement& dom_element,
 
 bool ParseXMLToTaskConfig(const QDomElement& dom_element,
                           TaskConfig* task_config) {
-  if (!dom_element.hasAttribute("fixed") ||
+  if (!dom_element.hasAttribute("fixed_interval") ||
       !dom_element.hasAttribute("interval_seconds") ||
       !dom_element.hasAttribute("min_seconds") ||
       !dom_element.hasAttribute("max_seconds")) {
@@ -209,7 +210,9 @@ bool ParseXMLToTaskConfig(const QDomElement& dom_element,
     return false;
   }
   task_config->fixed_interval
-      = dom_element.attribute("fixed") == "0" ? false : true;
+      = dom_element.attribute("fixed_interval") == "0" ? false : true;
+  task_config->fixed_order
+      = dom_element.attribute("fixed_order") == "0" ? false : true;
   task_config->interval_seconds
       = dom_element.attribute("interval_seconds").toInt();
   task_config->min_seconds = dom_element.attribute("min_seconds").toInt();

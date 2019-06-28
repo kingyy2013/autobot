@@ -48,8 +48,17 @@ public:
   const QStringList& GetSelectedAcountNames() const;
 
 signals:
-  void AccountsChanged(const QStringList&);
+  /// @brief Signal when the selcted accounts has changed.
+  /// @param selected_accounts. The name of the accounts that has changed.
+  void AccountsChanged(const QStringList& selected_accounts);
+
+  /// @brief Signal for all the accounts changed.
   void AccountsChanged();
+
+  /// @brief Signal when the accounts selection has changed.
+  /// @param selected_accounts. The name of the selected accounts that will be
+  /// changed into.
+  void AccountSelectionChanged(const QStringList& selected_accounts);
 
   void AccountStatusChanged();
 

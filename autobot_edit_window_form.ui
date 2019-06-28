@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>230</height>
+    <width>527</width>
+    <height>272</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,20 +15,17 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="1" colspan="2">
-     <widget class="QPushButton" name="pushButton_update_account">
+    <item row="4" column="3">
+     <widget class="QPushButton" name="pushButton_update_account_2">
       <property name="text">
-       <string>更改绰号&amp;密码</string>
+       <string>测试登陆</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_password">
-      <property name="text">
-       <string>密码</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
+    <item row="0" column="2" colspan="2">
+     <widget class="Line" name="line_basic_info">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
@@ -42,44 +39,6 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="4" rowspan="7">
-     <layout class="QGridLayout" name="gridLayout_field_info">
-      <item row="1" column="0">
-       <widget class="QPushButton" name="pushButton_add_target">
-        <property name="text">
-         <string>添加目标房间</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="pushButton_remove_target">
-        <property name="text">
-         <string>移除目标房间</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="QTreeWidget" name="treeWidget_targets">
-        <property name="selectionMode">
-         <enum>QAbstractItemView::ExtendedSelection</enum>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <column>
-         <property name="text">
-          <string>房间号</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>状态</string>
-         </property>
-        </column>
-       </widget>
-      </item>
-     </layout>
-    </item>
     <item row="2" column="1" colspan="3">
      <widget class="QLineEdit" name="lineEdit_password">
       <property name="whatsThis">
@@ -87,38 +46,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_nickname">
-      <property name="text">
-       <string>绰号</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="2" colspan="2">
-     <widget class="Line" name="line_basic_info">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1" colspan="3">
-     <widget class="QLineEdit" name="lineEdit_username">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1" colspan="3">
-     <widget class="QLineEdit" name="lineEdit_nickname">
-      <property name="whatsThis">
-       <string>nide yonghuming</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0" colspan="2">
+    <item row="5" column="0">
      <widget class="QLabel" name="label_speech_freq">
       <property name="enabled">
        <bool>true</bool>
@@ -131,20 +59,6 @@
       </property>
       <property name="text">
        <string>语言频率</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="3">
-     <widget class="QPushButton" name="pushButton_update_account_2">
-      <property name="text">
-       <string>测试登陆</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="2" colspan="2">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
@@ -222,6 +136,9 @@
         <property name="text">
          <string>范围频率</string>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">buttonGroup_freq</string>
+        </attribute>
        </widget>
       </item>
       <item row="1" column="0">
@@ -235,11 +152,50 @@
         <property name="text">
          <string>固定频率</string>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">buttonGroup_freq</string>
+        </attribute>
        </widget>
       </item>
      </layout>
     </item>
-    <item row="0" column="0" colspan="2">
+    <item row="7" column="2" colspan="2">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_password">
+      <property name="text">
+       <string>密码</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0" colspan="2">
+     <widget class="QRadioButton" name="radioButton_order_random">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>随机顺序</string>
+      </property>
+      <property name="autoExclusive">
+       <bool>true</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">buttonGroup_order</string>
+      </attribute>
+     </widget>
+    </item>
+    <item row="0" column="0">
      <widget class="QLabel" name="label_basic_info">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -252,10 +208,125 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="1" colspan="3">
+     <widget class="QLineEdit" name="lineEdit_username">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_nickname">
+      <property name="text">
+       <string>绰号</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="2" colspan="2">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1" colspan="2">
+     <widget class="QPushButton" name="pushButton_update_account">
+      <property name="text">
+       <string>更改绰号&amp;密码</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_speech_freq_2">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>语言顺序</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1" colspan="3">
+     <widget class="QLineEdit" name="lineEdit_nickname">
+      <property name="whatsThis">
+       <string>nide yonghuming</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4" rowspan="9">
+     <layout class="QGridLayout" name="gridLayout_field_info">
+      <item row="1" column="0">
+       <widget class="QPushButton" name="pushButton_add_target">
+        <property name="text">
+         <string>添加目标房间</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pushButton_remove_target">
+        <property name="text">
+         <string>移除目标房间</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QTreeWidget" name="treeWidget_targets">
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <column>
+         <property name="text">
+          <string>房间号</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>状态</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="8" column="2" colspan="2">
+     <widget class="QRadioButton" name="radioButton_order_fix">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>固定顺序</string>
+      </property>
+      <property name="autoExclusive">
+       <bool>true</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">buttonGroup_order</string>
+      </attribute>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup_order"/>
+  <buttongroup name="buttonGroup_freq"/>
+ </buttongroups>
 </ui>
