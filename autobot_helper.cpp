@@ -28,6 +28,7 @@ QDomElement ConvertTargetAccountToXML(const AutobotAccount& autobot_account,
                                       QDomDocument* parent_doc) {
   QDomElement dom_account = parent_doc->createElement("AutoBot");
   dom_account.setAttribute("Username", autobot_account.GetUsername());
+  dom_account.setAttribute("Nickname", autobot_account.GetNickname());
   dom_account.setAttribute("Password", autobot_account.GetPassword());
   dom_account.setAttribute("Speech", autobot_account.GetSpeechName());
 
@@ -108,16 +109,20 @@ bool ParseXMLToTargetRoom(const QDomElement& dom_element,
 bool ParseXMLToTargetAccount(const QDomElement& dom_element,
                              AutobotAccount* autobot_account) {
   if (!dom_element.hasAttribute("Username") ||
-      !dom_element.hasAttribute("Password")) {
+      !dom_element.hasAttribute("Password") ||
+      !dom_element.hasAttribute("Nickname") ||
+      !dom_element.hasAttribute("Speech")) {
     qDebug() << "Failed to parse Username and Password";
     return false;
   }
   const QString& username = dom_element.attribute("Username");
   const QString& password = dom_element.attribute("Password");
+  const QString& nickname = dom_element.attribute("Nickname");
   const QString& speech = dom_element.attribute("Speech");
 
   autobot_account->SetUsername(username);
   autobot_account->SetPassword(password);
+  autobot_account->SetNickname(nickname);
   autobot_account->SetSpeechName(speech);
 
   bool success = true;
@@ -205,7 +210,8 @@ bool ParseXMLToTaskConfig(const QDomElement& dom_element,
   }
   task_config->fixed_interval
       = dom_element.attribute("fixed") == "0" ? false : true;
-  task_config->interval_seconds = dom_element.attribute("interval_seconds").toInt();
+  task_config->interval_seconds
+      = dom_element.attribute("interval_seconds").toInt();
   task_config->min_seconds = dom_element.attribute("min_seconds").toInt();
   task_config->max_seconds = dom_element.attribute("max_seconds").toInt();
   return true;
