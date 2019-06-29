@@ -31,10 +31,6 @@ private slots:
 
   void on_pushButton_update_account_clicked();
 
-
-
-  void on_treeWidget_targets_itemDoubleClicked(QTreeWidgetItem *item, int column);
-
 private:
   Ui::AutobotEditWindow *ui;
   std::shared_ptr<AutobotAccount> autobot_account_ptr_;

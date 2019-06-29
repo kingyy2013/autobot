@@ -114,11 +114,6 @@ void AutobotEditWindow::SetTaskConfig() {
   autobot_account_ptr_->SetTaskConfig(task_config);
 }
 
-
-void AutobotEditWindow::on_treeWidget_targets_itemDoubleClicked(QTreeWidgetItem *item, int column) {
-
-}
-
 }
 
 

@@ -68,6 +68,7 @@ private:
   QStringList selected_autobot_nicknames_;
   QStringList selected_target_room_nicknames_;
   QHash<QString, QSet<QString>> speech_to_account_list_;
+  QHash<QString, QSet<QString>> speech_to_room_list_;
 };
 
 }// namespace

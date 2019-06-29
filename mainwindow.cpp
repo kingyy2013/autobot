@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "ui_autobot_login_dialog_form.h"
+
 #include "autobot_helper.h"
 #include <QDebug>
 #include <QFileDialog>
@@ -13,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
   autobot_login_dialog_ui_(new Ui::AutobotLoginDialog()),
   autobot_login_dialog_(new QDialog()),
   autobot_edit_window_(new AutobotEditWindow(this)),
+  target_room_edit_window_(new TargetRoomEditWindow(this)),
   target_speech_edit_window_(new TargetSpeechEditWindow(this)),
   last_directory_(QDir::currentPath()) {
   ui->setupUi(this);
@@ -183,14 +185,28 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
       qFatal(("account name " + account_username + " is not in the manager")
              .toStdString().data());
     } else {
+      // Brings account edit window.
       autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
       autobot_edit_window_->move(this->pos().x() + this->width(),
                                  this->pos().y());
       autobot_edit_window_->show();
+      // Brings target room edit window.
+      target_room_edit_window_->move(this->pos().x() + this->width()
+                                     + autobot_edit_window_->width(),
+                                     this->pos().y());
+      target_room_edit_window_->resize(target_room_edit_window_->width(),
+                                       autobot_edit_window_->height());
+      //target_room_edit_window_->AddAllRoomsToView();
+      // Brings speech edit window.
+      target_room_edit_window_->show();
+
       target_speech_edit_window_->move(this->pos().x() + this->width(),
-                                       this->pos().y()+ autobot_edit_window_->height());
-      target_speech_edit_window_->resize(autobot_edit_window_->width(),
-                                         this->height() - autobot_edit_window_->height());
+                                       this->pos().y()
+                                       + autobot_edit_window_->height());
+      target_speech_edit_window_->resize(autobot_edit_window_->width()
+                                         + target_room_edit_window_->width(),
+                                         this->height()
+                                         - autobot_edit_window_->height());
       target_speech_edit_window_->AddAllSpeechToView();
       target_speech_edit_window_->show();
       SetSelectedAcountToManager();

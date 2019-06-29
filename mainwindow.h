@@ -8,6 +8,8 @@
 
 #include "autobot_manager.h"
 #include "autobot_edit_window.h"
+#include "target_room_edit_window.h"
+#include "target_speech_edit_window.h"
 
 namespace Ui {
 class MainWindow;
@@ -53,6 +55,7 @@ private:
   Ui::AutobotLoginDialog* autobot_login_dialog_ui_;
   QDialog* autobot_login_dialog_;
   AutobotEditWindow* autobot_edit_window_;
+  TargetRoomEditWindow* target_room_edit_window_;
   TargetSpeechEditWindow* target_speech_edit_window_;
   QString last_directory_;
 
