@@ -11,7 +11,6 @@
 
 namespace Ui {
   class AutobotEditWindow;
-  class TargetRoomDialog;
 }
 
 namespace autobot {
@@ -27,22 +26,17 @@ public:
   void UpdateUI();
 
 private slots:
-  void AssignTargetRoomToTarget();
 
   void SetTaskConfig();
 
   void on_pushButton_update_account_clicked();
 
-  void on_pushButton_add_target_clicked();
 
-  void on_pushButton_remove_target_clicked();
 
   void on_treeWidget_targets_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
 private:
   Ui::AutobotEditWindow *ui;
-  Ui::TargetRoomDialog* target_room_dialog_ui_;
-  QDialog* target_room_dialog_;
   std::shared_ptr<AutobotAccount> autobot_account_ptr_;
 };
 

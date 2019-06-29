@@ -66,6 +66,7 @@ private:
   AutobotAccountMap account_dict_;
   TargetSpeechSetMap target_speech_dict_;
   QStringList selected_autobot_nicknames_;
+  QStringList selected_target_room_nicknames_;
   QHash<QString, QSet<QString>> speech_to_account_list_;
 };
 

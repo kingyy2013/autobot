@@ -79,6 +79,12 @@ void MainWindow::SetAccountToView(
   autobot_item->setBackground(1, QBrush(status_and_color.second));
   autobot_item->setBackground(2, QBrush(status_and_color.second));
   autobot_item->setBackground(3, QBrush(status_and_color.second));
+  for (const auto& target_room : account_ptr->GetTargetRoomMap()) {
+    QTreeWidgetItem *target_room_item
+        = new QTreeWidgetItem(autobot_item);
+    target_room_item->setText(0, target_room->GetRoomNumber());
+    autobot_item->addChild(target_room_item);
+  }
 }
 
 void MainWindow::AddAccountFromUi() {
@@ -140,9 +146,17 @@ void MainWindow::on_pushButton_account_delete_clicked() {
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
     if (messagebox.exec() == false) {
       foreach(QTreeWidgetItem * item, selected_items)  {
-        account_to_tree_item_map_.remove(item->text(0));
-        AutobotManager::GetInstance().RemoveAutobot(item->text(0));
-        delete item;
+        // If this is the top level item (account).
+        if (item->parent() == nullptr) {
+          account_to_tree_item_map_.remove(item->text(0));
+          AutobotManager::GetInstance().RemoveAutobot(item->text(0));
+          delete item;
+        } else {
+          const QString& parent_account_name = item->parent()->text(0);
+          AutobotManager::GetInstance().GetAccountDict()[parent_account_name]->
+              RemoveTargetRoom(item->text(0));
+          delete item;
+        }
       }
     }
   }
@@ -160,24 +174,27 @@ void MainWindow::SetSelectedAcountToManager() {
 
 void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
     QTreeWidgetItem *item, int) {
-  QString account_username = item->text(0);
-  std::shared_ptr <AutobotAccount> bot_account_ptr
-      = AutobotManager::GetInstance().Find(account_username);
-  if (bot_account_ptr == nullptr) {
-    qFatal(("account name " + account_username + " is not in the manager")
-           .toStdString().data());
-  } else {
-    autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
-    autobot_edit_window_->move(this->pos().x() + this->width(),
-                               this->pos().y());
-    autobot_edit_window_->show();
-    target_speech_edit_window_->move(this->pos().x() + this->width(),
-                               this->pos().y()+ autobot_edit_window_->height());
-    target_speech_edit_window_->resize(autobot_edit_window_->width(),
-                                       this->height() - autobot_edit_window_->height());
-    target_speech_edit_window_->AddAllSpeechToView();
-    target_speech_edit_window_->show();
-    SetSelectedAcountToManager();
+  // If this is top level item.
+  if (item->parent() == nullptr) {
+    QString account_username = item->text(0);
+    std::shared_ptr <AutobotAccount> bot_account_ptr
+        = AutobotManager::GetInstance().Find(account_username);
+    if (bot_account_ptr == nullptr) {
+      qFatal(("account name " + account_username + " is not in the manager")
+             .toStdString().data());
+    } else {
+      autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
+      autobot_edit_window_->move(this->pos().x() + this->width(),
+                                 this->pos().y());
+      autobot_edit_window_->show();
+      target_speech_edit_window_->move(this->pos().x() + this->width(),
+                                       this->pos().y()+ autobot_edit_window_->height());
+      target_speech_edit_window_->resize(autobot_edit_window_->width(),
+                                         this->height() - autobot_edit_window_->height());
+      target_speech_edit_window_->AddAllSpeechToView();
+      target_speech_edit_window_->show();
+      SetSelectedAcountToManager();
+    }
   }
 }
 
@@ -186,13 +203,16 @@ void MainWindow::on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item,
   if (item == nullptr) {
     autobot_edit_window_->hide();
   } else {
-    if (autobot_edit_window_->isVisible()) {
-      QString account_username = item->text(0);
-      std::shared_ptr <AutobotAccount> bot_account_ptr
-          = AutobotManager::GetInstance().Find(account_username);
-      autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
+    // If this is top level item.
+    if (item->parent() == nullptr) {
+      if (autobot_edit_window_->isVisible()) {
+        QString account_username = item->text(0);
+        std::shared_ptr <AutobotAccount> bot_account_ptr
+            = AutobotManager::GetInstance().Find(account_username);
+        autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
+      }
+      SetSelectedAcountToManager();
     }
-    SetSelectedAcountToManager();
   }
 }
 
@@ -206,6 +226,8 @@ void MainWindow::on_pushButton_saveall_clicked() {
   if (!filename.isEmpty()) {
     QFileInfo file_info(filename);
     last_directory_ = file_info.absoluteDir().absolutePath();
+  } else {
+    return;
   }
 
   // Writing to a file
@@ -235,6 +257,8 @@ void MainWindow::on_pushButton_loadall_clicked() {
   if (!filename.isEmpty()) {
     QFileInfo file_info(filename);
     last_directory_ = file_info.absoluteDir().absolutePath();
+  } else {
+    return;
   }
 
   // Create a document to write XML
