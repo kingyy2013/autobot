@@ -58,4 +58,15 @@ QStringList& TargetSpeech::GetWordsListMutable() {
   return words_list_;
 }
 
+const ConnectionUnitList& TargetSpeech::GetAllAssignedRoom() const {
+  return this->GetAllUpperConnections();
+}
+
+const QString TargetSpeech::GetTypeName() const {
+  return GetTypeNameStatic();
+}
+
+const QString TargetSpeech::GetTypeNameStatic() {
+  return "target_speech";
+}
 }

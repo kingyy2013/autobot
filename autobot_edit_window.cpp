@@ -31,9 +31,9 @@ AutobotEditWindow::~AutobotEditWindow() {
   delete ui;
 }
 
-void AutobotEditWindow::CombineAutobotAccount(
-    const std::shared_ptr<AutobotAccount>& account) {
-  autobot_account_ptr_ = account;
+void AutobotEditWindow::CombineAutobotAccount(const QString& account_name) {
+  autobot_account_ptr_
+      = AutobotManager::GetAccounts().GetUnitPtr(account_name);
   UpdateUI();
 }
 
@@ -41,14 +41,7 @@ void AutobotEditWindow::UpdateUI() {
   ui->lineEdit_password->setText(autobot_account_ptr_->GetPassword());
   ui->lineEdit_nickname->setText(autobot_account_ptr_->GetNickname());
   ui->lineEdit_username->setText(autobot_account_ptr_->GetUsername());
-//  ui->treeWidget_targets->clear();
-//  for (const auto& str_to_target_room
-//       : autobot_account_ptr_->GetTargetRoomMap()) {
-//    QTreeWidgetItem *target_room_item
-//        = new QTreeWidgetItem(ui->treeWidget_targets);
-//    target_room_item->setText(0, str_to_target_room->GetRoomNumber());
-//    ui->treeWidget_targets->addTopLevelItem(target_room_item);
-//  }
+
   const auto& task_config = autobot_account_ptr_->GetTaskConfig();
   ui->spinBox_freq_fix->setValue(task_config.interval_seconds);
   ui->spinBox_freq_max->setValue(task_config.max_seconds);
@@ -79,7 +72,6 @@ void AutobotEditWindow::on_pushButton_update_account_clicked() {
   autobot_account_ptr_->SetUsername(ui->lineEdit_username->text());
   autobot_account_ptr_->SetNickname(ui->lineEdit_nickname->text());
   autobot_account_ptr_->SetPassword(ui->lineEdit_password->text());
-  emit AutobotManager::GetInstance().AccountsChanged(QStringList(autobot_account_ptr_->GetUsername()));
 }
 
 void AutobotEditWindow::SetTaskConfig() {

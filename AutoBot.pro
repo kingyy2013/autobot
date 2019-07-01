@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml
+QT       += core testlib gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+  autobot_unit.cpp \
         main.cpp \
         mainwindow.cpp \
     autobot_account.cpp \
@@ -36,9 +37,11 @@ SOURCES += \
     target_speech.cpp \
     target_speech_edit_window.cpp \
     target_speech_set.cpp \
-    task_rumble_fish.cpp
+    task_rumble_fish.cpp \
+  test_autobot_basic.cc
 
 HEADERS += \
+  autobot_unit.h \
         mainwindow.h \
     autobot_account.h \
     autobot_helper.h \

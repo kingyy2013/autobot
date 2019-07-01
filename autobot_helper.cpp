@@ -27,24 +27,24 @@ QDomElement ConvertTargetRoomToXML(const TargetRoom& target_room,
 QDomElement ConvertTargetAccountToXML(const AutobotAccount& autobot_account,
                                       QDomDocument* parent_doc) {
   QDomElement dom_account = parent_doc->createElement("AutoBot");
-  dom_account.setAttribute("Username", autobot_account.GetUsername());
-  dom_account.setAttribute("Nickname", autobot_account.GetNickname());
-  dom_account.setAttribute("Password", autobot_account.GetPassword());
-  dom_account.setAttribute("Speech", autobot_account.GetSpeechName());
+//  dom_account.setAttribute("Username", autobot_account.GetUsername());
+//  dom_account.setAttribute("Nickname", autobot_account.GetNickname());
+//  dom_account.setAttribute("Password", autobot_account.GetPassword());
+////  dom_account.setAttribute("Speech", autobot_account.GetSpeechName());
 
-  // Save task config.
-  QDomElement task_dom = ConvertTaskConfigToXML(
-        autobot_account.GetTaskConfig(), parent_doc);
-  dom_account.appendChild(task_dom);
+//  // Save task config.
+//  QDomElement task_dom = ConvertTaskConfigToXML(
+//        autobot_account.GetTaskConfig(), parent_doc);
+//  dom_account.appendChild(task_dom);
 
-  // Save target rooms.
-  QDomElement dom_targets = parent_doc->createElement("TagetRooms");
-  for (const auto& target_room : autobot_account.GetTargetRoomMap()) {
-    QDomElement target_dom = ConvertTargetRoomToXML(*target_room,
-                                                    parent_doc);
-    dom_targets.appendChild(target_dom);
-  }
-  dom_account.appendChild(dom_targets);
+//  // Save target rooms.
+//  QDomElement dom_targets = parent_doc->createElement("TagetRooms");
+//  for (const auto& target_room : autobot_account.GetTargetRoomSet()) {
+////    QDomElement target_dom = ConvertTargetRoomToXML(*target_room,
+////                                                    parent_doc);
+////    dom_targets.appendChild(target_dom);
+//  }
+//  dom_account.appendChild(dom_targets);
   return dom_account;
 }
 
@@ -63,25 +63,25 @@ QDomElement ConvertTargetSpeechToXML(const TargetSpeech& target_speech,
 QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
                                        QDomDocument* parent_doc) {
   QDomElement dom_manager = parent_doc->createElement("AutobotManager");
-  dom_manager.setAttribute("DateTime",
-                           QDateTime::currentDateTime()
-                           .toString("yyyy.MM.dd:hh:mm:ss"));
-  // Save all accounts xml.
-  QDomElement dom_all_accounts = parent_doc->createElement("AutobotAccounts");
-  for (const auto& autobot_account : account_manager.GetAccountDict()) {
-    QDomElement target_dom = ConvertTargetAccountToXML(*autobot_account,
-                                                       parent_doc);
-    dom_all_accounts.appendChild(target_dom);
-  }
-  dom_manager.appendChild(dom_all_accounts);
-  // Save all speechs xml.
-  QDomElement dom_all_speechs = parent_doc->createElement("TargetSpeechs");
-  for (const auto& target_speech : account_manager.GetSpeechDict()) {
-    QDomElement target_speech_dom =
-        ConvertTargetSpeechToXML(*target_speech, parent_doc);
-    dom_all_speechs.appendChild(target_speech_dom);
-  }
-  dom_manager.appendChild(dom_all_speechs);
+//  dom_manager.setAttribute("DateTime",
+//                           QDateTime::currentDateTime()
+//                           .toString("yyyy.MM.dd:hh:mm:ss"));
+//  // Save all accounts xml.
+//  QDomElement dom_all_accounts = parent_doc->createElement("AutobotAccounts");
+//  for (const auto& autobot_account : account_manager.GetAutobotUniDict<AutobotAccount>()) {
+//    QDomElement target_dom = ConvertTargetAccountToXML(*autobot_account,
+//                                                       parent_doc);
+//    dom_all_accounts.appendChild(target_dom);
+//  }
+//  dom_manager.appendChild(dom_all_accounts);
+//  // Save all speechs xml.
+//  QDomElement dom_all_speechs = parent_doc->createElement("TargetSpeechs");
+//  for (const auto& target_speech : account_manager.GetSpeechDict()) {
+//    QDomElement target_speech_dom =
+//        ConvertTargetSpeechToXML(*target_speech, parent_doc);
+//    dom_all_speechs.appendChild(target_speech_dom);
+//  }
+//  dom_manager.appendChild(dom_all_speechs);
 
   return dom_manager;
 }
@@ -124,7 +124,7 @@ bool ParseXMLToTargetAccount(const QDomElement& dom_element,
   autobot_account->SetUsername(username);
   autobot_account->SetPassword(password);
   autobot_account->SetNickname(nickname);
-  autobot_account->SetSpeechName(speech);
+//  autobot_account->SetSpeechName(speech);
 
   bool success = true;
   QDomNodeList child_dorms = dom_element.childNodes();
@@ -141,7 +141,7 @@ bool ParseXMLToTargetAccount(const QDomElement& dom_element,
         auto target_room_ptr = std::make_shared<TargetRoom>();
         success &= ParseXMLToTargetRoom(target_dorms.at(j).toElement(),
                                         target_room_ptr.get());
-        autobot_account->AssignTargetRoom(target_room_ptr);
+//        autobot_account->AssignTargetRoom(target_room_ptr->GetRoomNumber());
       }
     }
   }
@@ -152,30 +152,29 @@ bool ParseXMLToAutobotManager(const QDomElement& dom_element,
                               AutobotManager* account_manager) {
   QDomNodeList child_dorms = dom_element.childNodes();
   bool success = true;
-  for (int i = 0; i < child_dorms.size(); ++i) {
-    QDomElement child_ele = child_dorms.at(i).toElement();
-    // Parse autobot accounts.
-    if (child_ele.tagName() == "AutobotAccounts") {
-      QDomNodeList accounts_doms = child_ele.childNodes();
-      for (int j = 0; j < accounts_doms.size(); ++j) {
-        auto autobot_ptr = std::make_shared<AutobotAccount>();
-        success &= ParseXMLToTargetAccount(accounts_doms.at(j).toElement(),
-                                           autobot_ptr.get());
-        account_manager->AddAccount(autobot_ptr);
-      }
-    }
-    // Parse target speeches.
-    if (child_ele.tagName() == "TargetSpeechs") {
-      QDomNodeList accounts_doms = child_ele.childNodes();
-      for (int j = 0; j < accounts_doms.size(); ++j) {
-        auto speech_ptr = std::make_shared<TargetSpeech>();
-        success &= ParseXMLToTargetSpeech(accounts_doms.at(j).toElement(),
-                                          speech_ptr.get());
-        account_manager->AddSpeech(speech_ptr);
-      }
-    }
-  }
-  account_manager->RebuildSpeechToAccountMap();
+//  for (int i = 0; i < child_dorms.size(); ++i) {
+//    QDomElement child_ele = child_dorms.at(i).toElement();
+//    // Parse autobot accounts.
+//    if (child_ele.tagName() == "AutobotAccounts") {
+//      QDomNodeList accounts_doms = child_ele.childNodes();
+//      for (int j = 0; j < accounts_doms.size(); ++j) {
+//        auto autobot_ptr = std::make_shared<AutobotAccount>();
+//        success &= ParseXMLToTargetAccount(accounts_doms.at(j).toElement(),
+//                                           autobot_ptr.get());
+//        account_manager->Add(autobot_ptr);
+//      }
+//    }
+//    // Parse target speeches.
+//    if (child_ele.tagName() == "TargetSpeechs") {
+//      QDomNodeList accounts_doms = child_ele.childNodes();
+//      for (int j = 0; j < accounts_doms.size(); ++j) {
+//        auto speech_ptr = std::make_shared<TargetSpeech>();
+//        success &= ParseXMLToTargetSpeech(accounts_doms.at(j).toElement(),
+//                                          speech_ptr.get());
+//        account_manager->Add(speech_ptr);
+//      }
+//    }
+//  }
   return success;
 }
 

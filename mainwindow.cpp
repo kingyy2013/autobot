@@ -46,33 +46,34 @@ void MainWindow::on_pushButton_account_add_clicked() {
 }
 
 void MainWindow::UpdateAllAccountToView() {
-  for (auto account_ptr : AutobotManager::GetInstance().GetAccountDict()) {
-    SetAccountToView(account_ptr,
-                     account_to_tree_item_map_[account_ptr->GetUsername()]);
+  for (auto account_ptr : AutobotManager::GetAccounts().GetUnitDict()) {
+    SetAccountToView(account_ptr->GetUnitName(),
+                     account_to_tree_item_map_[account_ptr->GetUnitName()]);
   }
 }
 
 void MainWindow::UpdateSelectedAccountToView(
     const QStringList& selected_accounts) {
-  const auto& account_dict = AutobotManager::GetInstance().GetAccountDict();
+//  const auto& account_dict = AutobotManager::GetInstance().GetAutobotUniDict<AutobotAccount>();
   for (const auto& selected_account_name : selected_accounts) {
-    SetAccountToView(account_dict[selected_account_name],
+    SetAccountToView(selected_account_name,
                      account_to_tree_item_map_[selected_account_name]);
   }
 }
 
 void MainWindow::UpdateAccountToCurrentView(
-    const std::shared_ptr<AutobotAccount>& account_ptr) {
+    const QString& account_ptr) {
   SetAccountToView(account_ptr,
                    ui->treeWidget_accounts->currentItem());
 }
 
 void MainWindow::SetAccountToView(
-    const std::shared_ptr<AutobotAccount>& account_ptr,
+    const QString& account_name,
     QTreeWidgetItem *autobot_item) {
+  const std::shared_ptr<AutobotAccount>& account_ptr
+      = AutobotManager::GetAccounts().GetUnitPtr(account_name);
   autobot_item->setText(0, account_ptr->GetUsername());
   autobot_item->setText(1, account_ptr->GetNickname());
-  autobot_item->setText(2, account_ptr->GetSpeechName());
   QPair<QString, QColor> status_and_color
       = ConvertStatusToQStringAndColor(account_ptr->GetStatus());
   autobot_item->setText(3,
@@ -81,10 +82,10 @@ void MainWindow::SetAccountToView(
   autobot_item->setBackground(1, QBrush(status_and_color.second));
   autobot_item->setBackground(2, QBrush(status_and_color.second));
   autobot_item->setBackground(3, QBrush(status_and_color.second));
-  for (const auto& target_room : account_ptr->GetTargetRoomMap()) {
+  for (const auto& target_room : account_ptr->GetTargetRoomSet()) {
     QTreeWidgetItem *target_room_item
         = new QTreeWidgetItem(autobot_item);
-    target_room_item->setText(0, target_room->GetRoomNumber());
+    target_room_item->setText(0, target_room->GetUnitName());
     autobot_item->addChild(target_room_item);
   }
 }
@@ -100,7 +101,7 @@ void MainWindow::AddAccountFromUi() {
     messagebox.setText("无法添加，账号名不能为空！");
     messagebox.exec();
   } else {
-    if (AutobotManager::GetInstance().Find(account_username) != nullptr) {
+    if (AutobotManager::GetAccounts().GetUnitPtr(account_username) != nullptr) {
       messagebox.setText("无法添加，账号： " + account_username + " 已存在！");
       messagebox.exec();
     } else {
@@ -109,11 +110,11 @@ void MainWindow::AddAccountFromUi() {
                                              account_password);
       QTreeWidgetItem *autobot_item
           = new QTreeWidgetItem(ui->treeWidget_accounts);
-      SetAccountToView(temp_account_ptr, autobot_item);
+      SetAccountToView(account_username, autobot_item);
       account_to_tree_item_map_[temp_account_ptr->GetUsername()]
           = autobot_item;
       ui->treeWidget_accounts->addTopLevelItem(autobot_item);
-      AutobotManager::GetInstance().AddAccount(temp_account_ptr);
+      AutobotManager::GetAccounts().Add(temp_account_ptr);
       autobot_login_dialog_->close();
     }
   }
@@ -121,12 +122,12 @@ void MainWindow::AddAccountFromUi() {
 
 void MainWindow::AddManagerToView() {
   for (const auto& autobot_account :
-       AutobotManager::GetInstance().GetAccountDict()) {
+       AutobotManager::GetAccounts().GetUnitDict()) {
     QTreeWidgetItem *autobot_item
         = new QTreeWidgetItem(ui->treeWidget_accounts);
-    SetAccountToView(autobot_account, autobot_item);
+    SetAccountToView(autobot_account->GetUnitName(), autobot_item);
     ui->treeWidget_accounts->addTopLevelItem(autobot_item);
-    account_to_tree_item_map_[autobot_account->GetUsername()]
+    account_to_tree_item_map_[autobot_account->GetUnitName()]
         = autobot_item;
   }
 }
@@ -151,18 +152,34 @@ void MainWindow::on_pushButton_account_delete_clicked() {
         // If this is the top level item (account).
         if (item->parent() == nullptr) {
           account_to_tree_item_map_.remove(item->text(0));
-          AutobotManager::GetInstance().RemoveAutobot(item->text(0));
+          AutobotManager::GetAccounts().Remove(item->text(0));
           delete item;
         } else {
-          const QString& parent_account_name = item->parent()->text(0);
-          AutobotManager::GetInstance().GetAccountDict()[parent_account_name]->
-              RemoveTargetRoom(item->text(0));
+//          const QString& parent_account_name = item->parent()->text(0);
+          AutobotManager::GetAccounts().BreakUpper(item->text(0));
           delete item;
         }
       }
     }
   }
 }
+
+void MainWindow::RemoveAccountsFromUi(const QStringList& selected_accounts) {
+  for (const QString& account_name : selected_accounts) {
+    // Removes tree widget item.
+    delete account_to_tree_item_map_[account_name];
+    account_to_tree_item_map_.remove(account_name);
+  }
+}
+
+void MainWindow::RemoveRoomsFromUi(const QStringList& selected_rooms) {
+  for (const QString& room_name : selected_rooms) {
+    // Removes tree widget item.
+    delete room_to_tree_item_map_[room_name];
+    room_to_tree_item_map_.remove(room_name);
+  }
+}
+
 
 void MainWindow::SetSelectedAcountToManager() {
   QList<QTreeWidgetItem*> selected_items
@@ -171,7 +188,7 @@ void MainWindow::SetSelectedAcountToManager() {
   for (auto item : selected_items) {
     selected_item_names.append(item->text(0));
   }
-  AutobotManager::GetInstance().SetSelectedAcountNames(selected_item_names);
+  AutobotManager::GetAccounts().SetSelectedNames(selected_item_names);
 }
 
 void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
@@ -180,13 +197,14 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
   if (item->parent() == nullptr) {
     QString account_username = item->text(0);
     std::shared_ptr <AutobotAccount> bot_account_ptr
-        = AutobotManager::GetInstance().Find(account_username);
+        = AutobotManager::GetAccounts().
+        GetUnitPtr(account_username);
     if (bot_account_ptr == nullptr) {
       qFatal(("account name " + account_username + " is not in the manager")
              .toStdString().data());
     } else {
       // Brings account edit window.
-      autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
+      autobot_edit_window_->CombineAutobotAccount(account_username);
       autobot_edit_window_->move(this->pos().x() + this->width(),
                                  this->pos().y());
       autobot_edit_window_->show();
@@ -223,9 +241,10 @@ void MainWindow::on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item,
     if (item->parent() == nullptr) {
       if (autobot_edit_window_->isVisible()) {
         QString account_username = item->text(0);
-        std::shared_ptr <AutobotAccount> bot_account_ptr
-            = AutobotManager::GetInstance().Find(account_username);
-        autobot_edit_window_->CombineAutobotAccount(bot_account_ptr);
+//        std::shared_ptr <AutobotAccount> bot_account_ptr
+//            = AutobotManager::GetInstance().
+//            GetUnitPtr<AutobotAccount>(account_username);
+        autobot_edit_window_->CombineAutobotAccount(account_username);
       }
       SetSelectedAcountToManager();
     }

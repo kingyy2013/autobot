@@ -26,8 +26,10 @@ public:
   ~MainWindow();
 private slots:
   void AddManagerToView();
-  void UpdateAccountToCurrentView(
-      const std::shared_ptr<AutobotAccount>& account_ptr);
+  void RemoveAccountsFromUi(const QStringList& selected_accounts);
+  void RemoveRoomsFromUi(const QStringList& selected_rooms);
+
+  void UpdateAccountToCurrentView(const QString& account_name);
   void AddAccountFromUi();
   void on_pushButton_account_add_clicked();
   void on_pushButton_account_delete_clicked();
@@ -48,7 +50,7 @@ private:
 
   // Set the account to the tree view and the account manager.
   void SetAccountToView(
-      const std::shared_ptr<AutobotAccount>& account_ptr,
+      const QString& account_name,
       QTreeWidgetItem *autobot_item);
 
   Ui::MainWindow *ui;

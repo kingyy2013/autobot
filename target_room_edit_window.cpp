@@ -1,6 +1,9 @@
 #include <QMessageBox>
 
 #include "target_room_edit_window.h"
+#include "target_room.h"
+#include "autobot_account.h"
+
 #include "autobot_manager.h"
 
 #include "ui_target_room_edit_window_form.h"
@@ -66,7 +69,7 @@ void TargetRoomEditWindow::AssignTargetRoomToTarget() {
   QStringList target_room_list
       = target_room_str.split(rx, QString::SkipEmptyParts);
   QString error_message;
-  for (const auto& room_str : target_room_list) {
+//  for (const auto& room_str : target_room_list) {
 //    // Assgin the added room to the current account's edit window.
 //    if(!autobot_account_ptr_->GetTargetRoomMap().contains(room_str)) {
 //      QTreeWidgetItem *target_room_item
@@ -75,22 +78,22 @@ void TargetRoomEditWindow::AssignTargetRoomToTarget() {
 //      ui->treeWidget_targets->addTopLevelItem(target_room_item);
 //    }
 
-    // Assgin the added room to all the selected accounts.
-    const auto& selected_accounts =
-        AutobotManager::GetInstance().GetSelectedAcountNames();
-    for (const auto& selected_account : selected_accounts) {
-      auto autobot_account_ptr
-          = AutobotManager::GetInstance().Find(selected_account);
-      if(!autobot_account_ptr->GetTargetRoomMap().contains(room_str)) {
-        autobot_account_ptr->AssignTargetRoom(
-              std::make_shared<TargetRoom>(room_str));
-      } else {
-        error_message.append(" 房间：" + room_str + " 到 " + " 机器人："
-                             + selected_account + "\n");
-      }
-    }
-  }
-  if (!error_message.isEmpty()) {
+//    // Assgin the added room to all the selected accounts.
+//    const auto& selected_accounts =
+//        AutobotManager::GetInstance()();
+//    for (const auto& selected_account : selected_accounts) {
+//      auto autobot_account_ptr
+//          = AutobotManager::GetInstance().Find(selected_account);
+//      if(!autobot_account_ptr->GetTargetRoomSet().contains(room_str)) {
+//        autobot_account_ptr->AssignTargetRoom(room_str);
+//      } else {
+//        error_message.append(" 房间：" + room_str + " 到 " + " 机器人："
+//                             + selected_account + "\n");
+//      }
+//    }
+//  }
+  AutobotManager::GetInstance().GetRooms().SetSelectedNames(target_room_list);
+  if (!AutobotManager::GetInstance().AssignSelectedRoomsToSelectedAccounts()) {
     QMessageBox messagebox(this);
     messagebox.setText("无法添加，\n" + error_message + " 已存在！");
     messagebox.exec();

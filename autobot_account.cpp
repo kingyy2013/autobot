@@ -4,18 +4,16 @@ namespace autobot {
 
 AutobotAccount::AutobotAccount(const QString& username,
                                const QString& password,
-                               const QString& nickname,
-                               const QString& speech_name)
-  : bot_username_(username),
+                               const QString& nickname)
+  : AutobotUnit (username),
     bot_password_(password),
     bot_nickname_(nickname),
-    speech_name_(speech_name),
     bot_status_(AccountStatus::UNINITIALIZED) {
 }
 
 
 const QString& AutobotAccount::GetUsername() const {
-  return bot_username_;
+  return this->GetUnitName();
 }
 
 const QString& AutobotAccount::GetNickname() const {
@@ -30,12 +28,9 @@ const AccountStatus& AutobotAccount::GetStatus() const {
   return bot_status_;
 }
 
-const TargtRoomMap& AutobotAccount::GetTargetRoomMap() const {
-  return assigned_target_rooms_;
-}
 
 void AutobotAccount::SetUsername(const QString& username) {
-  bot_username_ = username;
+  this->SetUnitName(username);
 }
 
 void AutobotAccount::SetNickname(const QString& nickname) {
@@ -47,20 +42,17 @@ void AutobotAccount::SetPassword(const QString& password) {
 }
 
 void AutobotAccount::AssignTargetRoom(
-    const std::shared_ptr<TargetRoom>& target_room) {
-  assigned_target_rooms_[target_room->GetRoomNumber()] = target_room;
+    const std::shared_ptr<AutobotUnit>& target_room) {
+  this->AddLowerConnection(target_room);
 }
 
-void AutobotAccount::RemoveTargetRoom(const QString& room_number) {
-  assigned_target_rooms_.remove(room_number);
+void AutobotAccount::RemoveTargetRoom(
+    const std::shared_ptr<AutobotUnit>& target_room) {
+  this->RemoveLowerConnection(target_room);
 }
 
-void AutobotAccount::SetSpeechName(const QString& speech_name) {
-  speech_name_ = speech_name;
-}
-
-const QString&  AutobotAccount::GetSpeechName() const {
-  return speech_name_;
+const ConnectionUnitList& AutobotAccount::GetTargetRoomSet() const {
+  return this->GetAllLowerConnections();
 }
 
 void AutobotAccount::SetTaskConfig(const TaskConfig& task_config) {
@@ -69,6 +61,14 @@ void AutobotAccount::SetTaskConfig(const TaskConfig& task_config) {
 
 const TaskConfig& AutobotAccount::GetTaskConfig() const {
   return task_config_;
+}
+
+const QString AutobotAccount::GetTypeName() const {
+  return GetTypeNameStatic();
+}
+
+const QString AutobotAccount::GetTypeNameStatic() {
+  return "autobot_account";
 }
 
 }
