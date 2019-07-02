@@ -16,7 +16,7 @@ const QString kDefaultFemaleSpeechName = "默认（女）";
 
 typedef QHash<QString, std::shared_ptr<TargetSpeech>> TargetSpeechSetDict;
 
-std::shared_ptr<TargetSpeechSetDict> CreateDefaultTargetSpeechSet();
+TargetSpeechSetDict CreateDefaultTargetSpeechSet();
 
 } // namespace
 

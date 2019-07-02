@@ -255,7 +255,7 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
                                          + target_room_edit_window_->width(),
                                          this->height()
                                          - autobot_edit_window_->height());
-      target_speech_edit_window_->AddAllSpeechToView();
+      target_speech_edit_window_->UpdateAllSpeechToView();
       target_speech_edit_window_->show();
       SetSelectedAcountToManager();
     }

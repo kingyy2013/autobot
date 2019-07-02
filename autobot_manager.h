@@ -24,7 +24,8 @@ class AutobotManager : public QObject {
   template<class UnitType>
   class AutobotSelectionHandler {
   public:
-    void Add(const std::shared_ptr<UnitType>& unit_name);
+    AutobotSelectionHandler() = default;
+    bool Add(const std::shared_ptr<UnitType>& unit_name);
     void RemoveSelection();
     void RemoveMuti(const QStringList& unit_names);
     void Remove(const QString& unit_name);
@@ -36,6 +37,7 @@ class AutobotManager : public QObject {
         const std::shared_ptr<AutobotUnit> upper_unit_ptr);
     void SetSelectedNames(const QStringList& selected_names);
     const QStringList& GetSelectedNames() const;
+    const QStringList GetAllNames() const;
     const QHash<QString, std::shared_ptr<UnitType>>& GetUnitDict() const;
 
     QHash<QString, std::shared_ptr<UnitType>> unit_ptr_map_;

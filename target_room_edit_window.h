@@ -38,7 +38,8 @@ private:
   Ui::TargetRoomDialog* target_room_dialog_ui_;
   QDialog* target_room_dialog_;
   QHash<QString, QTreeWidgetItem*> room_to_tree_item_map_;
-  QHash<QString, QTreeWidgetItem*> speech_to_tree_item_map_;
+  QHash<QString, QHash<QString, QTreeWidgetItem*>>
+  speech_room_to_tree_item_map_;
 };
 
 } // namespace

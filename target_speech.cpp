@@ -4,21 +4,21 @@
 namespace autobot {
 
 TargetSpeech::TargetSpeech(const QString& speech_name)
-  : speech_name_(speech_name),
+  : AutobotUnit(speech_name),
     cur_word_index_(words_list_.begin()) {}
 
 TargetSpeech::TargetSpeech(const QString& speech_name,
              const QStringList& words_list) :
+  AutobotUnit(speech_name),
   words_list_(words_list),
-  speech_name_(speech_name),
   cur_word_index_(words_list_.begin()){}
 
 void TargetSpeech::SetSpeechName(const QString& speech_name) {
-  speech_name_ = speech_name;
+  this->SetUnitName(speech_name);
 }
 
 const QString& TargetSpeech::SpeechName() const {
-  return speech_name_;
+  return this->GetUnitName();
 }
 
 void TargetSpeech::AddNewWords(const QString& piece_of_words) {

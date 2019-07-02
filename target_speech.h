@@ -33,7 +33,6 @@ public:
   static const QString GetTypeNameStatic();
 private:
   QStringList words_list_;
-  QString speech_name_;
   QStringList::Iterator cur_word_index_;
 };
 

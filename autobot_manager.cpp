@@ -1,12 +1,15 @@
 #include "autobot_manager.h"
 #include <memory>
 #include <QSet>
-
+#include "target_speech_set.h"
 #include <QDebug>
 
 namespace autobot {
 
 AutobotManager::AutobotManager() {
+  for (const auto default_speech : CreateDefaultTargetSpeechSet()) {
+    target_speechs_handler_.Add(default_speech);
+  }
 }
 
 // Singleton instance.
@@ -28,9 +31,14 @@ AutobotManager::TargetSpeechHandler& AutobotManager::GetSpeechs() {
 }
 
 template<class AutobotUnitType>
-void AutobotManager::AutobotSelectionHandler<AutobotUnitType>::Add(
+bool AutobotManager::AutobotSelectionHandler<AutobotUnitType>::Add(
     const std::shared_ptr<AutobotUnitType>& unit_ptr) {
-  unit_ptr_map_[unit_ptr->GetUnitName()] = unit_ptr;
+  if (!unit_ptr_map_.contains(unit_ptr->GetUnitName())) {
+    unit_ptr_map_[unit_ptr->GetUnitName()] = unit_ptr;
+    return true;
+  } else {
+    return false;
+  }
 }
 
 template<class AutobotUnitType>
@@ -91,6 +99,16 @@ template<class UnitType>
 const QStringList&
 AutobotManager::AutobotSelectionHandler<UnitType>::GetSelectedNames() const {
   return selected_unit_names_;
+}
+
+template<class UnitType>
+const QStringList
+AutobotManager::AutobotSelectionHandler<UnitType>::GetAllNames() const {
+  QStringList all_names;
+  for (const auto& unit : unit_ptr_map_) {
+    all_names.append(unit->GetUnitName());
+  }
+  return all_names;
 }
 
 template<class UnitType>

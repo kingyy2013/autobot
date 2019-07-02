@@ -123,18 +123,18 @@ void TargetRoomEditWindow::on_treeWidget_rooms_itemSelectionChanged() {
 }
 
 void autobot::TargetRoomEditWindow::on_pushButton_remove_speech_clicked() {
-  QStringList selected_speechs = GetSelectedItemNames(false);
-  // If any room got selected.
-  if (!selected_speechs.isEmpty()) {
-      // Break the assignment, but
-      foreach(const QString& selected_speech, selected_speechs)  {
-        const QString& upper_name
-            = speech_to_tree_item_map_[selected_speech]->parent()->text(0);
-        AutobotManager::GetSpeechs().BreakUpper(selected_speech, upper_name);
-        delete speech_to_tree_item_map_[selected_speech];
-        speech_to_tree_item_map_.remove(selected_speech);
-    }
-  }
+//  QStringList selected_speechs = GetSelectedItemNames(false);
+//  // If any room got selected.
+//  if (!selected_speechs.isEmpty()) {
+//      // Break the assignment, but
+//      foreach(const QString& selected_speech, selected_speechs)  {
+//        const QString& upper_name
+//            = speech_to_tree_item_map_[selected_speech]->parent()->text(0);
+//        AutobotManager::GetSpeechs().BreakUpper(selected_speech, upper_name);
+//        delete speech_to_tree_item_map_[selected_speech];
+//        speech_to_tree_item_map_.remove(selected_speech);
+//    }
+//  }
 }
 } // namespace
 

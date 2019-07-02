@@ -20,9 +20,11 @@ public:
   ~TargetSpeechEditWindow();
 
 public slots:
-  void AddAllSpeechToView();
+  void UpdateAllSpeechToView();
 
 private slots:
+  void UpdateSelectedSpeechToView(const QStringList& selected_accounts);
+
   void SpeechDialogAdd();
 
   void on_pushButton_speech_words_new_clicked();
@@ -36,11 +38,14 @@ private slots:
   void on_pushButton_speech_words_set_clicked();
 
 private:
+  void SetSpeechToView(const QString& speech_name);
+
   Ui::TargetSpeechEditWindow *ui;
   Ui::TargetSpeechDialog* speech_input_dialog_ui_;
   QDialog *speech_input_dialog_;
   // Container to store previous selected speech name.
   QTreeWidgetItem* prev_list_widge_;
+  QHash<QString, QTreeWidgetItem*> speech_to_tree_item_map_;
 };
 }// namespace
 
