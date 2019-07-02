@@ -3,6 +3,7 @@
 #include "ui_autobot_login_dialog_form.h"
 
 #include "autobot_helper.h"
+#include "autobot_manager.h"
 #include <QDebug>
 #include <QFileDialog>
 
@@ -47,8 +48,7 @@ void MainWindow::on_pushButton_account_add_clicked() {
 
 void MainWindow::UpdateAllAccountToView() {
   for (auto account_ptr : AutobotManager::GetAccounts().GetUnitDict()) {
-    SetAccountToView(account_ptr->GetUnitName(),
-                     account_to_tree_item_map_[account_ptr->GetUnitName()]);
+    SetAccountToView(account_ptr->GetUnitName());
   }
 }
 
@@ -56,20 +56,28 @@ void MainWindow::UpdateSelectedAccountToView(
     const QStringList& selected_accounts) {
 //  const auto& account_dict = AutobotManager::GetInstance().GetAutobotUniDict<AutobotAccount>();
   for (const auto& selected_account_name : selected_accounts) {
-    SetAccountToView(selected_account_name,
-                     account_to_tree_item_map_[selected_account_name]);
+    SetAccountToView(selected_account_name);
   }
 }
 
-void MainWindow::UpdateAccountToCurrentView(
-    const QString& account_ptr) {
-  SetAccountToView(account_ptr,
-                   ui->treeWidget_accounts->currentItem());
-}
+//void MainWindow::UpdateAccountToCurrentView(
+//    const QString& account_ptr) {
+//  SetAccountToView(account_ptr,
+//                   ui->treeWidget_accounts->currentItem());
+//}
 
-void MainWindow::SetAccountToView(
-    const QString& account_name,
-    QTreeWidgetItem *autobot_item) {
+void MainWindow::SetAccountToView(const QString& account_name) {
+  QTreeWidgetItem *autobot_item;
+  const auto& account_to_tree_item_map_itr_
+      = account_to_tree_item_map_.find(account_name);
+  if (account_to_tree_item_map_itr_ != account_to_tree_item_map_.end()) {
+    autobot_item = account_to_tree_item_map_itr_.value();
+  } else {
+    autobot_item = new QTreeWidgetItem(ui->treeWidget_accounts);
+    account_to_tree_item_map_[account_name] = autobot_item;
+    ui->treeWidget_accounts->addTopLevelItem(autobot_item);
+  }
+
   const std::shared_ptr<AutobotAccount>& account_ptr
       = AutobotManager::GetAccounts().GetUnitPtr(account_name);
   autobot_item->setText(0, account_ptr->GetUsername());
@@ -82,11 +90,31 @@ void MainWindow::SetAccountToView(
   autobot_item->setBackground(1, QBrush(status_and_color.second));
   autobot_item->setBackground(2, QBrush(status_and_color.second));
   autobot_item->setBackground(3, QBrush(status_and_color.second));
-  for (const auto& target_room : account_ptr->GetTargetRoomSet()) {
-    QTreeWidgetItem *target_room_item
-        = new QTreeWidgetItem(autobot_item);
+  const auto taregt_room_set = account_ptr->GetTargetRoomSet();
+  for (const auto& target_room : taregt_room_set) {
+    const QString& room_name = target_room->GetUnitName();
+    const auto& room_to_account_tree_item_map_itr_
+        = room_account_to_tree_item_map_.find(room_name);
+    QTreeWidgetItem *target_room_item;
+    if (room_to_account_tree_item_map_itr_
+        == room_account_to_tree_item_map_.end()) {
+      target_room_item = new QTreeWidgetItem(autobot_item);
+      room_account_to_tree_item_map_[room_name]
+          = QHash<QString, QTreeWidgetItem*>(
+      {{account_name, target_room_item}});
+    } else {
+       const auto& room_account_to_tree_item_map_itr_
+           = room_to_account_tree_item_map_itr_->find(account_name);
+      if (room_account_to_tree_item_map_itr_
+          == room_to_account_tree_item_map_itr_->end()) {
+        target_room_item = new QTreeWidgetItem(autobot_item);
+        room_account_to_tree_item_map_[room_name][account_name]
+            = target_room_item;
+      } else {
+        target_room_item = room_account_to_tree_item_map_itr_.value();
+      }
+    }
     target_room_item->setText(0, target_room->GetUnitName());
-    autobot_item->addChild(target_room_item);
   }
 }
 
@@ -108,13 +136,8 @@ void MainWindow::AddAccountFromUi() {
       std::shared_ptr<AutobotAccount> temp_account_ptr
           = std::make_shared<AutobotAccount>(account_username,
                                              account_password);
-      QTreeWidgetItem *autobot_item
-          = new QTreeWidgetItem(ui->treeWidget_accounts);
-      SetAccountToView(account_username, autobot_item);
-      account_to_tree_item_map_[temp_account_ptr->GetUsername()]
-          = autobot_item;
-      ui->treeWidget_accounts->addTopLevelItem(autobot_item);
       AutobotManager::GetAccounts().Add(temp_account_ptr);
+      SetAccountToView(account_username);
       autobot_login_dialog_->close();
     }
   }
@@ -123,12 +146,7 @@ void MainWindow::AddAccountFromUi() {
 void MainWindow::AddManagerToView() {
   for (const auto& autobot_account :
        AutobotManager::GetAccounts().GetUnitDict()) {
-    QTreeWidgetItem *autobot_item
-        = new QTreeWidgetItem(ui->treeWidget_accounts);
-    SetAccountToView(autobot_account->GetUnitName(), autobot_item);
-    ui->treeWidget_accounts->addTopLevelItem(autobot_item);
-    account_to_tree_item_map_[autobot_account->GetUnitName()]
-        = autobot_item;
+    SetAccountToView(autobot_account->GetUnitName());
   }
 }
 
@@ -149,15 +167,24 @@ void MainWindow::on_pushButton_account_delete_clicked() {
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
     if (messagebox.exec() == false) {
       foreach(QTreeWidgetItem * item, selected_items)  {
-        // If this is the top level item (account).
         if (item->parent() == nullptr) {
+          // If this is the top level item (account).
           account_to_tree_item_map_.remove(item->text(0));
           AutobotManager::GetAccounts().Remove(item->text(0));
+          room_account_to_tree_item_map_.remove(item->text(0));
           delete item;
         } else {
-//          const QString& parent_account_name = item->parent()->text(0);
-          AutobotManager::GetAccounts().BreakUpper(item->text(0));
-          delete item;
+          // Remove the rooms.
+          const QString room_name = item->text(0);
+          const QString account_name = item->parent()->text(0);
+          AutobotManager::GetRooms().BreakUpper(room_name,
+                                                account_name);
+          // Removes tree widget item.
+          for (const auto tree_item_itr
+               : room_account_to_tree_item_map_[room_name]) {
+            delete tree_item_itr;
+          }
+          room_account_to_tree_item_map_.remove(room_name);
         }
       }
     }
@@ -175,11 +202,13 @@ void MainWindow::RemoveAccountsFromUi(const QStringList& selected_accounts) {
 void MainWindow::RemoveRoomsFromUi(const QStringList& selected_rooms) {
   for (const QString& room_name : selected_rooms) {
     // Removes tree widget item.
-    delete room_to_tree_item_map_[room_name];
-    room_to_tree_item_map_.remove(room_name);
+    for (const auto tree_item_itr
+         : room_account_to_tree_item_map_[room_name]) {
+      delete tree_item_itr;
+    }
+    room_account_to_tree_item_map_.remove(room_name);
   }
 }
-
 
 void MainWindow::SetSelectedAcountToManager() {
   QList<QTreeWidgetItem*> selected_items
@@ -188,6 +217,7 @@ void MainWindow::SetSelectedAcountToManager() {
   for (auto item : selected_items) {
     selected_item_names.append(item->text(0));
   }
+  qDebug() << selected_item_names;
   AutobotManager::GetAccounts().SetSelectedNames(selected_item_names);
 }
 

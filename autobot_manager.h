@@ -28,7 +28,7 @@ class AutobotManager : public QObject {
     void RemoveSelection();
     void RemoveMuti(const QStringList& unit_names);
     void Remove(const QString& unit_name);
-    void BreakUpper(const QString& unit_name);
+    void BreakUpper(const QString& unit_name, const QString& upper_name);
     std::shared_ptr<UnitType> GetUnitPtr(
         const QString& dict_name) const;
 

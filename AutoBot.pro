@@ -37,8 +37,7 @@ SOURCES += \
     target_speech.cpp \
     target_speech_edit_window.cpp \
     target_speech_set.cpp \
-    task_rumble_fish.cpp \
-  test_autobot_basic.cc
+    task_rumble_fish.cpp
 
 HEADERS += \
   autobot_unit.h \

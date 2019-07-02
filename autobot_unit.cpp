@@ -5,12 +5,7 @@ namespace autobot {
 AutobotUnit::AutobotUnit(const QString& unit_name) : unit_name_(unit_name) {}
 
 AutobotUnit::~AutobotUnit() {
-  for (const auto& upper_unit : upper_connections_) {
-    upper_unit->RemoveLowerConnection(shared_from_this());
-  }
-  for (const auto& lower_unit_ : lower_connections_) {
-    lower_unit_->RemoveUpperConnection(shared_from_this());
-  }
+  BreakConnections();
 }
 
 const QString& AutobotUnit::GetUnitName() const {
@@ -44,8 +39,8 @@ void AutobotUnit::BreakLowerConnections() {
 
 bool AutobotUnit::AddUpperConnection(
     const std::shared_ptr<AutobotUnit>& parent) {
-  if(!upper_connections_.count(parent)) {
-    upper_connections_.insert(parent);
+  if(!upper_connections_.contains(parent->GetUnitName())) {
+    upper_connections_.insert(parent->GetUnitName(), parent);
     parent->AddLowerConnection(GetPtr());
     return true;
   } else {
@@ -55,9 +50,16 @@ bool AutobotUnit::AddUpperConnection(
 
 bool AutobotUnit::RemoveUpperConnection(
     const std::shared_ptr<AutobotUnit>& parent) {
-  if (upper_connections_.count(parent)) {
-    upper_connections_.erase(parent);
-    parent->RemoveLowerConnection(GetPtr());
+  return RemoveUpperConnection(parent->GetUnitName());
+}
+
+
+bool AutobotUnit::RemoveUpperConnection(
+    const QString& parent_name) {
+  if (upper_connections_.contains(parent_name)) {
+    const auto parent_ptr = upper_connections_[parent_name];
+    upper_connections_.remove(parent_name);
+    parent_ptr->RemoveLowerConnection(GetPtr());
     return true;
   } else {
     return false;
@@ -70,9 +72,20 @@ const ConnectionUnitList& AutobotUnit::GetAllUpperConnections() const {
 
 bool AutobotUnit::AddLowerConnection(
     const std::shared_ptr<AutobotUnit>& child) {
-  if(!lower_connections_.count(child)) {
-    lower_connections_.insert(child);
+  if(!lower_connections_.contains(child->GetUnitName())) {
+    lower_connections_.insert(child->GetUnitName(), child);
     child->AddUpperConnection(GetPtr());
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool AutobotUnit::RemoveLowerConnection(const QString& child) {
+  if (lower_connections_.contains(child)) {
+    const auto child_ptr = lower_connections_[child];
+    lower_connections_.remove(child);
+    child_ptr->RemoveUpperConnection(GetPtr());
     return true;
   } else {
     return false;
@@ -81,16 +94,10 @@ bool AutobotUnit::AddLowerConnection(
 
 bool AutobotUnit::RemoveLowerConnection(
     const std::shared_ptr<AutobotUnit>& child) {
-  if (lower_connections_.count(child)) {
-    lower_connections_.erase(child);
-    child->RemoveUpperConnection(GetPtr());
-    return true;
-  } else {
-    return false;
-  }
+  return RemoveLowerConnection(child->GetUnitName());
 }
 
 const ConnectionUnitList& AutobotUnit::GetAllLowerConnections() const {
-  return upper_connections_;
+  return lower_connections_;
 }
 } // namespace

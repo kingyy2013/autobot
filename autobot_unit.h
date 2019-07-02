@@ -2,12 +2,13 @@
 #define AUTOBOT_UNIT_H
 
 #include <unordered_set>
+#include <QHash>
 #include <QString>
 #include <memory>
 
 namespace autobot {
 class AutobotUnit;
-typedef std::unordered_set<std::shared_ptr<AutobotUnit>> ConnectionUnitList;
+typedef QHash<QString, std::shared_ptr<AutobotUnit>> ConnectionUnitList;
 
 class AutobotUnit : public std::enable_shared_from_this<AutobotUnit> {
 
@@ -27,10 +28,12 @@ public:
 
   virtual bool AddUpperConnection(const std::shared_ptr<AutobotUnit>&);
   virtual bool RemoveUpperConnection(const std::shared_ptr<AutobotUnit>&);
+  virtual bool RemoveUpperConnection(const QString&);
   virtual const ConnectionUnitList& GetAllUpperConnections() const;
 
   virtual bool AddLowerConnection(const std::shared_ptr<AutobotUnit>&);
   virtual bool RemoveLowerConnection(const std::shared_ptr<AutobotUnit>&);
+  virtual bool RemoveLowerConnection(const QString&);
   virtual const ConnectionUnitList & GetAllLowerConnections() const;
 
   bool IsUpperConnector(const std::shared_ptr<AutobotUnit>&);

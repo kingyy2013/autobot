@@ -29,7 +29,7 @@ private slots:
   void RemoveAccountsFromUi(const QStringList& selected_accounts);
   void RemoveRoomsFromUi(const QStringList& selected_rooms);
 
-  void UpdateAccountToCurrentView(const QString& account_name);
+//  void UpdateAccountToCurrentView(const QString& account_name);
   void AddAccountFromUi();
   void on_pushButton_account_add_clicked();
   void on_pushButton_account_delete_clicked();
@@ -49,9 +49,7 @@ private:
   void SetSelectedAcountToManager();
 
   // Set the account to the tree view and the account manager.
-  void SetAccountToView(
-      const QString& account_name,
-      QTreeWidgetItem *autobot_item);
+  void SetAccountToView(const QString& account_name);
 
   Ui::MainWindow *ui;
   Ui::AutobotLoginDialog* autobot_login_dialog_ui_;
@@ -62,7 +60,8 @@ private:
   QString last_directory_;
 
   QHash<QString, QTreeWidgetItem*> account_to_tree_item_map_;
-  QHash<QString, QTreeWidgetItem*> room_to_tree_item_map_;
+  QHash<QString,
+  QHash<QString, QTreeWidgetItem*>> room_account_to_tree_item_map_;
 };
 
 } // namespace

@@ -2,6 +2,7 @@
 #include <memory>
 #include <QSet>
 
+#include <QDebug>
 
 namespace autobot {
 
@@ -55,8 +56,8 @@ void AutobotManager::AutobotSelectionHandler<UnitType>::Remove(
 
 template<class UnitType>
 void AutobotManager::AutobotSelectionHandler<UnitType>::BreakUpper(
-    const QString& unit_name) {
-  unit_ptr_map_[unit_name]->BreakUpperConnections();
+    const QString& unit_name, const QString& upper_name) {
+  unit_ptr_map_[unit_name]->RemoveUpperConnection(upper_name);
 }
 
 template<class UnitType>
@@ -64,7 +65,7 @@ std::shared_ptr<UnitType> AutobotManager::AutobotSelectionHandler<UnitType>
 ::GetUnitPtr(
     const QString& dict_name) const {
   const auto& unit_ptr_itr = unit_ptr_map_.find(dict_name);
-  if (unit_ptr_itr == unit_ptr_map_.end()) {
+  if (unit_ptr_itr != unit_ptr_map_.end()) {
     return std::static_pointer_cast<UnitType>(unit_ptr_itr.value());
   } else {
     return nullptr;
@@ -74,7 +75,8 @@ std::shared_ptr<UnitType> AutobotManager::AutobotSelectionHandler<UnitType>
 template<class UnitType>
 void AutobotManager::AutobotSelectionHandler<UnitType>::AssignedSelectedToUpper(
     const std::shared_ptr<AutobotUnit> upper_unit_ptr) {
-  for (const auto& unit_ptr : unit_ptr_map_) {
+  for (const auto& selected_name : selected_unit_names_) {
+    const auto& unit_ptr = unit_ptr_map_[selected_name];
     upper_unit_ptr->AddLowerConnection(unit_ptr);
   }
 }
@@ -203,9 +205,11 @@ bool AutobotManager::AssignSelectedRoomsToSelectedAccounts() {
   for (const auto& selected_account : selected_accounts) {
     const auto& selected_account_ptr
         = autobot_accounts_handler_.GetUnitPtr(selected_account);
+    qDebug() << "selected_account: " << selected_account;
     // Account -> contains rooom.
     target_rooms_handler_.AssignedSelectedToUpper(selected_account_ptr);
   }
+  emit AccountsChanged(selected_accounts);
   return true;
 }
 
@@ -217,6 +221,7 @@ bool AutobotManager::AssignSelectedSpeechsToSelectedRooms() {
     // Room -> contains speech.
     target_speechs_handler_.AssignedSelectedToUpper(selected_room_ptr);
   }
+  emit RoomsChanged(selected_rooms);
   return true;
 }
 

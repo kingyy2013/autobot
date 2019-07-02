@@ -1,4 +1,5 @@
 #include <QMessageBox>
+#include <QDebug>
 
 #include "target_room_edit_window.h"
 #include "target_room.h"
@@ -19,8 +20,8 @@ TargetRoomEditWindow::TargetRoomEditWindow(QWidget *parent) :
   ui->setupUi(this);
   target_room_dialog_ui_->setupUi(target_room_dialog_);
   connect(target_room_dialog_ui_->pushButton_add, SIGNAL(clicked()), this,
-          SLOT(AssignTargetRoomToTarget()));
-  connect(target_room_dialog_ui_->pushButton_cancel, SIGNAL(clicked()),
+          SLOT(AddRoomFromDialog()));
+  connect(target_room_dialog_ui_->pushButton_add, SIGNAL(clicked()),
           target_room_dialog_, SLOT(close()));
   connect(target_room_dialog_ui_->pushButton_cancel, SIGNAL(clicked()),
           target_room_dialog_, SLOT(close()));
@@ -33,19 +34,38 @@ TargetRoomEditWindow::~TargetRoomEditWindow()
   delete ui;
 }
 
-void TargetRoomEditWindow::on_pushButton_add_target_clicked() {
+QStringList TargetRoomEditWindow::GetSelectedItemNames (bool top_level) {
+  QList<QTreeWidgetItem*> selected_items
+      = ui->treeWidget_rooms->selectedItems();
+  QStringList selected_names;
+  foreach(QTreeWidgetItem * item, selected_items) {
+    // Selected names when.
+    // 1. Top-level item && requested top_level.
+    // 1. Bottom-level item && not requested top_level.
+    if((item->parent() == nullptr) ^ !top_level) {
+      selected_names.append(item->text(0));
+    }
+  }
+  return selected_names;
+}
+
+void TargetRoomEditWindow::on_pushButton_add_room_clicked() {
   target_room_dialog_->exec();
 }
 
-void TargetRoomEditWindow::on_pushButton_remove_target_clicked() {
+void TargetRoomEditWindow::on_pushButton_remove_room_clicked() {
   QList<QTreeWidgetItem*> selected_items
-      = ui->treeWidget_targets->selectedItems();
-  if (selected_items.empty() == false) {
-    QString account_list_msg;
-    foreach(QTreeWidgetItem * item, selected_items)  {
+      = ui->treeWidget_rooms->selectedItems();
+  QString account_list_msg;
+  foreach(QTreeWidgetItem * item, selected_items) {
+    // Selected rooms.
+    if(item->parent() == nullptr) {
       account_list_msg.append(item->text(0));
       account_list_msg.append(" ");
     }
+  }
+  // If any room got selected.
+  if (account_list_msg != nullptr) {
     QMessageBox messagebox(this);
     messagebox.setWindowTitle("");
     messagebox.setText("您确定删除： " + account_list_msg + "?");
@@ -54,52 +74,68 @@ void TargetRoomEditWindow::on_pushButton_remove_target_clicked() {
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
     if (messagebox.exec() == false) {
       foreach(QTreeWidgetItem * item, selected_items)  {
-//        autobot_account_ptr_->RemoveTargetRoom(item->text(0));
+        AutobotManager::GetRooms().Remove(item->text(0));
         delete item;
       }
     }
   }
 }
 
-
-void TargetRoomEditWindow::AssignTargetRoomToTarget() {
+void TargetRoomEditWindow::AddRoomFromDialog() {
   const QString& target_room_str =
       target_room_dialog_ui_->lineEdit_room->text();
   QRegExp rx("[, ]");// match a comma or a space
   QStringList target_room_list
       = target_room_str.split(rx, QString::SkipEmptyParts);
   QString error_message;
-//  for (const auto& room_str : target_room_list) {
-//    // Assgin the added room to the current account's edit window.
-//    if(!autobot_account_ptr_->GetTargetRoomMap().contains(room_str)) {
-//      QTreeWidgetItem *target_room_item
-//          = new QTreeWidgetItem(ui->treeWidget_targets);
-//      target_room_item->setText(0, room_str);
-//      ui->treeWidget_targets->addTopLevelItem(target_room_item);
-//    }
+  for (const auto& room_str : target_room_list) {
+    if(AutobotManager::GetRooms().GetUnitPtr(room_str) == nullptr) {
+      QTreeWidgetItem *target_room_item
+          = new QTreeWidgetItem(ui->treeWidget_rooms);
+      AutobotManager::GetRooms().Add(std::make_shared<TargetRoom>(room_str));
+      target_room_item->setText(0, room_str);
+      ui->treeWidget_rooms->addTopLevelItem(target_room_item);
+      room_to_tree_item_map_[room_str] = target_room_item;
+    } else {
+      error_message.append(" 房间：" + room_str + "\n");
+    }
+  }
+  if(!error_message.isEmpty()) {
+    QMessageBox messagebox(this);
+    messagebox.setText("无法添加: \n" + error_message + " 已存在！");
+    messagebox.exec();
+  }
+}
 
-//    // Assgin the added room to all the selected accounts.
-//    const auto& selected_accounts =
-//        AutobotManager::GetInstance()();
-//    for (const auto& selected_account : selected_accounts) {
-//      auto autobot_account_ptr
-//          = AutobotManager::GetInstance().Find(selected_account);
-//      if(!autobot_account_ptr->GetTargetRoomSet().contains(room_str)) {
-//        autobot_account_ptr->AssignTargetRoom(room_str);
-//      } else {
-//        error_message.append(" 房间：" + room_str + " 到 " + " 机器人："
-//                             + selected_account + "\n");
-//      }
-//    }
-//  }
-  AutobotManager::GetInstance().GetRooms().SetSelectedNames(target_room_list);
+void autobot::TargetRoomEditWindow::on_pushButton_set_room_clicked() {
+  QString error_message;
   if (!AutobotManager::GetInstance().AssignSelectedRoomsToSelectedAccounts()) {
     QMessageBox messagebox(this);
     messagebox.setText("无法添加，\n" + error_message + " 已存在！");
     messagebox.exec();
-  } else {
-    target_room_dialog_->close();
   }
 }
 
+
+void TargetRoomEditWindow::on_treeWidget_rooms_itemSelectionChanged() {
+  QStringList selected_room_names = GetSelectedItemNames(true);
+  AutobotManager::GetRooms().SetSelectedNames(selected_room_names);
+}
+
+void autobot::TargetRoomEditWindow::on_pushButton_remove_speech_clicked() {
+  QStringList selected_speechs = GetSelectedItemNames(false);
+  // If any room got selected.
+  if (!selected_speechs.isEmpty()) {
+      // Break the assignment, but
+      foreach(const QString& selected_speech, selected_speechs)  {
+        const QString& upper_name
+            = speech_to_tree_item_map_[selected_speech]->parent()->text(0);
+        AutobotManager::GetSpeechs().BreakUpper(selected_speech, upper_name);
+        delete speech_to_tree_item_map_[selected_speech];
+        speech_to_tree_item_map_.remove(selected_speech);
+    }
+  }
+}
 } // namespace
+
+
