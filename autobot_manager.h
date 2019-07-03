@@ -56,32 +56,6 @@ public:
   static TargetRoomHandler& GetRooms();
   static TargetSpeechHandler& GetSpeechs();
 
-//  // Template functions.
-//  /// @brief Added new autobot account to the manager.
-//  /// @param autobot_account. Autobot account that is being added.
-//  template<class AutobotUnitType>
-//  void Add(const std::shared_ptr<AutobotUnitType>& unit_name);
-//  template<class AutobotUnitType>
-//  void RemoveSelection();
-//  template<class AutobotUnitType>
-//  void RemoveMuti(const QStringList& unit_names);
-//  template<class AutobotUnitType>
-//  void Remove(const QString& unit_name);
-//  template<class AutobotUnitType>
-//  void BreakUpper(const QString& unit_name);
-//  template<class AutobotUnitType>
-//  std::shared_ptr<AutobotUnitType> GetUnitPtr(
-//      const QString& dict_name) const;
-
-//  template<class AutobotUnitType>
-//  void SetSelectedNames(const QStringList& selected_names);
-//  template<class AutobotUnitType>
-//  const QStringList& GetSelectedNames() const;
-//  template<class AutobotUnitType>
-//  const AutobotUnitDict GetAutobotUniDict() const ;
-  // Template functions.
-
-
   bool AssignSelectedRoomsToSelectedAccounts();
   bool AssignSelectedSpeechsToSelectedRooms();
 
@@ -95,74 +69,7 @@ public:
     return target_speechs_handler_;
   }
 
-// typedef template<> void Remove<AutobotAccount>(const QString& unit_name) RemoveAutobotAccount;
-//  using RemoveAutobotAccount = decltype(template<> void Remove<AutobotAccount>(const QString& unit_name));
-
-//  typedef template<> void Remove<AutobotAccount>() RemoveAutobotAccount;
-
-//  // Usage functions.
-//  std::shared_ptr<TargetRoom> GetTargetRoomPtr(
-//      const QString& room_name) const;
-//  std::shared_ptr<AutobotAccount> GetAutobotAccountPtr(
-//      const QString& account_name) const;
-//  std::shared_ptr<TargetSpeech> GetTargetSpeech(
-//      const QString& speech_name) const;
-
-//  inline void RemoveAccount(const QString& name) {
-//    Remove<AutobotAccount>(name);
-//  }
-//  inline void RemoveRoom(const QString& name) {
-//    Remove<TargetRoom>(name);
-//  }
-//  inline void RemoveSpeech(const QString& name) {
-//    this->Remove<TargetSpeech>(name);
-//  }
-
-  // Connection related.
-  // Break TargetRoom from AutobotAccount, but still keep the instance.
-//  void BreakTargetRoomPtr(const QString& room_name);
-  // Break TargetSpeech from TargetRoom, but still keep the instance.
-//  void BreakTargetSpeechPtr(const QString& room_name);
-
-//  bool AssignSelectedSpeechsToSelectedRooms();
-//  void AssignSpeechToRoom(const QString& speech_name,
-//                          const QString& roomt_name);
-
-//  bool AssignSelectedRoomsToSelectedAccounts();
-//  void AssignRoomToAccount(const QString& roomt_name,
-//                           const QString& account_name);
-
-
-//  /// @brief Find the AutobotAccount instance.
-//  std::shared_ptr<AutobotAccount> FindAccount(const QString& account_name) const;
-
-//  void AddRoom(const std::shared_ptr<TargetRoom>& room_ptr);
-//  void RemoveSelectedRooms();
-//  void RemoveRooms(const QStringList& room_names);
-//  void RemoveRoom(const QString& room_names);
-//  std::shared_ptr<TargetRoom> FindRoom(const QString& room_name) const;
-
-//  void AddSpeech(const std::shared_ptr<TargetSpeech>& speech_ptr);
-//  void RemoveSelectedSpeechs();
-//  void RemoveSpeechs(const QStringList& speech_names);
-//  void RemoveSpeech(const QString& speech_name);
-//  std::shared_ptr<TargetSpeech> FindSpeech(const QString& speech_name) const;
-
-
   const QString& GetErrorMessage() const;
-
-//  // Sets selected nicknames.
-//  void SetSelectedAcountNames(const QStringList& selected_names);
-//  void SetSelectedRoomNames(const QStringList& selected_names);
-//  void SetSelectedSpeechNames(const QStringList& selected_names);
-
-//  const QStringList& GetSelectedAcountNames() const;
-//  const QStringList& GetSelectedRoomNames() const;
-//  const QStringList& GetSelectedSpeechNames() const;
-
-//  const AutobotAccountDict& GetAccountDict() const;
-//  const TargetRoomDict& GetRoomDict() const;
-//  const TargetSpeechSetDict& GetSpeechDict() const;
 
 signals:
   /// @brief Signal when the selected accounts have changed.
@@ -172,6 +79,9 @@ signals:
   /// @brief Signal when the selected rooms have changed.
   /// @param selected_rooms. The name of the rooms that has changed.
   void RoomsChanged(const QStringList& selected_rooms);
+
+  void RoomsRemoved(const QStringList& selected_rooms);
+  void SpeechsRemoved(const QStringList& selected_speechs);
 
   /// @brief Signal for all the accounts changed.
   void AccountsChanged();
@@ -184,16 +94,6 @@ signals:
   void AccountStatusChanged();
 
 private:
-//  AutobotAccountDict autobot_accounts_dict_;
-//  TargetRoomDict target_rooms_dict_;
-//  TargetSpeechSetDict target_speechs_dict_;
-
-//  QStringList selected_account_names_;
-//  QStringList selected_room_names_;
-//  QStringList selected_speech_names_;
-
-//  QHash<QString, AutobotUnitDict> type_to_unit_ptr_map_;
-//  QHash<QString, QStringList> type_to_selection_map_;
   AutobotAccountHandler autobot_accounts_handler_;
   TargetRoomHandler target_rooms_handler_;
   TargetSpeechHandler target_speechs_handler_;

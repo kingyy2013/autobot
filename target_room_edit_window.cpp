@@ -73,18 +73,20 @@ void TargetRoomEditWindow::on_pushButton_remove_room_clicked() {
     messagebox.addButton("确定", QMessageBox::ButtonRole::AcceptRole);
     messagebox.addButton("取消", QMessageBox::ButtonRole::RejectRole);
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
+    QStringList selected_room_names;
     if (messagebox.exec() == false) {
       foreach(QTreeWidgetItem * item, selected_items)  {
         if (item->parent() == nullptr) {
           // If this is the top level item (account).
+          selected_room_names.append(item->text(0));
           room_to_tree_item_map_.remove(item->text(0));
-          AutobotManager::GetAccounts().Remove(item->text(0));
+          AutobotManager::GetRooms().Remove(item->text(0));
           delete item;
         } else {
           // Remove the rooms.
           const QString speech_name = item->text(0);
           const QString room_name = item->parent()->text(0);
-          AutobotManager::GetRooms().BreakUpper(speech_name,
+          AutobotManager::GetSpeechs().BreakUpper(speech_name,
                                                 room_name);
           // Removes tree widget item.
           for (const auto tree_item_itr
@@ -95,6 +97,7 @@ void TargetRoomEditWindow::on_pushButton_remove_room_clicked() {
         }
       }
     }
+    emit AutobotManager::GetInstance().RoomsRemoved(selected_room_names);
   }
 }
 
@@ -132,7 +135,7 @@ void TargetRoomEditWindow::SetRoomToView(const QString& room_name) {
     if (speech_to_room_tree_item_map_itr
         == speech_to_room_tree_item_map_.end()) {
       target_speech_item = new QTreeWidgetItem(room_item);
-      speech_to_room_tree_item_map_[room_name]
+      speech_to_room_tree_item_map_[speech_name]
           = QHash<QString, QTreeWidgetItem*>(
       {{room_name, target_speech_item}});
     } else {
@@ -180,6 +183,12 @@ void autobot::TargetRoomEditWindow::on_pushButton_set_room_clicked() {
     messagebox.setText("无法添加，\n" + error_message + " 已存在！");
     messagebox.exec();
   }
+  QStringList selected_account_names
+      = AutobotManager::GetAccounts().GetSelectedNames();
+  QStringList selected_room_names
+      = AutobotManager::GetRooms().GetSelectedNames();
+  emit AutobotManager::GetInstance().AccountsChanged(selected_account_names);
+  emit AutobotManager::GetInstance().RoomsChanged(selected_room_names);
 }
 
 

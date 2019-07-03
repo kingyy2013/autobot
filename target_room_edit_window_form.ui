@@ -62,7 +62,7 @@
     <item row="1" column="0">
      <widget class="QPushButton" name="pushButton_set_room">
       <property name="text">
-       <string>设置当前房间</string>
+       <string>分配房间至机器人</string>
       </property>
      </widget>
     </item>

@@ -226,8 +226,6 @@ bool AutobotManager::AssignSelectedRoomsToSelectedAccounts() {
     // Account -> contains rooom.
     target_rooms_handler_.AssignedSelectedToUpper(selected_account_ptr);
   }
-  emit AccountsChanged(selected_accounts);
-  emit RoomsChanged(target_rooms_handler_.GetSelectedNames());
   return true;
 }
 
@@ -239,7 +237,6 @@ bool AutobotManager::AssignSelectedSpeechsToSelectedRooms() {
     // Room -> contains speech.
     target_speechs_handler_.AssignedSelectedToUpper(selected_room_ptr);
   }
-  emit RoomsChanged(selected_rooms);
   return true;
 }
 

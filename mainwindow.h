@@ -26,7 +26,6 @@ public:
   ~MainWindow();
 private slots:
   void AddManagerToView();
-  void RemoveAccountsFromUi(const QStringList& selected_accounts);
   void RemoveRoomsFromUi(const QStringList& selected_rooms);
 
 //  void UpdateAccountToCurrentView(const QString& account_name);
@@ -44,6 +43,8 @@ private slots:
   void UpdateAllAccountToView();
 
   void UpdateSelectedAccountsToView(const QStringList& selected_accounts);
+
+  void on_treeWidget_accounts_itemSelectionChanged();
 
 private:
   void SetSelectedAcountToManager();

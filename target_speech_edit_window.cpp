@@ -206,16 +206,15 @@ void TargetSpeechEditWindow::on_treeWidget_speech_names_itemSelectionChanged() {
 
 
 void TargetSpeechEditWindow::on_pushButton_speech_words_set_clicked() {
-//  const auto current_speech =  ui->treeWidget_speech_names->currentItem();
-//  if (current_speech != nullptr) {
-//    QStringList selected_account_names
-//        = AutobotManager::GetInstance().GetSelectedAcountNames();
-//    for (const auto &selected_name : selected_account_names) {
-//      AutobotManager::GetInstance().
-//          AssignSpeechToAccount(current_speech->text(0),
-//                                selected_name);
-//    }
-//  }
+  QString error_message;
+  if (!AutobotManager::GetInstance().AssignSelectedSpeechsToSelectedRooms()) {
+    QMessageBox messagebox(this);
+    messagebox.setText("无法添加，\n" + error_message + " 已存在！");
+    messagebox.exec();
+  }
+  QStringList selected_room_names
+      = AutobotManager::GetRooms().GetSelectedNames();
+  emit AutobotManager::GetInstance().RoomsChanged(selected_room_names);
 }
 
 }// namespace

@@ -32,8 +32,13 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(&(AutobotManager::GetInstance()),
           SIGNAL(AccountsChanged(const QStringList&)), this,
           SLOT(UpdateSelectedAccountsToView(const QStringList&)));
-  connect(&(AutobotManager::GetInstance()), SIGNAL(AccountsChanged()),
-          this, SLOT(UpdateAllAccountToView()));
+  connect(&(AutobotManager::GetInstance()),
+          SIGNAL(AccountsChanged(const QStringList&)), this,
+          SLOT(UpdateSelectedAccountsToView(const QStringList&)));
+
+  connect(&(AutobotManager::GetInstance()),
+          SIGNAL(RoomsRemoved(const QStringList&)),
+          this, SLOT(RemoveRoomsFromUi(const QStringList&)));
 }
 
 MainWindow::~MainWindow() {
@@ -166,46 +171,44 @@ void MainWindow::on_pushButton_account_delete_clicked() {
     messagebox.addButton("取消", QMessageBox::ButtonRole::RejectRole);
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
     if (messagebox.exec() == false) {
+      QStringList selected_rooms;
       foreach(QTreeWidgetItem * item, selected_items)  {
         if (item->parent() == nullptr) {
           // If this is the top level item (account).
+          // Remove the account.
           account_to_tree_item_map_.remove(item->text(0));
           AutobotManager::GetAccounts().Remove(item->text(0));
           delete item;
         } else {
-          // Remove the rooms.
+          // Break the rooms.
           const QString room_name = item->text(0);
           const QString account_name = item->parent()->text(0);
           AutobotManager::GetRooms().BreakUpper(room_name,
                                                 account_name);
-          // Removes tree widget item.
-          for (const auto tree_item_itr
-               : room_account_to_tree_item_map_[room_name]) {
-            delete tree_item_itr;
-          }
-          room_account_to_tree_item_map_.remove(room_name);
+          delete room_account_to_tree_item_map_[room_name][account_name];
+          room_account_to_tree_item_map_[room_name].remove(account_name);
+          selected_rooms.append(room_name);
         }
+      }
+      // Update room info if neccssary.
+      if (!selected_rooms.empty()) {
+        emit AutobotManager::GetInstance().RoomsChanged(selected_rooms);
       }
     }
   }
 }
 
-void MainWindow::RemoveAccountsFromUi(const QStringList& selected_accounts) {
-  for (const QString& account_name : selected_accounts) {
-    // Removes tree widget item.
-    delete account_to_tree_item_map_[account_name];
-    account_to_tree_item_map_.remove(account_name);
-  }
-}
-
+// Still keep the room, just remove it from UI.
 void MainWindow::RemoveRoomsFromUi(const QStringList& selected_rooms) {
   for (const QString& room_name : selected_rooms) {
-    // Removes tree widget item.
-    for (const auto tree_item_itr
-         : room_account_to_tree_item_map_[room_name]) {
-      delete tree_item_itr;
+    if (room_account_to_tree_item_map_.contains(room_name)) {
+      // Removes tree widget item.
+      for (const auto tree_item_itr
+           : room_account_to_tree_item_map_[room_name]) {
+        delete tree_item_itr;
+      }
+      room_account_to_tree_item_map_.remove(room_name);
     }
-    room_account_to_tree_item_map_.remove(room_name);
   }
 }
 
@@ -258,6 +261,13 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
       SetSelectedAcountToManager();
     }
   }
+}
+
+
+
+
+void autobot::MainWindow::on_treeWidget_accounts_itemSelectionChanged() {
+  SetSelectedAcountToManager();
 }
 
 void MainWindow::on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item,
@@ -356,7 +366,4 @@ void MainWindow::on_pushButton_loadall_clicked() {
 }
 
 } //namespace
-
-
-
 
