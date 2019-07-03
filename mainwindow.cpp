@@ -59,17 +59,10 @@ void MainWindow::UpdateAllAccountToView() {
 
 void MainWindow::UpdateSelectedAccountsToView(
     const QStringList& selected_accounts) {
-//  const auto& account_dict = AutobotManager::GetInstance().GetAutobotUniDict<AutobotAccount>();
   for (const auto& selected_account_name : selected_accounts) {
     SetAccountToView(selected_account_name);
   }
 }
-
-//void MainWindow::UpdateAccountToCurrentView(
-//    const QString& account_ptr) {
-//  SetAccountToView(account_ptr,
-//                   ui->treeWidget_accounts->currentItem());
-//}
 
 void MainWindow::SetAccountToView(const QString& account_name) {
   QTreeWidgetItem *autobot_item;
@@ -279,9 +272,6 @@ void MainWindow::on_treeWidget_accounts_itemClicked(QTreeWidgetItem *item,
     if (item->parent() == nullptr) {
       if (autobot_edit_window_->isVisible()) {
         QString account_username = item->text(0);
-//        std::shared_ptr <AutobotAccount> bot_account_ptr
-//            = AutobotManager::GetInstance().
-//            GetUnitPtr<AutobotAccount>(account_username);
         autobot_edit_window_->CombineAutobotAccount(account_username);
       }
       SetSelectedAcountToManager();

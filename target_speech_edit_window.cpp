@@ -74,8 +74,6 @@ void TargetSpeechEditWindow::SpeechDialogAdd() {
     if(!AutobotManager::GetSpeechs().GetUnitDict().contains(speech_nickname)) {
       AutobotManager::GetSpeechs()
           .Add(std::make_shared<TargetSpeech>(speech_nickname));
-      const auto& speech_dict =
-          AutobotManager::GetSpeechs().GetUnitDict();
       SetSpeechToView(speech_nickname);
     } else {
       error_message.append(speech_nickname + " ");
@@ -87,30 +85,6 @@ void TargetSpeechEditWindow::SpeechDialogAdd() {
     messagebox.setText("无法添加，语言集名称： " + error_message + " 已存在！");
     messagebox.exec();
   }
-
-//  const QString& target_room_str =
-//      target_room_dialog_ui_->lineEdit_room->text();
-//  QRegExp rx("[, ]");// match a comma or a space
-//  QStringList target_room_list
-//      = target_room_str.split(rx, QString::SkipEmptyParts);
-//  QString error_message;
-//  for (const auto& room_str : target_room_list) {
-//    if(AutobotManager::GetRooms().GetUnitPtr(room_str) == nullptr) {
-//      QTreeWidgetItem *target_room_item
-//          = new QTreeWidgetItem(ui->treeWidget_rooms);
-//      AutobotManager::GetRooms().Add(std::make_shared<TargetRoom>(room_str));
-//      target_room_item->setText(0, room_str);
-//      ui->treeWidget_rooms->addTopLevelItem(target_room_item);
-//      room_to_tree_item_map_[room_str] = target_room_item;
-//    } else {
-//      error_message.append(" 房间：" + room_str + "\n");
-//    }
-//  }
-//  if(!error_message.isEmpty()) {
-//    QMessageBox messagebox(this);
-//    messagebox.setText("无法添加: \n" + error_message + " 已存在！");
-//    messagebox.exec();
-//  }
 }
 
 void TargetSpeechEditWindow::on_treeWidget_speech_names_itemClicked(
@@ -177,14 +151,18 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
       // Not so sure why Accept role coresponds to 0,
       // but reject corepsonds to 1.
       if (messagebox.exec() == false) {
+        QStringList selected_speechs;
         foreach(QTreeWidgetItem * item, selected_items)  {
           if (item->text(0) != kDefaultSpeechName) {
+            selected_speechs.append(item->text(0));
             AutobotManager::GetSpeechs().Remove(item->text(0));
+            speech_to_tree_item_map_.remove(item->text(0));
             prev_list_widge_ = nullptr;
             ui->textEdit_speech_words->setText(kDefaultInstruction);
             delete item;
           }
         }
+        emit AutobotManager::GetInstance().SpeechsRemoved(selected_speechs);
       }
     } else {
       QMessageBox messagebox(this);

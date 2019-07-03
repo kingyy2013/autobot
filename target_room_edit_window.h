@@ -21,6 +21,7 @@ public:
 private slots:
   void SetRoomToView(const QString& room_name);
   void AddRoomFromDialog();
+  void RemoveSpeechsFromUi(const QStringList& selected_speechs);
 
   void UpdateSelectedRoomsToView(const QStringList& selected_rooms);
 

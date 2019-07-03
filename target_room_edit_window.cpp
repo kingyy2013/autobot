@@ -29,6 +29,10 @@ TargetRoomEditWindow::TargetRoomEditWindow(QWidget *parent) :
   connect(&(AutobotManager::GetInstance()),
           SIGNAL(RoomsChanged(const QStringList&)), this,
           SLOT(UpdateSelectedRoomsToView(const QStringList&)));
+
+  connect(&(AutobotManager::GetInstance()),
+          SIGNAL(SpeechsRemoved(const QStringList&)), this,
+          SLOT(RemoveSpeechsFromUi(const QStringList&)));
 }
 
 TargetRoomEditWindow::~TargetRoomEditWindow()
@@ -36,6 +40,21 @@ TargetRoomEditWindow::~TargetRoomEditWindow()
   delete target_room_dialog_ui_;
   delete target_room_dialog_;
   delete ui;
+}
+
+
+void TargetRoomEditWindow::RemoveSpeechsFromUi(
+    const QStringList& selected_speechs) {
+  for (const QString& speech_name : selected_speechs) {
+    if (speech_to_room_tree_item_map_.contains(speech_name)) {
+      // Removes tree widget item.
+      for (const auto tree_item_itr
+           : speech_to_room_tree_item_map_[speech_name]) {
+        delete tree_item_itr;
+      }
+      speech_to_room_tree_item_map_.remove(speech_name);
+    }
+  }
 }
 
 QStringList TargetRoomEditWindow::GetSelectedItemNames (bool top_level) {
@@ -89,10 +108,7 @@ void TargetRoomEditWindow::on_pushButton_remove_room_clicked() {
           AutobotManager::GetSpeechs().BreakUpper(speech_name,
                                                 room_name);
           // Removes tree widget item.
-          for (const auto tree_item_itr
-               : speech_to_room_tree_item_map_[speech_name]) {
-            delete tree_item_itr;
-          }
+          delete speech_to_room_tree_item_map_[speech_name][room_name];
           speech_to_room_tree_item_map_.remove(speech_name);
         }
       }
