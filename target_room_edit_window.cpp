@@ -25,6 +25,10 @@ TargetRoomEditWindow::TargetRoomEditWindow(QWidget *parent) :
           target_room_dialog_, SLOT(close()));
   connect(target_room_dialog_ui_->pushButton_cancel, SIGNAL(clicked()),
           target_room_dialog_, SLOT(close()));
+
+  connect(&(AutobotManager::GetInstance()),
+          SIGNAL(RoomsChanged(const QStringList&)), this,
+          SLOT(UpdateSelectedRoomsToView(const QStringList&)));
 }
 
 TargetRoomEditWindow::~TargetRoomEditWindow()
@@ -41,7 +45,7 @@ QStringList TargetRoomEditWindow::GetSelectedItemNames (bool top_level) {
   foreach(QTreeWidgetItem * item, selected_items) {
     // Selected names when.
     // 1. Top-level item && requested top_level.
-    // 1. Bottom-level item && not requested top_level.
+    // 2. Bottom-level item && not requested top_level.
     if((item->parent() == nullptr) ^ !top_level) {
       selected_names.append(item->text(0));
     }
@@ -58,11 +62,8 @@ void TargetRoomEditWindow::on_pushButton_remove_room_clicked() {
       = ui->treeWidget_rooms->selectedItems();
   QString account_list_msg;
   foreach(QTreeWidgetItem * item, selected_items) {
-    // Selected rooms.
-    if(item->parent() == nullptr) {
-      account_list_msg.append(item->text(0));
-      account_list_msg.append(" ");
-    }
+    account_list_msg.append(item->text(0));
+    account_list_msg.append(" ");
   }
   // If any room got selected.
   if (account_list_msg != nullptr) {
@@ -74,10 +75,79 @@ void TargetRoomEditWindow::on_pushButton_remove_room_clicked() {
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
     if (messagebox.exec() == false) {
       foreach(QTreeWidgetItem * item, selected_items)  {
-        AutobotManager::GetRooms().Remove(item->text(0));
-        delete item;
+        if (item->parent() == nullptr) {
+          // If this is the top level item (account).
+          room_to_tree_item_map_.remove(item->text(0));
+          AutobotManager::GetAccounts().Remove(item->text(0));
+          delete item;
+        } else {
+          // Remove the rooms.
+          const QString speech_name = item->text(0);
+          const QString room_name = item->parent()->text(0);
+          AutobotManager::GetRooms().BreakUpper(speech_name,
+                                                room_name);
+          // Removes tree widget item.
+          for (const auto tree_item_itr
+               : speech_to_room_tree_item_map_[speech_name]) {
+            delete tree_item_itr;
+          }
+          speech_to_room_tree_item_map_.remove(speech_name);
+        }
       }
     }
+  }
+}
+
+void TargetRoomEditWindow::UpdateSelectedRoomsToView(
+    const QStringList& selected_rooms) {
+  for (const auto& selected_room_name : selected_rooms) {
+    SetRoomToView(selected_room_name);
+  }
+}
+
+void TargetRoomEditWindow::SetRoomToView(const QString& room_name) {
+  QTreeWidgetItem *room_item;
+  const auto& room_to_tree_item_map_itr_
+      = room_to_tree_item_map_.find(room_name);
+  if (room_to_tree_item_map_itr_ != room_to_tree_item_map_.end()) {
+    room_item = room_to_tree_item_map_itr_.value();
+  } else {
+    room_item = new QTreeWidgetItem(ui->treeWidget_rooms);
+    room_to_tree_item_map_[room_name] = room_item;
+    ui->treeWidget_rooms->addTopLevelItem(room_item);
+  }
+
+  const std::shared_ptr<TargetRoom>& room_ptr
+      = AutobotManager::GetRooms().GetUnitPtr(room_name);
+  room_item->setText(0, room_ptr->GetRoomNumber());
+  room_item->setText(1,
+                     QString::number(room_ptr->GetAssignedAccountSet().size()));
+
+  const auto speech_room_set = room_ptr->GetSpeechNameSet();
+  for (const auto& target_speech : speech_room_set) {
+    const QString& speech_name = target_speech->GetUnitName();
+    const auto& speech_to_room_tree_item_map_itr
+        = speech_to_room_tree_item_map_.find(speech_name);
+    QTreeWidgetItem *target_speech_item;
+    if (speech_to_room_tree_item_map_itr
+        == speech_to_room_tree_item_map_.end()) {
+      target_speech_item = new QTreeWidgetItem(room_item);
+      speech_to_room_tree_item_map_[room_name]
+          = QHash<QString, QTreeWidgetItem*>(
+      {{room_name, target_speech_item}});
+    } else {
+       const auto& speech_room_to_tree_item_map_itr_
+           = speech_to_room_tree_item_map_itr->find(room_name);
+      if (speech_room_to_tree_item_map_itr_
+          == speech_to_room_tree_item_map_itr->end()) {
+        target_speech_item = new QTreeWidgetItem(room_item);
+        speech_to_room_tree_item_map_[speech_name][room_name]
+            = target_speech_item;
+      } else {
+        target_speech_item = speech_room_to_tree_item_map_itr_.value();
+      }
+    }
+    target_speech_item->setText(0, target_speech->GetUnitName());
   }
 }
 
@@ -90,12 +160,8 @@ void TargetRoomEditWindow::AddRoomFromDialog() {
   QString error_message;
   for (const auto& room_str : target_room_list) {
     if(AutobotManager::GetRooms().GetUnitPtr(room_str) == nullptr) {
-      QTreeWidgetItem *target_room_item
-          = new QTreeWidgetItem(ui->treeWidget_rooms);
       AutobotManager::GetRooms().Add(std::make_shared<TargetRoom>(room_str));
-      target_room_item->setText(0, room_str);
-      ui->treeWidget_rooms->addTopLevelItem(target_room_item);
-      room_to_tree_item_map_[room_str] = target_room_item;
+      SetRoomToView(room_str);
     } else {
       error_message.append(" 房间：" + room_str + "\n");
     }
@@ -122,20 +188,6 @@ void TargetRoomEditWindow::on_treeWidget_rooms_itemSelectionChanged() {
   AutobotManager::GetRooms().SetSelectedNames(selected_room_names);
 }
 
-void autobot::TargetRoomEditWindow::on_pushButton_remove_speech_clicked() {
-//  QStringList selected_speechs = GetSelectedItemNames(false);
-//  // If any room got selected.
-//  if (!selected_speechs.isEmpty()) {
-//      // Break the assignment, but
-//      foreach(const QString& selected_speech, selected_speechs)  {
-//        const QString& upper_name
-//            = speech_to_tree_item_map_[selected_speech]->parent()->text(0);
-//        AutobotManager::GetSpeechs().BreakUpper(selected_speech, upper_name);
-//        delete speech_to_tree_item_map_[selected_speech];
-//        speech_to_tree_item_map_.remove(selected_speech);
-//    }
-//  }
-}
 } // namespace
 
 

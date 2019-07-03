@@ -194,6 +194,17 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_delete_clicked() {
   }
 }
 
+void TargetSpeechEditWindow::on_treeWidget_speech_names_itemSelectionChanged() {
+  QList<QTreeWidgetItem*> selected_items
+      = ui->treeWidget_speech_names->selectedItems();
+  QStringList selected_speech_names;
+  for (const auto& seleted_item : selected_items) {
+    selected_speech_names.append(seleted_item->text(0));
+  }
+  AutobotManager::GetSpeechs().SetSelectedNames(selected_speech_names);
+}
+
+
 void TargetSpeechEditWindow::on_pushButton_speech_words_set_clicked() {
 //  const auto current_speech =  ui->treeWidget_speech_names->currentItem();
 //  if (current_speech != nullptr) {
@@ -208,3 +219,4 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_set_clicked() {
 }
 
 }// namespace
+

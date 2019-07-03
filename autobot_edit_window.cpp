@@ -67,7 +67,6 @@ void AutobotEditWindow::UpdateUI() {
   }
 }
 
-
 void AutobotEditWindow::on_pushButton_update_account_clicked() {
   autobot_account_ptr_->SetUsername(ui->lineEdit_username->text());
   autobot_account_ptr_->SetNickname(ui->lineEdit_nickname->text());

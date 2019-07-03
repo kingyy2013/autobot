@@ -19,7 +19,10 @@ public:
   ~TargetRoomEditWindow();
 
 private slots:
+  void SetRoomToView(const QString& room_name);
   void AddRoomFromDialog();
+
+  void UpdateSelectedRoomsToView(const QStringList& selected_rooms);
 
   void on_pushButton_add_room_clicked();
 
@@ -29,9 +32,6 @@ private slots:
 
   void on_treeWidget_rooms_itemSelectionChanged();
 
-
-  void on_pushButton_remove_speech_clicked();
-
 private:
   QStringList GetSelectedItemNames(bool top_level);
   Ui::TargetRoomEditWindow *ui;
@@ -39,7 +39,7 @@ private:
   QDialog* target_room_dialog_;
   QHash<QString, QTreeWidgetItem*> room_to_tree_item_map_;
   QHash<QString, QHash<QString, QTreeWidgetItem*>>
-  speech_room_to_tree_item_map_;
+  speech_to_room_tree_item_map_;
 };
 
 } // namespace

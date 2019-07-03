@@ -223,11 +223,11 @@ bool AutobotManager::AssignSelectedRoomsToSelectedAccounts() {
   for (const auto& selected_account : selected_accounts) {
     const auto& selected_account_ptr
         = autobot_accounts_handler_.GetUnitPtr(selected_account);
-    qDebug() << "selected_account: " << selected_account;
     // Account -> contains rooom.
     target_rooms_handler_.AssignedSelectedToUpper(selected_account_ptr);
   }
   emit AccountsChanged(selected_accounts);
+  emit RoomsChanged(target_rooms_handler_.GetSelectedNames());
   return true;
 }
 

@@ -43,7 +43,7 @@ private slots:
 
   void UpdateAllAccountToView();
 
-  void UpdateSelectedAccountToView(const QStringList& selected_accounts);
+  void UpdateSelectedAccountsToView(const QStringList& selected_accounts);
 
 private:
   void SetSelectedAcountToManager();

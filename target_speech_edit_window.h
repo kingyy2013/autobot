@@ -37,6 +37,8 @@ private slots:
 
   void on_pushButton_speech_words_set_clicked();
 
+  void on_treeWidget_speech_names_itemSelectionChanged();
+
 private:
   void SetSpeechToView(const QString& speech_name);
 

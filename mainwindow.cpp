@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connect(&(AutobotManager::GetInstance()),
           SIGNAL(AccountsChanged(const QStringList&)), this,
-          SLOT(UpdateSelectedAccountToView(const QStringList&)));
+          SLOT(UpdateSelectedAccountsToView(const QStringList&)));
   connect(&(AutobotManager::GetInstance()), SIGNAL(AccountsChanged()),
           this, SLOT(UpdateAllAccountToView()));
 }
@@ -52,7 +52,7 @@ void MainWindow::UpdateAllAccountToView() {
   }
 }
 
-void MainWindow::UpdateSelectedAccountToView(
+void MainWindow::UpdateSelectedAccountsToView(
     const QStringList& selected_accounts) {
 //  const auto& account_dict = AutobotManager::GetInstance().GetAutobotUniDict<AutobotAccount>();
   for (const auto& selected_account_name : selected_accounts) {
@@ -171,7 +171,6 @@ void MainWindow::on_pushButton_account_delete_clicked() {
           // If this is the top level item (account).
           account_to_tree_item_map_.remove(item->text(0));
           AutobotManager::GetAccounts().Remove(item->text(0));
-          room_account_to_tree_item_map_.remove(item->text(0));
           delete item;
         } else {
           // Remove the rooms.
@@ -217,7 +216,6 @@ void MainWindow::SetSelectedAcountToManager() {
   for (auto item : selected_items) {
     selected_item_names.append(item->text(0));
   }
-  qDebug() << selected_item_names;
   AutobotManager::GetAccounts().SetSelectedNames(selected_item_names);
 }
 
