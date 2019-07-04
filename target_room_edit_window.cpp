@@ -142,7 +142,7 @@ void TargetRoomEditWindow::SetRoomToView(const QString& room_name) {
   room_item->setText(1,
                      QString::number(room_ptr->GetAssignedAccountSet().size()));
 
-  const auto speech_room_set = room_ptr->GetSpeechNameSet();
+  const auto speech_room_set = room_ptr->GetSpeechSet();
   for (const auto& target_speech : speech_room_set) {
     const QString& speech_name = target_speech->GetUnitName();
     const auto& speech_to_room_tree_item_map_itr

@@ -27,7 +27,7 @@ public:
 
   QStringList& GetWordsListMutable();
 
-  const ConnectionUnitList& GetAllAssignedRoom() const;
+  const AutobotUnitDict& GetAssignedRooms() const;
 
   const QString GetTypeName() const ;
   static const QString GetTypeNameStatic();

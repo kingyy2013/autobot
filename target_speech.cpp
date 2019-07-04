@@ -58,7 +58,7 @@ QStringList& TargetSpeech::GetWordsListMutable() {
   return words_list_;
 }
 
-const ConnectionUnitList& TargetSpeech::GetAllAssignedRoom() const {
+const AutobotUnitDict& TargetSpeech::GetAssignedRooms() const {
   return this->GetAllUpperConnections();
 }
 

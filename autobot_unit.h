@@ -8,7 +8,7 @@
 
 namespace autobot {
 class AutobotUnit;
-typedef QHash<QString, std::shared_ptr<AutobotUnit>> ConnectionUnitList;
+typedef QHash<QString, std::shared_ptr<AutobotUnit>> AutobotUnitDict;
 
 class AutobotUnit : public std::enable_shared_from_this<AutobotUnit> {
 
@@ -29,21 +29,25 @@ public:
   virtual bool AddUpperConnection(const std::shared_ptr<AutobotUnit>&);
   virtual bool RemoveUpperConnection(const std::shared_ptr<AutobotUnit>&);
   virtual bool RemoveUpperConnection(const QString&);
-  virtual const ConnectionUnitList& GetAllUpperConnections() const;
+  virtual const AutobotUnitDict& GetAllUpperConnections() const;
 
   virtual bool AddLowerConnection(const std::shared_ptr<AutobotUnit>&);
   virtual bool RemoveLowerConnection(const std::shared_ptr<AutobotUnit>&);
   virtual bool RemoveLowerConnection(const QString&);
-  virtual const ConnectionUnitList & GetAllLowerConnections() const;
+  virtual const AutobotUnitDict & GetAllLowerConnections() const;
 
-  bool IsUpperConnector(const std::shared_ptr<AutobotUnit>&);
-  bool IsLowerConnector(const std::shared_ptr<AutobotUnit>&);
+  // Reassign the value in the upper connection to the input autobot_unit
+  // diction.
+  void ReassignUpperConnectionMap(const AutobotUnitDict& autobot_dict);
+  // Reassign the value in the lower connection to the input autobot_unit
+  // diction.
+  void ReassignLowerConnectionMap(const AutobotUnitDict& autobot_dict);
 
   virtual const QString GetTypeName() const = 0;
 private:
   QString unit_name_;
-  ConnectionUnitList upper_connections_;
-  ConnectionUnitList lower_connections_;
+  AutobotUnitDict upper_connections_;
+  AutobotUnitDict lower_connections_;
 };
 
 } // namespace

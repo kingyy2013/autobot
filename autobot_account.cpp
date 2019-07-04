@@ -51,7 +51,7 @@ void AutobotAccount::RemoveTargetRoom(
   this->RemoveLowerConnection(target_room);
 }
 
-const ConnectionUnitList& AutobotAccount::GetTargetRoomSet() const {
+const AutobotUnitDict& AutobotAccount::GetTargetRoomSet() const {
   return this->GetAllLowerConnections();
 }
 

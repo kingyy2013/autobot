@@ -22,11 +22,11 @@ void TargetRoom::RemoveTargetSpeech(
   this->RemoveLowerConnection(target_speech);
 }
 
-const ConnectionUnitList& TargetRoom::GetSpeechNameSet() const {
+const AutobotUnitDict& TargetRoom::GetSpeechSet() const {
   return this->GetAllLowerConnections();
 }
 
-const ConnectionUnitList& TargetRoom::GetAssignedAccountSet() const{
+const AutobotUnitDict& TargetRoom::GetAssignedAccountSet() const{
   return this->GetAllUpperConnections();
 }
 

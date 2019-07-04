@@ -16,86 +16,91 @@ QPair<QString, QColor> ConvertStatusToQStringAndColor(AccountStatus status) {
   return kStatusToQString[static_cast<uint>(status)];
 }
 
-
 QDomElement ConvertTargetRoomToXML(const TargetRoom& target_room,
                                    QDomDocument* parent_doc) {
   QDomElement dom_ele = parent_doc->createElement("TargetRoom");
-  dom_ele.setAttribute("Room", target_room.GetRoomNumber());
+  dom_ele.setAttribute("RoomNumber", target_room.GetRoomNumber());
+
+  QDomElement dom_speech = parent_doc->createElement("AssignedName");
+  dom_speech.setAttribute("SpeechNames",
+                          target_room.GetSpeechSet().keys().join(" "));
+  dom_ele.appendChild(dom_speech);
+
+  QDomElement dom_accounts = parent_doc->createElement("AssignedAccount");
+  dom_accounts.setAttribute(
+        "AccountNames", target_room.GetAssignedAccountSet().keys().join(" "));
+  dom_ele.appendChild(dom_accounts);
+
   return dom_ele;
-}
-
-QDomElement ConvertTargetAccountToXML(const AutobotAccount& autobot_account,
-                                      QDomDocument* parent_doc) {
-  QDomElement dom_account = parent_doc->createElement("AutoBot");
-//  dom_account.setAttribute("Username", autobot_account.GetUsername());
-//  dom_account.setAttribute("Nickname", autobot_account.GetNickname());
-//  dom_account.setAttribute("Password", autobot_account.GetPassword());
-////  dom_account.setAttribute("Speech", autobot_account.GetSpeechName());
-
-//  // Save task config.
-//  QDomElement task_dom = ConvertTaskConfigToXML(
-//        autobot_account.GetTaskConfig(), parent_doc);
-//  dom_account.appendChild(task_dom);
-
-//  // Save target rooms.
-//  QDomElement dom_targets = parent_doc->createElement("TagetRooms");
-//  for (const auto& target_room : autobot_account.GetTargetRoomSet()) {
-////    QDomElement target_dom = ConvertTargetRoomToXML(*target_room,
-////                                                    parent_doc);
-////    dom_targets.appendChild(target_dom);
-//  }
-//  dom_account.appendChild(dom_targets);
-  return dom_account;
 }
 
 QDomElement ConvertTargetSpeechToXML(const TargetSpeech& target_speech,
                                      QDomDocument* parent_doc) {
-  QDomElement dom_account = parent_doc->createElement("Speech");
-  dom_account.setAttribute("Speechname", target_speech.SpeechName());
-  for (const auto& single_word : target_speech.GetWordsList()) {
-    QDomElement target_dom = parent_doc->createElement("Word");
-    target_dom.setAttribute("word", single_word);
-    dom_account.appendChild(target_dom);
-  }
-  return dom_account;
+  QDomElement dom_speech = parent_doc->createElement("Speech");
+  dom_speech.setAttribute("Speechname", target_speech.SpeechName());
+
+  QDomElement target_dom = parent_doc->createElement("Word");
+  target_dom.setAttribute("word", target_speech.GetWordsList().join(" "));
+  dom_speech.appendChild(target_dom);
+
+  QDomElement dom_room = parent_doc->createElement("AssignedRooms");
+  dom_room.setAttribute(
+        "RoomName", target_speech.GetAssignedRooms().keys().join(" "));
+  dom_speech.appendChild(dom_room);
+
+  return dom_speech;
 }
 
-QDomElement ConvertAutobotManagerToXML(const AutobotManager& account_manager,
-                                       QDomDocument* parent_doc) {
-  QDomElement dom_manager = parent_doc->createElement("AutobotManager");
-//  dom_manager.setAttribute("DateTime",
-//                           QDateTime::currentDateTime()
-//                           .toString("yyyy.MM.dd:hh:mm:ss"));
-//  // Save all accounts xml.
-//  QDomElement dom_all_accounts = parent_doc->createElement("AutobotAccounts");
-//  for (const auto& autobot_account : account_manager.GetAutobotUniDict<AutobotAccount>()) {
-//    QDomElement target_dom = ConvertTargetAccountToXML(*autobot_account,
-//                                                       parent_doc);
-//    dom_all_accounts.appendChild(target_dom);
-//  }
-//  dom_manager.appendChild(dom_all_accounts);
-//  // Save all speechs xml.
-//  QDomElement dom_all_speechs = parent_doc->createElement("TargetSpeechs");
-//  for (const auto& target_speech : account_manager.GetSpeechDict()) {
-//    QDomElement target_speech_dom =
-//        ConvertTargetSpeechToXML(*target_speech, parent_doc);
-//    dom_all_speechs.appendChild(target_speech_dom);
-//  }
-//  dom_manager.appendChild(dom_all_speechs);
+QDomElement ConvertAutobotAccountToXML(
+    const AutobotAccount& autobot_account,
+    QDomDocument* parent_doc) {
+  QDomElement dom_account = parent_doc->createElement("Account");
+  dom_account.setAttribute("Username", autobot_account.GetUsername());
+  dom_account.setAttribute("Password", autobot_account.GetPassword());
+  dom_account.setAttribute("Nickname", autobot_account.GetNickname());
+  dom_account.appendChild(ConvertTaskConfigToXML(
+                            autobot_account.GetTaskConfig(),
+                            parent_doc));
+  QDomElement dom_room = parent_doc->createElement("AttachedRooms");
+  dom_room.setAttribute(
+        "RoomName", autobot_account.GetTargetRoomSet().keys().join(" "));
+  dom_account.appendChild(dom_room);
 
-  return dom_manager;
+  return dom_account;
 }
 
 QDomElement ConvertTaskConfigToXML(const TaskConfig& task_config,
                                    QDomDocument* parent_doc) {
-  QDomElement dom_manager = parent_doc->createElement("TaskConfig");
-  dom_manager.setAttribute("fixed_interval", task_config.fixed_interval);
-  dom_manager.setAttribute("fixed_order", task_config.fixed_order);
-  dom_manager.setAttribute("interval_seconds", task_config.interval_seconds);
-  dom_manager.setAttribute("min_seconds", task_config.min_seconds);
-  dom_manager.setAttribute("max_seconds", task_config.max_seconds);
+  QDomElement dom_config = parent_doc->createElement("TaskConfig");
+  dom_config.setAttribute("fixed_interval", task_config.fixed_interval);
+  dom_config.setAttribute("fixed_order", task_config.fixed_order);
+  dom_config.setAttribute("interval_seconds", task_config.interval_seconds);
+  dom_config.setAttribute("min_seconds", task_config.min_seconds);
+  dom_config.setAttribute("max_seconds", task_config.max_seconds);
+  return dom_config;
+}
+
+QDomElement ConvertAutobotManagerToXML(const AutobotManager& autobot_manager,
+                                       QDomDocument* parent_doc) {
+  QDomElement dom_manager = parent_doc->createElement("AutobotManager");
+  for (const auto& autobot_account
+       : autobot_manager.GetAccounts().GetUnitDict()) {
+    dom_manager.appendChild(
+        ConvertAutobotAccountToXML(*autobot_account, parent_doc));
+  }
+  for (const auto& target_room
+       : autobot_manager.GetRooms().GetUnitDict()) {
+    dom_manager.appendChild(
+          ConvertTargetRoomToXML(*target_room, parent_doc));
+  }
+  for (const auto& target_speech
+       : autobot_manager.GetSpeechs().GetUnitDict()) {
+    dom_manager.appendChild(
+          ConvertTargetSpeechToXML(*target_speech, parent_doc));
+  }
   return dom_manager;
 }
+
 
 bool ParseXMLToTargetRoom(const QDomElement& dom_element,
                           TargetRoom* target_room) {
@@ -111,20 +116,17 @@ bool ParseXMLToTargetAccount(const QDomElement& dom_element,
                              AutobotAccount* autobot_account) {
   if (!dom_element.hasAttribute("Username") ||
       !dom_element.hasAttribute("Password") ||
-      !dom_element.hasAttribute("Nickname") ||
-      !dom_element.hasAttribute("Speech")) {
+      !dom_element.hasAttribute("Nickname")) {
     qDebug() << "Failed to parse Username and Password";
     return false;
   }
   const QString& username = dom_element.attribute("Username");
   const QString& password = dom_element.attribute("Password");
   const QString& nickname = dom_element.attribute("Nickname");
-  const QString& speech = dom_element.attribute("Speech");
 
   autobot_account->SetUsername(username);
   autobot_account->SetPassword(password);
   autobot_account->SetNickname(nickname);
-//  autobot_account->SetSpeechName(speech);
 
   bool success = true;
   QDomNodeList child_dorms = dom_element.childNodes();

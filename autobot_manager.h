@@ -13,10 +13,6 @@
 
 namespace autobot {
 
-//typedef QHash<QString, std::shared_ptr<AutobotAccount>> AutobotAccountDict;
-//typedef QHash<QString, std::shared_ptr<TargetRoom>> TargetRoomDict;
-typedef QHash<QString, std::shared_ptr<AutobotUnit>> AutobotUnitDict;
-
 class AutobotManager : public QObject {
   Q_OBJECT
   /// @brief Added new autobot account to the manager.

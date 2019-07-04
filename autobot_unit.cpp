@@ -66,7 +66,7 @@ bool AutobotUnit::RemoveUpperConnection(
   }
 }
 
-const ConnectionUnitList& AutobotUnit::GetAllUpperConnections() const {
+const AutobotUnitDict& AutobotUnit::GetAllUpperConnections() const {
   return upper_connections_;
 }
 
@@ -97,7 +97,26 @@ bool AutobotUnit::RemoveLowerConnection(
   return RemoveLowerConnection(child->GetUnitName());
 }
 
-const ConnectionUnitList& AutobotUnit::GetAllLowerConnections() const {
+const AutobotUnitDict& AutobotUnit::GetAllLowerConnections() const {
   return lower_connections_;
 }
+
+
+void AutobotUnit::ReassignUpperConnectionMap(
+    const AutobotUnitDict& autobot_dict) {
+  for (auto itr = upper_connections_.begin();
+       itr != upper_connections_.end(); ++itr) {
+    itr.value() = autobot_dict[itr.key()];
+  }
+}
+
+void AutobotUnit::ReassignLowerConnectionMap(
+    const AutobotUnitDict& autobot_dict) {
+  for (auto itr = lower_connections_.begin();
+       itr != lower_connections_.end(); ++itr) {
+    itr.value() = autobot_dict[itr.key()];
+  }
+}
+
+
 } // namespace
