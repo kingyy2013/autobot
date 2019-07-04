@@ -109,7 +109,7 @@ void TargetRoomEditWindow::on_pushButton_remove_room_clicked() {
                                                 room_name);
           // Removes tree widget item.
           delete speech_to_room_tree_item_map_[speech_name][room_name];
-          speech_to_room_tree_item_map_.remove(speech_name);
+          speech_to_room_tree_item_map_[speech_name].remove(room_name);
         }
       }
     }
