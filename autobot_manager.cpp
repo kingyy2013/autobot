@@ -139,5 +139,57 @@ bool AutobotManager::AssignSelectedSpeechsToSelectedRooms() {
   return true;
 }
 
+void AutobotManager::ReconnectAllUnits() {
+  for (const auto& account_unit : autobot_accounts_handler_.GetUnitDict()) {
+    QStringList room_list = account_unit->GetAttachedRoomSet().keys();
+    for (const QString& room_name : room_list) {
+      account_unit->
+          ReassignLowerConnection(room_name,
+                                  target_rooms_handler_.GetUnitPtr(room_name));
+    }
+  }
+  for (const auto& room_unit : target_rooms_handler_.GetUnitDict()) {
+    QStringList account_list = room_unit->GetAssignedAccountSet().keys();
+    for (const QString& account_name : account_list) {
+      room_unit->
+          ReassignUpperConnection(account_name,
+                                  autobot_accounts_handler_.
+                                  GetUnitPtr(account_name));
+    }
+    QStringList speech_list = room_unit->GetAttachedSpeechSet().keys();
+    for (const QString& speech_name : speech_list) {
+      room_unit->
+          ReassignLowerConnection(speech_name,
+                                  target_speechs_handler_.
+                                  GetUnitPtr(speech_name));
+    }
+  }
+  for (const auto& speech_unit : target_speechs_handler_.GetUnitDict()) {
+    QStringList room_list = speech_unit->GetAssignedRooms().keys();
+    for (const QString& room_name : room_list) {
+      speech_unit->
+          ReassignUpperConnection(room_name,
+                                  target_rooms_handler_.GetUnitPtr(room_name));
+    }
+  }
+}
+
+void AutobotManager::Print() {
+  for (const auto& unit_ptr : autobot_accounts_handler_.GetUnitDict()) {
+    unit_ptr->Print();
+  }
+  for (const auto& unit_ptr : target_rooms_handler_.GetUnitDict()) {
+    unit_ptr->Print();
+  }
+  for (const auto& unit_ptr : target_speechs_handler_.GetUnitDict()) {
+    unit_ptr->Print();
+  }
+}
+
+void AutobotManager::Clear() {
+  autobot_accounts_handler_.RemoveMuti(autobot_accounts_handler_.GetAllNames());
+  target_rooms_handler_.RemoveMuti(target_rooms_handler_.GetAllNames());
+  target_speechs_handler_.RemoveMuti(target_speechs_handler_.GetAllNames());
+}
 
 }// namespace

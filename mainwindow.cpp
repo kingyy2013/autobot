@@ -88,7 +88,7 @@ void MainWindow::SetAccountToView(const QString& account_name) {
   autobot_item->setBackground(1, QBrush(status_and_color.second));
   autobot_item->setBackground(2, QBrush(status_and_color.second));
   autobot_item->setBackground(3, QBrush(status_and_color.second));
-  const auto taregt_room_set = account_ptr->GetTargetRoomSet();
+  const auto taregt_room_set = account_ptr->GetAttachedRoomSet();
   for (const auto& target_room : taregt_room_set) {
     const QString& room_name = target_room->GetUnitName();
     const auto& room_to_account_tree_item_map_itr_
@@ -164,13 +164,22 @@ void MainWindow::on_pushButton_account_delete_clicked() {
     messagebox.addButton("取消", QMessageBox::ButtonRole::RejectRole);
     // Not so sure why Accept role coresponds to 0, but reject corepsonds to 1.
     if (messagebox.exec() == false) {
-      QStringList selected_rooms;
+      QSet<QString> selected_rooms;
       foreach(QTreeWidgetItem * item, selected_items)  {
         if (item->parent() == nullptr) {
           // If this is the top level item (account).
           // Remove the account.
-          account_to_tree_item_map_.remove(item->text(0));
-          AutobotManager::GetAccounts().Remove(item->text(0));
+          QString account_name = item->text(0);
+          account_to_tree_item_map_.remove(account_name);
+          const auto& account_ptr =
+              AutobotManager::GetAccounts().GetUnitPtr(account_name);
+          for (const auto& room_name
+               : account_ptr->GetAttachedRoomSet().keys()) {
+            delete room_account_to_tree_item_map_[room_name][account_name];
+            room_account_to_tree_item_map_[room_name].remove(account_name);
+            selected_rooms.insert(room_name);
+          }
+          AutobotManager::GetAccounts().Remove(account_name);
           delete item;
         } else {
           // Break the rooms.
@@ -180,12 +189,13 @@ void MainWindow::on_pushButton_account_delete_clicked() {
                                                 account_name);
           delete room_account_to_tree_item_map_[room_name][account_name];
           room_account_to_tree_item_map_[room_name].remove(account_name);
-          selected_rooms.append(room_name);
+          selected_rooms.insert(room_name);
         }
       }
       // Update room info if neccssary.
       if (!selected_rooms.empty()) {
-        emit AutobotManager::GetInstance().RoomsChanged(selected_rooms);
+        emit AutobotManager::GetInstance().
+            RoomsChanged(selected_rooms.toList());
       }
     }
   }
@@ -238,7 +248,7 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
                                      this->pos().y());
       target_room_edit_window_->resize(target_room_edit_window_->width(),
                                        autobot_edit_window_->height());
-      //target_room_edit_window_->AddAllRoomsToView();
+      target_room_edit_window_->UpdateAllRoomsToView();
       // Brings speech edit window.
       target_room_edit_window_->show();
 
@@ -346,12 +356,14 @@ void MainWindow::on_pushButton_loadall_clicked() {
 
   // Getting root element
   QDomElement root = document.firstChildElement();
+  AutobotManager::GetInstance().Clear();
   if (!ParseXMLToAutobotManager(root,
                                &AutobotManager::GetInstance())) {
     QMessageBox messagebox(this);
     messagebox.setText("无法解读文件格式");
     messagebox.exec();
   }
+  AutobotManager::GetInstance().Print();
   AddManagerToView();
 }
 

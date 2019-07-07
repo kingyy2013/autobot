@@ -15,8 +15,8 @@ public:
 
   void AssignTargetSpeech(const std::shared_ptr<AutobotUnit>&);
   void RemoveTargetSpeech(const std::shared_ptr<AutobotUnit>&);
-  const AutobotUnitDict& GetSpeechSet() const;
   const AutobotUnitDict& GetAssignedAccountSet() const;
+  const AutobotUnitDict& GetAttachedSpeechSet() const;
 
   const QString GetTypeName() const ;
   static const QString GetTypeNameStatic();

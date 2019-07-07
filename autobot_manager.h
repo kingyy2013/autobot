@@ -46,6 +46,8 @@ class AutobotManager : public QObject {
 
 public:
   AutobotManager();
+  void Print();
+  void Clear();
   /// @brief The global singlton instance.
   static AutobotManager& GetInstance();
   static AutobotAccountHandler& GetAccounts();
@@ -54,6 +56,8 @@ public:
 
   bool AssignSelectedRoomsToSelectedAccounts();
   bool AssignSelectedSpeechsToSelectedRooms();
+
+  void ReconnectAllUnits();
 
   inline AutobotAccountHandler& MutableAccounts() {
     return autobot_accounts_handler_;

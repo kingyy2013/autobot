@@ -19,10 +19,10 @@ void TargetRoom::AssignTargetSpeech(
 
 void TargetRoom::RemoveTargetSpeech(
     const std::shared_ptr<AutobotUnit>& target_speech) {
-  this->RemoveLowerConnection(target_speech);
+  this->RemoveLowerConnection(target_speech->GetUnitName());
 }
 
-const AutobotUnitDict& TargetRoom::GetSpeechSet() const {
+const AutobotUnitDict& TargetRoom::GetAttachedSpeechSet() const {
   return this->GetAllLowerConnections();
 }
 

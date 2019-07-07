@@ -17,12 +17,12 @@ class TargetRoomEditWindow : public QMainWindow
 public:
   explicit TargetRoomEditWindow(QWidget *parent = nullptr);
   ~TargetRoomEditWindow();
+  void UpdateAllRoomsToView();
 
 private slots:
   void SetRoomToView(const QString& room_name);
   void AddRoomFromDialog();
   void RemoveSpeechsFromUi(const QStringList& selected_speechs);
-
   void UpdateSelectedRoomsToView(const QStringList& selected_rooms);
 
   void on_pushButton_add_room_clicked();

@@ -48,10 +48,10 @@ void AutobotAccount::AssignTargetRoom(
 
 void AutobotAccount::RemoveTargetRoom(
     const std::shared_ptr<AutobotUnit>& target_room) {
-  this->RemoveLowerConnection(target_room);
+  this->RemoveLowerConnection(target_room->GetUnitName());
 }
 
-const AutobotUnitDict& AutobotAccount::GetTargetRoomSet() const {
+const AutobotUnitDict& AutobotAccount::GetAttachedRoomSet() const {
   return this->GetAllLowerConnections();
 }
 

@@ -38,7 +38,7 @@ public:
   // Target room as lower level connector.
   void AssignTargetRoom(const std::shared_ptr<AutobotUnit>&);
   void RemoveTargetRoom(const std::shared_ptr<AutobotUnit>&);
-  const AutobotUnitDict& GetTargetRoomSet() const;
+  const AutobotUnitDict& GetAttachedRoomSet() const;
 
   // Get the status of the account.
   const AccountStatus& GetStatus() const;

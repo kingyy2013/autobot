@@ -117,6 +117,11 @@ void TargetRoomEditWindow::on_pushButton_remove_room_clicked() {
   }
 }
 
+void TargetRoomEditWindow::UpdateAllRoomsToView() {
+  UpdateSelectedRoomsToView(
+        AutobotManager::GetRooms().GetAllNames());
+}
+
 void TargetRoomEditWindow::UpdateSelectedRoomsToView(
     const QStringList& selected_rooms) {
   for (const auto& selected_room_name : selected_rooms) {
@@ -142,7 +147,7 @@ void TargetRoomEditWindow::SetRoomToView(const QString& room_name) {
   room_item->setText(1,
                      QString::number(room_ptr->GetAssignedAccountSet().size()));
 
-  const auto speech_room_set = room_ptr->GetSpeechSet();
+  const auto speech_room_set = room_ptr->GetAttachedSpeechSet();
   for (const auto& target_speech : speech_room_set) {
     const QString& speech_name = target_speech->GetUnitName();
     const auto& speech_to_room_tree_item_map_itr
