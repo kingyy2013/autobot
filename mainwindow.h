@@ -47,7 +47,7 @@ private slots:
   void UpdateSelectedAccountsToView(const QStringList& selected_accounts);
 
   void on_treeWidget_accounts_itemSelectionChanged();
-
+  void FigureAndSetRoomSelection(const QString& room_name);
 private:
   void SetSelectedAcountToManager();
 

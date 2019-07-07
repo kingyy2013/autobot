@@ -224,6 +224,14 @@ void TargetRoomEditWindow::on_treeWidget_rooms_itemSelectionChanged() {
   AutobotManager::GetRooms().SetSelectedNames(selected_room_names);
 }
 
+void TargetRoomEditWindow::on_treeWidget_rooms_itemDoubleClicked(QTreeWidgetItem *item, int column) {
+  if (item->parent() == nullptr) {
+    FigureRoomSelection(item->text(0));
+  }
+}
+
 } // namespace
+
+
 
 

@@ -19,6 +19,9 @@ public:
   ~TargetRoomEditWindow();
   void UpdateAllRoomsToView();
   void Clear();
+
+signals:
+  void FigureRoomSelection(const QString& room_name);
 private slots:
   void SetRoomToView(const QString& room_name);
   void AddRoomFromDialog();
@@ -32,6 +35,8 @@ private slots:
   void on_pushButton_set_room_clicked();
 
   void on_treeWidget_rooms_itemSelectionChanged();
+
+  void on_treeWidget_rooms_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
 private:
   QStringList GetSelectedItemNames(bool top_level);

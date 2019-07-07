@@ -36,6 +36,9 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(&(AutobotManager::GetInstance()),
           SIGNAL(RoomsRemoved(const QStringList&)),
           this, SLOT(RemoveRoomsFromUi(const QStringList&)));
+
+  connect(target_room_edit_window_, SIGNAL(FigureRoomSelection(const QString&)),
+          this, SLOT(FigureAndSetRoomSelection(const QString&)));
 }
 
 MainWindow::~MainWindow() {
@@ -58,6 +61,14 @@ void MainWindow::UpdateAllAccountToView() {
   Clear();
   for (auto account_ptr : AutobotManager::GetAccounts().GetUnitDict()) {
     SetAccountToView(account_ptr->GetUnitName());
+  }
+}
+
+void MainWindow::FigureAndSetRoomSelection(const QString& room_name) {
+  ui->treeWidget_accounts->selectionModel()->clearSelection();
+  for (const auto& tree_widget : room_account_to_tree_item_map_[room_name]) {
+    tree_widget->parent()->setExpanded(true);
+    tree_widget->setSelected(true);
   }
 }
 
