@@ -18,7 +18,7 @@ public:
   explicit TargetRoomEditWindow(QWidget *parent = nullptr);
   ~TargetRoomEditWindow();
   void UpdateAllRoomsToView();
-
+  void Clear();
 private slots:
   void SetRoomToView(const QString& room_name);
   void AddRoomFromDialog();

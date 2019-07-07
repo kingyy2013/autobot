@@ -19,6 +19,7 @@ public:
   explicit TargetSpeechEditWindow(QWidget *parent = nullptr);
   ~TargetSpeechEditWindow();
 
+  void Clear();
 public slots:
   void UpdateAllSpeechToView();
 

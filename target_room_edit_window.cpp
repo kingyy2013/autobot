@@ -42,6 +42,11 @@ TargetRoomEditWindow::~TargetRoomEditWindow()
   delete ui;
 }
 
+void TargetRoomEditWindow::Clear() {
+  ui->treeWidget_rooms->clear();
+  speech_to_room_tree_item_map_.clear();
+  room_to_tree_item_map_.clear();
+}
 
 void TargetRoomEditWindow::RemoveSpeechsFromUi(
     const QStringList& selected_speechs) {
@@ -118,6 +123,7 @@ void TargetRoomEditWindow::on_pushButton_remove_room_clicked() {
 }
 
 void TargetRoomEditWindow::UpdateAllRoomsToView() {
+  Clear();
   UpdateSelectedRoomsToView(
         AutobotManager::GetRooms().GetAllNames());
 }

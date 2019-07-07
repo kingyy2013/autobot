@@ -80,6 +80,8 @@ signals:
   /// @param selected_rooms. The name of the rooms that has changed.
   void RoomsChanged(const QStringList& selected_rooms);
 
+  void SpeechsChanged(const QStringList& selected_speechs);
+
   void RoomsRemoved(const QStringList& selected_rooms);
   void SpeechsRemoved(const QStringList& selected_speechs);
 

@@ -24,6 +24,9 @@ class MainWindow : public QMainWindow {
 public:
   explicit MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
+  void Clear();
+  void UpdateAllAccountToView();
+
 private slots:
   void AddManagerToView();
   void RemoveRoomsFromUi(const QStringList& selected_rooms);
@@ -40,7 +43,6 @@ private slots:
 
   void on_pushButton_loadall_clicked();
 
-  void UpdateAllAccountToView();
 
   void UpdateSelectedAccountsToView(const QStringList& selected_accounts);
 

@@ -31,8 +31,13 @@ TargetSpeechEditWindow::~TargetSpeechEditWindow() {
   delete ui;
 }
 
+void TargetSpeechEditWindow::Clear() {
+  speech_to_tree_item_map_.clear();
+  ui->treeWidget_speech_names->clear();
+}
 
 void TargetSpeechEditWindow::UpdateAllSpeechToView() {
+  Clear();
   UpdateSelectedSpeechToView(
         AutobotManager::GetSpeechs().GetAllNames());
 }

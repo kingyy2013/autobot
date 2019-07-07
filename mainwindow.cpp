@@ -32,9 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(&(AutobotManager::GetInstance()),
           SIGNAL(AccountsChanged(const QStringList&)), this,
           SLOT(UpdateSelectedAccountsToView(const QStringList&)));
-  connect(&(AutobotManager::GetInstance()),
-          SIGNAL(AccountsChanged(const QStringList&)), this,
-          SLOT(UpdateSelectedAccountsToView(const QStringList&)));
 
   connect(&(AutobotManager::GetInstance()),
           SIGNAL(RoomsRemoved(const QStringList&)),
@@ -47,11 +44,18 @@ MainWindow::~MainWindow() {
   delete ui;
 }
 
+void MainWindow::Clear() {
+  account_to_tree_item_map_.clear();
+  room_account_to_tree_item_map_.clear();
+  ui->treeWidget_accounts->clear();
+}
+
 void MainWindow::on_pushButton_account_add_clicked() {
   autobot_login_dialog_->exec();
 }
 
 void MainWindow::UpdateAllAccountToView() {
+  Clear();
   for (auto account_ptr : AutobotManager::GetAccounts().GetUnitDict()) {
     SetAccountToView(account_ptr->GetUnitName());
   }
@@ -364,7 +368,9 @@ void MainWindow::on_pushButton_loadall_clicked() {
     messagebox.exec();
   }
   AutobotManager::GetInstance().Print();
-  AddManagerToView();
+  this->UpdateAllAccountToView();
+  target_room_edit_window_->UpdateAllRoomsToView();
+  target_speech_edit_window_->UpdateAllSpeechToView();
 }
 
 } //namespace
