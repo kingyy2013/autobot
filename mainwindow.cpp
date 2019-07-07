@@ -65,6 +65,9 @@ void MainWindow::UpdateAllAccountToView() {
 }
 
 void MainWindow::FigureAndSetRoomSelection(const QString& room_name) {
+  // For unknown reason, I can't refresh the treeWidget manually, therefore,
+  // on_treeWidget_accounts_itemSelectionChanged will be triggered mutiple
+  // times.
   ui->treeWidget_accounts->selectionModel()->clearSelection();
   for (const auto& tree_widget : room_account_to_tree_item_map_[room_name]) {
     tree_widget->parent()->setExpanded(true);
@@ -235,7 +238,9 @@ void MainWindow::SetSelectedAcountToManager() {
       = ui->treeWidget_accounts->selectedItems();
   QStringList selected_item_names;
   for (auto item : selected_items) {
-    selected_item_names.append(item->text(0));
+    if(item->parent()==nullptr) {
+      selected_item_names.append(item->text(0));
+    }
   }
   AutobotManager::GetAccounts().SetSelectedNames(selected_item_names);
 }
@@ -263,7 +268,6 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
                                      this->pos().y());
       target_room_edit_window_->resize(target_room_edit_window_->width(),
                                        autobot_edit_window_->height());
-      target_room_edit_window_->UpdateAllRoomsToView();
       // Brings speech edit window.
       target_room_edit_window_->show();
 
@@ -274,7 +278,6 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
                                          + target_room_edit_window_->width(),
                                          this->height()
                                          - autobot_edit_window_->height());
-      target_speech_edit_window_->UpdateAllSpeechToView();
       target_speech_edit_window_->show();
       SetSelectedAcountToManager();
     }

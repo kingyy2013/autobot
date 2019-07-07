@@ -32,6 +32,7 @@ TargetSpeechEditWindow::~TargetSpeechEditWindow() {
 }
 
 void TargetSpeechEditWindow::Clear() {
+  prev_list_widge_ = nullptr;
   speech_to_tree_item_map_.clear();
   ui->treeWidget_speech_names->clear();
 }
