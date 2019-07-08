@@ -23,6 +23,9 @@
       <property name="sortingEnabled">
        <bool>true</bool>
       </property>
+      <property name="expandsOnDoubleClick">
+       <bool>false</bool>
+      </property>
       <column>
        <property name="text">
         <string>房间号</string>

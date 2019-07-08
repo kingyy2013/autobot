@@ -37,8 +37,30 @@ MainWindow::MainWindow(QWidget *parent) :
           SIGNAL(RoomsRemoved(const QStringList&)),
           this, SLOT(RemoveRoomsFromUi(const QStringList&)));
 
-  connect(target_room_edit_window_, SIGNAL(FigureRoomSelection(const QString&)),
-          this, SLOT(FigureAndSetRoomSelection(const QString&)));
+  // Double click on room edit window will select all rooms in account edit
+  // window.
+  connect(target_room_edit_window_, SIGNAL(
+            FigureAssignedRoomSelection(const QString&)),
+          this, SLOT(SetRoomSelection(const QString&)));
+
+  // Double click on room will select room in room edit window.
+  connect(this, SIGNAL(FigureAttachedRoomSelection(const QString&)),
+          target_room_edit_window_,
+          SLOT(SetRoomSelection(const QString&)));
+
+  // Double click on speech in room edit window will select the speech in speech
+  // edit window.
+  connect(target_room_edit_window_, SIGNAL(
+            FigureAttachedSpeechSelection(const QString&)),
+          target_speech_edit_window_,
+          SLOT(SetSpeechSelection(const QString&)));
+
+  // Double click on speech in room edit window will select the speech in speech
+  // edit window.
+  connect(target_speech_edit_window_, SIGNAL(
+            FigureAssignedSpeechSelection(const QString&)),
+          target_room_edit_window_,
+          SLOT(SetSpeechSelection(const QString&)));
 }
 
 MainWindow::~MainWindow() {
@@ -64,7 +86,7 @@ void MainWindow::UpdateAllAccountToView() {
   }
 }
 
-void MainWindow::FigureAndSetRoomSelection(const QString& room_name) {
+void MainWindow::SetRoomSelection(const QString& room_name) {
   // For unknown reason, I can't refresh the treeWidget manually, therefore,
   // on_treeWidget_accounts_itemSelectionChanged will be triggered mutiple
   // times.
@@ -280,10 +302,13 @@ void MainWindow::on_treeWidget_accounts_itemDoubleClicked(
                                          - autobot_edit_window_->height());
       target_speech_edit_window_->show();
       SetSelectedAcountToManager();
+
     }
+  } else {
+    // When selected on the room.
+    emit FigureAttachedRoomSelection(item->text(0));
   }
 }
-
 
 
 

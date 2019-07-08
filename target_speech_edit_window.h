@@ -20,7 +20,12 @@ public:
   ~TargetSpeechEditWindow();
 
   void Clear();
+
+signals:
+  void FigureAssignedSpeechSelection(const QString& speech_name);
+
 public slots:
+  void SetSpeechSelection(const QString& speech_name);
   void UpdateAllSpeechToView();
 
 private slots:
@@ -39,6 +44,8 @@ private slots:
   void on_pushButton_speech_words_set_clicked();
 
   void on_treeWidget_speech_names_itemSelectionChanged();
+
+  void on_treeWidget_speech_names_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
 private:
   void SetSpeechToView(const QString& speech_name);

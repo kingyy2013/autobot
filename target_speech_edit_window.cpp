@@ -201,5 +201,16 @@ void TargetSpeechEditWindow::on_pushButton_speech_words_set_clicked() {
   emit AutobotManager::GetInstance().RoomsChanged(selected_room_names);
 }
 
+void TargetSpeechEditWindow::on_treeWidget_speech_names_itemDoubleClicked(
+    QTreeWidgetItem *item, int column) {
+   emit FigureAssignedSpeechSelection(item->text(0));
+}
+
+void TargetSpeechEditWindow::SetSpeechSelection(const QString& speech_name) {
+  ui->treeWidget_speech_names->selectionModel()->clearSelection();
+  speech_to_tree_item_map_[speech_name]->setSelected(true);
+  on_treeWidget_speech_names_itemClicked(speech_to_tree_item_map_[speech_name]);
+}
 }// namespace
+
 

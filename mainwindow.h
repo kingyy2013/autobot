@@ -27,6 +27,12 @@ public:
   void Clear();
   void UpdateAllAccountToView();
 
+signals:
+  void FigureAttachedRoomSelection(const QString& room_name);
+
+public slots:
+  void SetRoomSelection(const QString&);
+
 private slots:
   void AddManagerToView();
   void RemoveRoomsFromUi(const QStringList& selected_rooms);
@@ -47,7 +53,6 @@ private slots:
   void UpdateSelectedAccountsToView(const QStringList& selected_accounts);
 
   void on_treeWidget_accounts_itemSelectionChanged();
-  void FigureAndSetRoomSelection(const QString& room_name);
 private:
   void SetSelectedAcountToManager();
 

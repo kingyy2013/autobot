@@ -21,7 +21,13 @@ public:
   void Clear();
 
 signals:
-  void FigureRoomSelection(const QString& room_name);
+  void FigureAssignedRoomSelection(const QString& room_name);
+  void FigureAttachedSpeechSelection(const QString& speech_name);
+
+public slots:
+  void SetRoomSelection(const QString&);
+  void SetSpeechSelection(const QString&);
+
 private slots:
   void SetRoomToView(const QString& room_name);
   void AddRoomFromDialog();

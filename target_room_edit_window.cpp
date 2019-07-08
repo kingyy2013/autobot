@@ -224,9 +224,28 @@ void TargetRoomEditWindow::on_treeWidget_rooms_itemSelectionChanged() {
   AutobotManager::GetRooms().SetSelectedNames(selected_room_names);
 }
 
-void TargetRoomEditWindow::on_treeWidget_rooms_itemDoubleClicked(QTreeWidgetItem *item, int column) {
+void TargetRoomEditWindow::on_treeWidget_rooms_itemDoubleClicked(
+    QTreeWidgetItem *item, int column) {
   if (item->parent() == nullptr) {
-    FigureRoomSelection(item->text(0));
+    emit FigureAssignedRoomSelection(item->text(0));
+  } else {
+    emit FigureAttachedSpeechSelection(item->text(0));
+  }
+}
+
+void TargetRoomEditWindow::SetRoomSelection(const QString& room_name) {
+  ui->treeWidget_rooms->selectionModel()->clearSelection();
+  room_to_tree_item_map_[room_name]->setSelected(true);
+}
+
+void TargetRoomEditWindow::SetSpeechSelection(const QString& room_name) {
+  // For unknown reason, I can't refresh the treeWidget manually, therefore,
+  // on_treeWidget_accounts_itemSelectionChanged will be triggered mutiple
+  // times.
+  ui->treeWidget_rooms->selectionModel()->clearSelection();
+  for (const auto& tree_widget : speech_to_room_tree_item_map_[room_name]) {
+    tree_widget->parent()->setExpanded(true);
+    tree_widget->setSelected(true);
   }
 }
 
